@@ -1,0 +1,44 @@
+{
+  "name": "esports-tournament-backend",
+  "version": "1.0.0",
+  "description": "Esports Tournament Management API - Fixed and Optimized",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "esports",
+    "tournament",
+    "api",
+    "gaming"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "google-auth-library": "^10.5.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3",
+    "socket.io": "^4.7.5",
+    "uuid": "^9.0.1",
+    "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

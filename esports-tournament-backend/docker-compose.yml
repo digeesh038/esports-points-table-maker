@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: esports_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: esports_database
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - esports_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: esports_redis
+    restart: unless-stopped
+    ports:
+      - "6100:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - esports_network
+  # Uncomment to run the API in Docker
+  # api:
+  #   build: .
+  #   container_name: esports_api
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NODE_ENV: development
+  #     DATABASE_HOST: postgres
+  #     DATABASE_PORT: 5432
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - esports_network
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+networks:
+  esports_network:
+    driver: bridge

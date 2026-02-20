@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Professional Esports Tournament Management Platform - Create, manage, and track esports tournaments with real-time leaderboards and scoring for Free Fire, BGMI, Valorant, COD Mobile, and CS:GO" />
+    <meta name="keywords"
+        content="esports, tournament, management, leaderboard, gaming, free fire, bgmi, valorant, csgo, cod mobile" />
+    <meta name="author" content="Esports Manager" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Esports Tournament Manager" />
+    <meta property="og:description" content="Professional tournament management platform for esports organizers" />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Esports Tournament Manager" />
+    <meta name="twitter:description" content="Professional tournament management platform for esports organizers" />
+
+    <!-- Title -->
+    <title>Esports Tournament Manager - Professional Esports Management Platform</title>
+
+    <!-- Preconnect to backend API -->
+    <link rel="preconnect" href="http://localhost:3000" />
+
+    <!-- Google Fonts (Optional - uncomment if you want custom fonts) -->
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"> -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <style>
+        /* Prevent FOUC (Flash of Unstyled Content) */
+        #root {
+            min-height: 100vh;
+        }
+
+        /* Initial loading state (minimal to avoid redundancy) */
+        .app-loading {
+            background: #0b0f1a;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- App Root -->
+    <div id="root">
+        <div class="app-loading"></div>
+    </div>
+
+    <!-- React App Script -->
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
