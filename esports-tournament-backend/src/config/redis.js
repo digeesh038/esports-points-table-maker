@@ -5,33 +5,38 @@ dotenv.config();
 
 let redisClient = null;
 
-// Only create Redis client if configuration is provided
-if (process.env.REDIS_HOST) {
-    try {
+try {
+    if (process.env.REDIS_URL) {
+        // 🔥 Production (Render)
+        redisClient = new Redis(process.env.REDIS_URL);
+        console.log('🌍 Using production Redis');
+    } else if (process.env.REDIS_HOST) {
+        // 🖥 Local development
         redisClient = new Redis({
             host: process.env.REDIS_HOST || 'localhost',
             port: parseInt(process.env.REDIS_PORT) || 6379,
             password: process.env.REDIS_PASSWORD || undefined,
-            retryStrategy: (times) => {
-                const delay = Math.min(times * 50, 2000);
-                return delay;
-            },
-            maxRetriesPerRequest: 3,
         });
+        console.log('💻 Using local Redis');
+    } else {
+        console.warn('⚠️ Redis not configured, caching disabled');
+    }
 
+    if (redisClient) {
         redisClient.on('connect', () => {
             console.log('✅ Redis connected successfully');
         });
 
         redisClient.on('error', (err) => {
-            console.warn('⚠️  Redis connection error:', err.message);
+            console.warn('⚠️ Redis connection error:', err.message);
         });
-    } catch (error) {
-        console.warn('⚠️  Redis not configured, caching disabled');
     }
+} catch (error) {
+    console.warn('⚠️ Redis initialization failed:', error.message);
 }
 
-// Helper functions with fallback
+/* ---------- Helper Functions ---------- */
+
 export const getCache = async (key) => {
     if (!redisClient) return null;
     try {
@@ -61,20 +66,6 @@ export const deleteCache = async (key) => {
         return true;
     } catch (error) {
         console.warn('Redis DELETE error:', error.message);
-        return false;
-    }
-};
-
-export const clearCachePattern = async (pattern) => {
-    if (!redisClient) return false;
-    try {
-        const keys = await redisClient.keys(pattern);
-        if (keys.length > 0) {
-            await redisClient.del(...keys);
-        }
-        return true;
-    } catch (error) {
-        console.warn('Redis CLEAR error:', error.message);
         return false;
     }
 };
