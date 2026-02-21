@@ -22,31 +22,34 @@ export const AuthProvider = ({ children }) => {
     // ✅ GOOGLE LOGIN (only authentication method)
     const googleLogin = async (credential) => {
         try {
-            const res = await authAPI.googleSignIn(credential);
+            const response = await authAPI.googleSignIn(credential);
 
-            const token = res?.data?.token;
-            const user = res?.data?.user;
+            console.log("Google backend response:", response);
 
-            if (!token || !user) {
+            if (!response.success || !response.data) {
                 return {
                     success: false,
-                    error: res?.message || 'Invalid response from server',
+                    error: response.message || "Invalid response from server",
                 };
             }
 
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
+            const { token, user } = response.data;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
             setUser(user);
 
             return { success: true };
+
         } catch (err) {
+            console.error("Google login error:", err);
             return {
                 success: false,
-                error: err.response?.data?.message || 'Google sign-in failed',
+                error: err.response?.data?.message || "Google sign-in failed",
             };
         }
     };
-
 
 
     // 🎭 GUEST LOGIN
