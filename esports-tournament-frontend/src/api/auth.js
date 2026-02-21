@@ -1,53 +1,29 @@
 import apiClient from './client';
 
 export const authAPI = {
-    // Login user
-    login: async (credentials) => {
-        const response = await apiClient.post('/auth/login', credentials);
-        return response.data;
-    },
+    login: (credentials) =>
+        apiClient.post('/auth/login', credentials).then(res => res.data),
 
-    // Google Sign-In
-    googleSignIn: async (credential) => {
-        const response = await apiClient.post('/auth/google-signin', { credential });
-        return response.data;
-    },
+    googleSignIn: (credential) =>
+        apiClient.post('/auth/google-signin', { credential }).then(res => res.data),
 
-    // Register new user
-    signup: async (userData) => {
-        const response = await apiClient.post('/auth/signup', userData);
-        return response.data;
-    },
+    signup: (userData) =>
+        apiClient.post('/auth/signup', userData).then(res => res.data),
 
-    // Logout user
-    logout: async () => {
-        const response = await apiClient.post('/auth/logout');
-        return response.data;
-    },
+    logout: () =>
+        apiClient.post('/auth/logout').then(res => res.data),
 
-    // Get current user
-    getCurrentUser: async () => {
-        const response = await apiClient.get('/auth/me');
-        return response.data;
-    },
+    getCurrentUser: () =>
+        apiClient.get('/auth/me').then(res => res.data),
 
-    // Refresh token
-    refreshToken: async () => {
-        const response = await apiClient.post('/auth/refresh');
-        return response.data;
-    },
+    refreshToken: () =>
+        apiClient.post('/auth/refresh').then(res => res.data),
 
-    // Update profile
-    updateProfile: async (userData) => {
-        const response = await apiClient.put('/auth/profile', userData);
-        return response.data;
-    },
+    updateProfile: (userData) =>
+        apiClient.put('/auth/profile', userData).then(res => res.data),
 
-    // Change password
-    changePassword: async (passwords) => {
-        const response = await apiClient.put('/auth/password', passwords);
-        return response.data;
-    },
+    changePassword: (passwords) =>
+        apiClient.put('/auth/password', passwords).then(res => res.data),
 };
 
 export default authAPI;

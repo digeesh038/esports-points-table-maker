@@ -41,7 +41,7 @@ apiClient.interceptors.response.use(
 
       // Only redirect if NOT already on auth pages
       if (!window.location.pathname.startsWith('/auth')) {
-        window.location.href = '/auth';
+        window.location.href = '/login';
       }
 
       toast.error('Session expired. Please login again.');
