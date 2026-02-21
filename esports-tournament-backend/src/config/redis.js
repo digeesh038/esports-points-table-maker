@@ -7,19 +7,15 @@ let redisClient = null;
 
 try {
     if (process.env.REDIS_URL) {
-        // 🔥 Production (Render)
         redisClient = new Redis(process.env.REDIS_URL);
         console.log('🌍 Using production Redis');
     } else if (process.env.REDIS_HOST) {
-        // 🖥 Local development
         redisClient = new Redis({
             host: process.env.REDIS_HOST || 'localhost',
             port: parseInt(process.env.REDIS_PORT) || 6379,
             password: process.env.REDIS_PASSWORD || undefined,
         });
         console.log('💻 Using local Redis');
-    } else {
-        console.warn('⚠️ Redis not configured, caching disabled');
     }
 
     if (redisClient) {
@@ -66,6 +62,20 @@ export const deleteCache = async (key) => {
         return true;
     } catch (error) {
         console.warn('Redis DELETE error:', error.message);
+        return false;
+    }
+};
+
+export const clearCachePattern = async (pattern) => {
+    if (!redisClient) return false;
+    try {
+        const keys = await redisClient.keys(pattern);
+        if (keys.length > 0) {
+            await redisClient.del(...keys);
+        }
+        return true;
+    } catch (error) {
+        console.warn('Redis CLEAR error:', error.message);
         return false;
     }
 };
