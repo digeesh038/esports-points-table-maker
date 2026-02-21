@@ -24,9 +24,7 @@ import errorHandler from './middlewares/errorHandler.js';
 const app = express();
 
 // Security middleware
-app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+app.use(helmet());
 
 // CORS configuration
 const corsOptions = {
