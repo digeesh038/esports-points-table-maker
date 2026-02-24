@@ -82,14 +82,21 @@ const DashboardPage = () => {
     }
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-12 relative animate-fade-in">
             {/* HEADER */}
-            <div>
-                <h1 className="text-2xl xs:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic leading-tight">
-                    {isGuest ? 'Guest Mode' : `WELCOME BACK, ${user?.name?.toUpperCase()}`}
+            <div className="relative">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
+                    <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
+                        System Online • V.4.0.2
+                    </span>
+                </div>
+                <h1 className="text-3xl xs:text-4xl md:text-5xl lg:text-7xl font-black italic leading-tight tracking-tighter uppercase">
+                    <span className="text-white">COMMAND</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">CENTER</span>
                 </h1>
-                <p className="text-gray-400 mt-2 text-sm md:text-lg font-medium opacity-80">
-                    {isGuest ? 'You are viewing as a guest. Features are limited.' : 'System status: OPTIMAL • Monitoring esports ecosystem.'}
+                <p className="text-gray-500 mt-2 text-sm md:text-base font-medium flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-neon-green shadow-[0_0_8px_#39ff14] animate-pulse" />
+                    {isGuest ? 'GUEST_PROTO_RESTRICTED: Limited functionality enabled.' : `LINK_ESTABLISHED: Welcome back, ${user?.name}`}
                 </p>
             </div>
 

@@ -116,15 +116,15 @@ const GoogleSignInPage = () => {
                                     size="large"
                                     text="signin_with"
                                     shape="rectangular"
-                                    width="250"
+                                    width="230"
                                 />
                             </div>
                         </div>
 
                         {/* Connection Warning (Conditional) */}
                         <div className="mt-6 text-center">
-                            <p className="text-[9px] text-gray-500 uppercase tracking-widest font-mono">
-                                Note: Disable AdBlockers if login button fails to load
+                            <p className="text-[10px] text-amber-500/80 uppercase tracking-widest font-mono animate-pulse">
+                                note: disable adblocker if button fails
                             </p>
                         </div>
 
