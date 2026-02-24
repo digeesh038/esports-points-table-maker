@@ -7,7 +7,7 @@ import Button from '../common/Button';
 import organizationsAPI from '../../api/organizations';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard, ShieldCheck, Zap } from 'lucide-react';
+import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard, QrCode, Upload, X, Zap } from 'lucide-react';
 
 const GAME_OPTIONS = [
     { value: 'free_fire', label: 'Free Fire' },
@@ -40,16 +40,17 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         isPublic: true,
         isPaid: false,
         entryFee: 0,
-        paymentMethod: 'razorpay',
+        paymentMethod: 'manual',
         paymentInstructions: '',
+        upiId: '',
+        paymentQrCode: '',
     });
 
     const [organizations, setOrganizations] = useState([]);
     const [loadingOrgs, setLoadingOrgs] = useState(true);
+    const [qrPreview, setQrPreview] = useState(null);
 
-    useEffect(() => {
-        fetchOrganizations();
-    }, []);
+    useEffect(() => { fetchOrganizations(); }, []);
 
     useEffect(() => {
         if (initialData) {
@@ -66,9 +67,12 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 isPublic: initialData.isPublic !== false,
                 isPaid: initialData.isPaid || false,
                 entryFee: initialData.entryFee || 0,
-                paymentMethod: initialData.paymentMethod || 'razorpay',
+                paymentMethod: initialData.paymentMethod || 'manual',
                 paymentInstructions: initialData.paymentInstructions || '',
+                upiId: initialData.upiId || '',
+                paymentQrCode: initialData.paymentQrCode || '',
             });
+            if (initialData.paymentQrCode) setQrPreview(initialData.paymentQrCode);
         }
     }, [initialData]);
 
@@ -78,9 +82,9 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
             const orgs = response.data.organizations || [];
             setOrganizations(orgs);
             if (orgs.length > 0 && !initialData) {
-                setFormData((prev) => ({ ...prev, organizationId: orgs[0].id }));
+                setFormData(prev => ({ ...prev, organizationId: orgs[0].id }));
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to load organizations');
         } finally {
             setLoadingOrgs(false);
@@ -92,16 +96,35 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
     };
 
+    const handleQrUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { toast.error('QR image must be < 2MB'); return; }
+        if (!file.type.startsWith('image/')) { toast.error('Upload an image file'); return; }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setFormData({ ...formData, paymentQrCode: reader.result });
+            setQrPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const removeQr = () => {
+        setFormData({ ...formData, paymentQrCode: '' });
+        setQrPreview(null);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        // Always manual UPI for paid tournaments
+        onSubmit({ ...formData, paymentMethod: 'manual' });
     };
 
     if (loadingOrgs) {
         return (
             <div className="flex items-center justify-center py-16 gap-3">
                 <div className="w-6 h-6 border-2 border-neon-blue border-t-transparent rounded-full animate-spin" />
-                <span className="text-[11px] font-mono text-gray-500 uppercase tracking-[0.2em]">Loading Config...</span>
+                <span className="text-[11px] font-mono text-gray-500 uppercase tracking-[0.2em]">Loading...</span>
             </div>
         );
     }
@@ -112,12 +135,9 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 <div className="w-16 h-16 bg-neon-blue/10 border border-neon-blue/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <Building2 className="w-8 h-8 text-neon-blue/50" />
                 </div>
-                <p className="text-gray-400 mb-6 text-sm font-medium">
-                    You need an organization before you can create a tournament.
-                </p>
+                <p className="text-gray-400 mb-6 text-sm font-medium">You need an organization first.</p>
                 <Link to="/dashboard/organizations" className="btn-primary inline-flex items-center gap-2 py-3 px-8 text-sm font-bold">
-                    <Building2 className="w-4 h-4" />
-                    Create Organization
+                    <Building2 className="w-4 h-4" /> Create Organization
                 </Link>
             </Card>
         );
@@ -126,78 +146,71 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
     return (
         <form onSubmit={handleSubmit} className="space-y-8">
 
-            {/* ── Section: Tournament Identity ── */}
+            {/* ── Tournament Identity ── */}
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <Trophy className="w-4 h-4 text-neon-purple" />
                     <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Tournament Identity</span>
                 </div>
-
                 <Select label="Organization" icon={<Building2 className="w-3.5 h-3.5" />}
-                    name="organizationId" value={formData.organizationId}
-                    onChange={handleChange} required disabled={!!initialData}>
+                    name="organizationId" value={formData.organizationId} onChange={handleChange} required disabled={!!initialData}>
                     <option value="">Choose Organization...</option>
-                    {organizations.map((org) => (
-                        <option key={org.id} value={org.id}>{org.name}</option>
-                    ))}
+                    {organizations.map(org => <option key={org.id} value={org.id}>{org.name}</option>)}
                 </Select>
-
                 <Input label="Tournament Name" icon={<Trophy className="w-3.5 h-3.5" />}
-                    type="text" name="name" value={formData.name}
-                    onChange={handleChange} placeholder="e.g. FFMC Pro League Season 3" required />
-
+                    type="text" name="name" value={formData.name} onChange={handleChange}
+                    placeholder="e.g. FFMC Pro League Season 3" required />
                 <Textarea label="Description" icon={<AlignLeft className="w-3.5 h-3.5" />}
-                    name="description" value={formData.description || ''}
-                    onChange={handleChange} placeholder="Describe your tournament, rules, prize pool info..." />
+                    name="description" value={formData.description || ''} onChange={handleChange}
+                    placeholder="Describe your tournament, rules, prize pool..." />
             </div>
 
-            {/* ── Section: Game & Format ── */}
+            {/* ── Game & Format ── */}
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <Swords className="w-4 h-4 text-neon-blue" />
                     <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Game & Format</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <Select label="Game" icon={<Gamepad2 className="w-3.5 h-3.5" />}
                         name="game" value={formData.game} onChange={handleChange} required>
-                        {GAME_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                        {GAME_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </Select>
                     <Select label="Format" icon={<Swords className="w-3.5 h-3.5" />}
-                        name="format" value={formData.format} onChange={handleChange} required className="lg:col-span-2">
-                        {FORMAT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                        name="format" value={formData.format} onChange={handleChange} required className="md:col-span-2">
+                        {FORMAT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </Select>
                 </div>
             </div>
 
-            {/* ── Section: Schedule & Limits ── */}
+            {/* ── Schedule & Limits ── */}
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <CalendarDays className="w-4 h-4 text-neon-green" />
                     <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Schedule & Limits</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                     <Input label="Start Date" icon={<CalendarDays className="w-3.5 h-3.5" />}
                         type="date" name="startDate" value={formData.startDate} onChange={handleChange} required />
                     <Input label="End Date" icon={<CalendarDays className="w-3.5 h-3.5" />}
                         type="date" name="endDate" value={formData.endDate} onChange={handleChange} />
                     <Input label="Max Teams" icon={<Users className="w-3.5 h-3.5" />}
-                        type="number" name="maxTeams" value={formData.maxTeams}
-                        onChange={handleChange} placeholder="e.g. 16" min="2" />
-                    <Input label="Registration Deadline" icon={<CalendarDays className="w-3.5 h-3.5" />}
+                        type="number" name="maxTeams" value={formData.maxTeams} onChange={handleChange}
+                        placeholder="e.g. 16" min="2" />
+                    <Input label="Reg. Deadline" icon={<CalendarDays className="w-3.5 h-3.5" />}
                         type="date" name="registrationDeadline" value={formData.registrationDeadline} onChange={handleChange} />
                 </div>
             </div>
 
-            {/* ── Section: Visibility & Monetization ── */}
+            {/* ── Visibility & Payment ── */}
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <Globe className="w-4 h-4 text-yellow-500" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Visibility & Monetization</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Visibility & Payment</span>
                 </div>
 
-                {/* Toggle Switches */}
+                {/* Toggles */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {/* Public toggle */}
                     <label className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:border-neon-blue/40 transition-all">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
@@ -205,7 +218,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-white">Public Tournament</p>
-                                <p className="text-[11px] text-gray-500">Visible to everyone</p>
+                                <p className="text-[11px] text-gray-500">Visible to all players</p>
                             </div>
                         </div>
                         <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPublic ? 'bg-neon-blue' : 'bg-white/10'}`}>
@@ -214,7 +227,6 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                         </div>
                     </label>
 
-                    {/* Paid toggle */}
                     <label className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:border-neon-pink/40 transition-all">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
@@ -222,7 +234,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-white">Paid Tournament</p>
-                                <p className="text-[11px] text-gray-500">Require entry fee</p>
+                                <p className="text-[11px] text-gray-500">Require entry fee (UPI)</p>
                             </div>
                         </div>
                         <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPaid ? 'bg-neon-pink' : 'bg-white/10'}`}>
@@ -232,39 +244,63 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                     </label>
                 </div>
 
-                {/* Paid tournament fields */}
+                {/* UPI / QR Payment Setup */}
                 {formData.isPaid && (
                     <div className="space-y-5 animate-in slide-in-from-top-2 duration-300">
-                        <Input label="Entry Fee (INR)" icon={<CreditCard className="w-3.5 h-3.5" />}
-                            type="number" name="entryFee" value={formData.entryFee}
-                            onChange={handleChange} placeholder="e.g. 100" min="1" required />
 
-                        {/* Razorpay badge — no manual QR/UPI needed */}
-                        <div className="p-5 bg-neon-blue/5 border border-neon-blue/20 rounded-2xl flex items-start gap-4">
-                            <ShieldCheck className="w-6 h-6 text-neon-blue flex-shrink-0 mt-0.5" />
-                            <div>
-                                <p className="text-[11px] font-black text-neon-blue uppercase tracking-widest mb-1 flex items-center gap-2">
-                                    <Zap className="w-3 h-3" /> Razorpay Secure Checkout — Active
-                                </p>
-                                <p className="text-[10px] text-gray-500 font-mono leading-relaxed">
-                                    Payments are collected via <span className="text-white font-bold">Razorpay</span> — India's #1 payment gateway. Participant entry fees go <span className="text-white">directly to your registered Razorpay account</span>. Razorpay automatically presents UPI, QR, Cards, and Net Banking — no manual setup needed.
-                                </p>
-                            </div>
+                        {/* Entry fee */}
+                        <Input label="Entry Fee (₹)" icon={<CreditCard className="w-3.5 h-3.5" />}
+                            type="number" name="entryFee" value={formData.entryFee} onChange={handleChange}
+                            placeholder="e.g. 100" min="1" required />
+
+                        {/* UPI ID */}
+                        <Input label="Your UPI ID" icon={<Zap className="w-3.5 h-3.5" />}
+                            type="text" name="upiId" value={formData.upiId} onChange={handleChange}
+                            placeholder="e.g. yourname@paytm or 9876543210@upi" />
+
+                        {/* QR Code Upload */}
+                        <div className="space-y-3">
+                            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                                <QrCode className="w-3.5 h-3.5" /> Upload Payment QR Code
+                            </label>
+                            {qrPreview ? (
+                                <div className="flex items-center gap-5 p-4 bg-white/5 border border-neon-purple/20 rounded-2xl">
+                                    <div className="p-2 bg-white rounded-xl shadow-lg">
+                                        <img src={qrPreview} alt="QR Code" className="w-24 h-24 object-contain" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-white mb-1">QR Code Uploaded ✓</p>
+                                        <p className="text-[10px] text-gray-500 mb-3">Players will see this to pay.</p>
+                                        <button type="button" onClick={removeQr}
+                                            className="flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 font-bold uppercase">
+                                            <X className="w-3 h-3" /> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-neon-purple/20 rounded-2xl cursor-pointer hover:border-neon-purple/50 hover:bg-neon-purple/[0.03] transition-all bg-black/20 group">
+                                    <Upload className="w-6 h-6 text-neon-purple mb-2 group-hover:scale-110 transition-transform" />
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest group-hover:text-white">
+                                        Upload your UPI QR Code
+                                    </span>
+                                    <span className="text-[9px] text-gray-700 mt-1">PNG, JPG — max 2MB</span>
+                                    <input type="file" accept="image/*" onChange={handleQrUpload} className="hidden" />
+                                </label>
+                            )}
                         </div>
 
-                        <Textarea label="Payment / Registration Instructions (optional)"
+                        {/* Instructions */}
+                        <Textarea label="Payment Instructions (shown to players)"
                             icon={<AlignLeft className="w-3.5 h-3.5" />}
-                            name="paymentInstructions" value={formData.paymentInstructions}
-                            onChange={handleChange}
-                            placeholder="e.g. Join our Discord before registering. Screenshot mandatory after payment."
+                            name="paymentInstructions" value={formData.paymentInstructions} onChange={handleChange}
+                            placeholder="e.g. Pay via Google Pay / PhonePe to the UPI ID shown. Upload screenshot after payment. Join Discord before registering."
                             rows={3} />
                     </div>
                 )}
             </div>
 
-            {/* Submit */}
             <Button type="submit" className="w-full py-5 text-sm" loading={loading}>
-                {initialData ? 'Save Changes' : (formData.isPaid ? '💳 Pay Activation Fee & Create Tournament' : '🚀 Create Tournament')}
+                {initialData ? 'Save Changes' : (formData.isPaid ? '🎯 Create Paid Tournament' : '🚀 Create Tournament')}
             </Button>
         </form>
     );

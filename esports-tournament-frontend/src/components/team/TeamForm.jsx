@@ -4,7 +4,7 @@ import Button from '../common/Button';
 import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity, Receipt, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
+const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) => {
     const [formData, setFormData] = useState({
         tournamentId: '',
         name: '',
@@ -22,9 +22,10 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
     const [proofPreview, setProofPreview] = useState(null);
     const [showPaymentInfo, setShowPaymentInfo] = useState(false);
 
-    // Find current tournament if ID is selected
-    const selectedT = tournaments.find(t => t.id === formData.tournamentId);
-    const isManualPayment = selectedT?.isPaid && selectedT?.paymentMethod === 'manual';
+    // Use directly-passed tournament OR find from dropdown selection
+    const selectedT = tournament || tournaments.find(t => t.id === formData.tournamentId);
+    // Show payment section for any paid tournament (manual UPI/QR is the only method)
+    const isManualPayment = selectedT?.isPaid && selectedT?.entryFee > 0;
 
     const handleChange = (e) => {
         setFormData({

@@ -120,93 +120,23 @@ const TournamentDetailPage = () => {
 
         try {
             setSubmitting(true);
+            await teamsAPI.register(id, teamData);
 
             if (tournament.isPaid && tournament.entryFee > 0) {
-
-                // ── Load Razorpay SDK ──────────────────────────────────────────
-                const sdkLoaded = await loadRazorpay();
-                if (!sdkLoaded) {
-                    toast.error('Razorpay SDK failed to load. Check internet connection.');
-                    return;
-                }
-
-                // ── Create Order on Backend ────────────────────────────────────
-                let orderRes;
-                try {
-                    orderRes = await paymentsAPI.createOrder({
-                        tournamentId: id,
-                        amount: tournament.entryFee,
-                        currency: tournament.currency || 'INR',
-                    });
-                } catch (e) {
-                    toast.error(e.response?.data?.message || 'Could not initiate payment. Try again.');
-                    return;
-                }
-
-                const { orderId, amount, currency, keyId } = orderRes.data.data;
-
-                // ── Open Razorpay Checkout ─────────────────────────────────────
-                await new Promise((resolve, reject) => {
-                    const options = {
-                        key: keyId,
-                        amount,
-                        currency,
-                        name: tournament.name,
-                        description: `Entry fee — ${tournament.name}`,
-                        order_id: orderId,
-                        handler: async (razorpayResponse) => {
-                            try {
-                                // ⚡ Pass signature → backend verifies HMAC → creates team
-                                const registerData = {
-                                    ...teamData,
-                                    razorpayPaymentId: razorpayResponse.razorpay_payment_id,
-                                    razorpayOrderId: razorpayResponse.razorpay_order_id,
-                                    razorpaySignature: razorpayResponse.razorpay_signature,
-                                };
-
-                                await teamsAPI.register(id, registerData);
-                                toast.success('✅ Payment verified & Team registered!');
-                                setShowTeamModal(false);
-                                fetchTournamentData();
-                                resolve();
-                            } catch (err) {
-                                const msg = err.response?.data?.message || 'Registration failed after payment';
-                                toast.error(`❌ ${msg}. Save Payment ID: ${razorpayResponse.razorpay_payment_id}`);
-                                reject(err);
-                            }
-                        },
-                        prefill: {
-                            name: teamData.contactName || '',
-                            email: teamData.contactEmail || '',
-                            contact: teamData.contactPhone || '',
-                        },
-                        theme: { color: '#00f3ff' },
-                        modal: {
-                            ondismiss: () => {
-                                toast('Payment cancelled.', { icon: '⚠️' });
-                                setSubmitting(false);
-                                resolve();
-                            },
-                        },
-                    };
-
-                    const rzp = new window.Razorpay(options);
-                    rzp.open();
-                });
-
+                toast.success('✅ Team registered! Payment pending organizer verification.');
             } else {
-                // Free tournament — direct registration
-                await teamsAPI.register(id, teamData);
                 toast.success('Team registered successfully.');
-                setShowTeamModal(false);
-                fetchTournamentData();
             }
+
+            setShowTeamModal(false);
+            fetchTournamentData();
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to register team');
         } finally {
             setSubmitting(false);
         }
     };
+
 
     const handleViewReceipt = (team) => {
         setSelectedReceiptTeam(team);
@@ -493,7 +423,7 @@ const TournamentDetailPage = () => {
                 <div className="p-6 bg-dark-900/50"><StageForm onSubmit={handleCreateStage} loading={creatingStage} tournamentGame={tournament.game} /></div>
             </Modal>
             <Modal isOpen={showTeamModal} onClose={() => setShowTeamModal(false)} title="Register New Team">
-                <div className="p-6 bg-dark-900/50"><TeamForm onSubmit={handleRegisterTeam} loading={submitting} /></div>
+                <div className="p-6 bg-dark-900/50"><TeamForm onSubmit={handleRegisterTeam} loading={submitting} tournament={tournament} /></div>
             </Modal>
 
             <Modal isOpen={showPlayerModal} onClose={() => setShowPlayerModal(false)} title="Manage Team Roster">
