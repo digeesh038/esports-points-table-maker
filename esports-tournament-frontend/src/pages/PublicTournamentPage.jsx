@@ -14,6 +14,8 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useSocket } from '../contexts/SocketContext';
+import paymentsAPI from '../api/payments';
+import { loadRazorpay } from '../utils/payment';
 
 const PublicTournamentPage = () => {
     const { id } = useParams();
@@ -83,13 +85,75 @@ const PublicTournamentPage = () => {
             toast.error('Registration is restricted in guest mode.');
             return;
         }
+
         try {
             setRegistering(true);
-            await teamsAPI.register(tournament.id, teamData);
-            toast.success('Team registered successfully! Awaiting approval.');
-            setShowRegisterModal(false);
+
+            if (tournament.isPaid && tournament.entryFee > 0) {
+                // 1. Load Razorpay script
+                const res = await loadRazorpay();
+                if (!res) {
+                    toast.error('Razorpay SDK failed to load. Are you online?');
+                    return;
+                }
+
+                // 2. Create Order in Backend
+                const orderRes = await paymentsAPI.createOrder({
+                    tournamentId: id,
+                    amount: tournament.entryFee,
+                    currency: tournament.currency || 'INR'
+                });
+
+                const { orderId, amount, currency, keyId } = orderRes.data.data;
+
+                // 3. Open Razorpay Checkout
+                const options = {
+                    key: keyId,
+                    amount: amount,
+                    currency: currency,
+                    name: "Esports Tournament",
+                    description: `Registration for ${tournament.name}`,
+                    order_id: orderId,
+                    handler: async (response) => {
+                        try {
+                            // 4. Register team with payment details
+                            const registerData = {
+                                ...teamData,
+                                razorpayPaymentId: response.razorpay_payment_id,
+                                razorpayOrderId: response.razorpay_order_id,
+                                razorpaySignature: response.razorpay_signature
+                            };
+
+                            await teamsAPI.register(id, registerData);
+                            toast.success('Payment successful & Team registered!');
+                            setShowRegisterModal(false);
+                            fetchTournamentData();
+                        } catch (err) {
+                            console.error('Registration after payment failed:', err);
+                            toast.error('Payment was successful but team registration failed. Please contact support.');
+                        }
+                    },
+                    prefill: {
+                        name: teamData.contactName || '',
+                        email: teamData.contactEmail || '',
+                        contact: teamData.contactPhone || '',
+                    },
+                    theme: {
+                        color: "#00f3ff",
+                    },
+                };
+
+                const paymentObject = new window.Razorpay(options);
+                paymentObject.open();
+            } else {
+                // Free tournament registration
+                await teamsAPI.register(tournament.id, teamData);
+                toast.success('Team registered successfully! Awaiting approval.');
+                setShowRegisterModal(false);
+                fetchTournamentData();
+            }
         } catch (error) {
-            toast.error(error.message || 'Failed to register team');
+            toast.error(error.response?.data?.message || error.message || 'Failed to register team');
         } finally {
             setRegistering(false);
         }
@@ -144,8 +208,10 @@ const PublicTournamentPage = () => {
                             <span className="font-bold text-white">{format(new Date(tournament.startDate), 'MMM dd, yyyy')}</span>
                         </div>
                         <div className="flex items-center bg-dark-800/50 px-5 py-2 rounded-xl border border-dark-600">
-                            <Users className="w-5 h-5 mr-3 text-neon-pink" />
-                            <span className="font-bold text-white">{tournament.teams?.length || 0} Entities Registered</span>
+                            <Zap className={`w-5 h-5 mr-3 ${tournament.isPaid ? 'text-neon-pink' : 'text-neon-green'}`} />
+                            <span className="font-bold text-white">
+                                {tournament.isPaid ? `Entry: ${tournament.currency} ${tournament.entryFee}` : 'FREE ENTRY'}
+                            </span>
                         </div>
                     </div>
 

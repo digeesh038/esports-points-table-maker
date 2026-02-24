@@ -15,6 +15,8 @@ import { Calendar, Users, Trophy, Plus, Target, Zap, UserPlus, Trash2 } from 'lu
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import paymentsAPI from '../api/payments';
+import { loadRazorpay } from '../utils/payment';
 
 const TournamentDetailPage = () => {
     const { id } = useParams();
@@ -115,10 +117,70 @@ const TournamentDetailPage = () => {
 
         try {
             setSubmitting(true);
-            await teamsAPI.register(id, teamData);
-            toast.success('Team registered successfully.');
-            setShowTeamModal(false);
-            fetchTournamentData();
+
+            if (tournament.isPaid && tournament.entryFee > 0) {
+                // 1. Load Razorpay script
+                const res = await loadRazorpay();
+                if (!res) {
+                    toast.error('Razorpay SDK failed to load. Are you online?');
+                    return;
+                }
+
+                // 2. Create Order in Backend
+                const orderRes = await paymentsAPI.createOrder({
+                    tournamentId: id,
+                    amount: tournament.entryFee,
+                    currency: tournament.currency || 'INR'
+                });
+
+                const { orderId, amount, currency, keyId } = orderRes.data.data;
+
+                // 3. Open Razorpay Checkout
+                const options = {
+                    key: keyId,
+                    amount: amount,
+                    currency: currency,
+                    name: "Esports Tournament",
+                    description: `Registration for ${tournament.name}`,
+                    order_id: orderId,
+                    handler: async (response) => {
+                        try {
+                            // 4. Register team with payment details
+                            const registerData = {
+                                ...teamData,
+                                razorpayPaymentId: response.razorpay_payment_id,
+                                razorpayOrderId: response.razorpay_order_id,
+                                razorpaySignature: response.razorpay_signature
+                            };
+
+                            await teamsAPI.register(id, registerData);
+                            toast.success('Payment successful & Team registered!');
+                            setShowTeamModal(false);
+                            fetchTournamentData();
+                        } catch (err) {
+                            console.error('Registration after payment failed:', err);
+                            toast.error('Payment was successful but team registration failed. Please contact support.');
+                        }
+                    },
+                    prefill: {
+                        name: teamData.contactName || '',
+                        email: teamData.contactEmail || '',
+                        contact: teamData.contactPhone || '',
+                    },
+                    theme: {
+                        color: "#00f3ff",
+                    },
+                };
+
+                const paymentObject = new window.Razorpay(options);
+                paymentObject.open();
+            } else {
+                // Free tournament registration
+                await teamsAPI.register(id, teamData);
+                toast.success('Team registered successfully.');
+                setShowTeamModal(false);
+                fetchTournamentData();
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to register team');
         } finally {
@@ -249,8 +311,10 @@ const TournamentDetailPage = () => {
                             </div>
                             <div className="bg-dark-800/40 p-4 rounded-2xl border border-dark-600">
                                 <Zap className="w-5 h-5 text-yellow-500 mb-2" />
-                                <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">Status</p>
-                                <p className="text-white font-black text-sm uppercase">Active</p>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">Entry Fee</p>
+                                <p className={`font-black text-sm uppercase ${tournament.isPaid ? 'text-neon-pink' : 'text-neon-green'}`}>
+                                    {tournament.isPaid ? `${tournament.currency} ${tournament.entryFee}` : 'FREE'}
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ import organizationsAPI from '../../api/organizations';
 import tournamentsAPI from '../../api/tournaments';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy } from 'lucide-react';
+import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard } from 'lucide-react';
 
 const GAME_OPTIONS = [
     { value: 'free_fire', label: 'Free Fire' },
@@ -39,6 +39,8 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         maxTeams: '',
         registrationDeadline: '',
         isPublic: true,
+        isPaid: false,
+        entryFee: 0,
     });
 
     const [organizations, setOrganizations] = useState([]);
@@ -252,34 +254,74 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 </div>
             </div>
 
-            {/* Section: Visibility */}
+            {/* Section: Visibility & Payment */}
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <Globe className="w-4 h-4 text-yellow-500" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Visibility</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Visibility & Monetization</span>
                 </div>
 
-                <label className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:border-neon-blue/40 transition-all group">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
-                            <Globe className="w-5 h-5 text-yellow-500/70" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <label className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:border-neon-blue/40 transition-all group">
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
+                                <Globe className="w-5 h-5 text-yellow-500/70" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-white">Public Tournament</p>
+                                <p className="text-[11px] text-gray-500">Visible to everyone</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-bold text-white">Public Tournament</p>
-                            <p className="text-[11px] text-gray-500">Anyone can view and browse this tournament</p>
+                        <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPublic ? 'bg-neon-blue' : 'bg-white/10'}`}>
+                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-300 ${formData.isPublic ? 'left-7' : 'left-1'}`} />
+                            <input
+                                type="checkbox"
+                                name="isPublic"
+                                checked={formData.isPublic}
+                                onChange={handleChange}
+                                className="sr-only"
+                            />
                         </div>
-                    </div>
-                    <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPublic ? 'bg-neon-blue' : 'bg-white/10'}`}>
-                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-300 ${formData.isPublic ? 'left-7' : 'left-1'}`} />
-                        <input
-                            type="checkbox"
-                            name="isPublic"
-                            checked={formData.isPublic}
+                    </label>
+
+                    <label className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:border-neon-pink/40 transition-all group">
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center">
+                                <CreditCard className="w-5 h-5 text-neon-pink/70" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-white">Paid Tournament</p>
+                                <p className="text-[11px] text-gray-500">Require entry fee</p>
+                            </div>
+                        </div>
+                        <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPaid ? 'bg-neon-pink' : 'bg-white/10'}`}>
+                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-lg transition-all duration-300 ${formData.isPaid ? 'left-7' : 'left-1'}`} />
+                            <input
+                                type="checkbox"
+                                name="isPaid"
+                                checked={formData.isPaid}
+                                onChange={handleChange}
+                                className="sr-only"
+                            />
+                        </div>
+                    </label>
+                </div>
+
+                {formData.isPaid && (
+                    <div className="animate-in slide-in-from-top-2 duration-300">
+                        <Input
+                            label="Entry Fee (INR)"
+                            icon={<CreditCard className="w-3.5 h-3.5" />}
+                            type="number"
+                            name="entryFee"
+                            value={formData.entryFee}
                             onChange={handleChange}
-                            className="sr-only"
+                            placeholder="e.g. 50"
+                            min="0"
+                            required
                         />
                     </div>
-                </label>
+                )}
             </div>
 
             {/* Submit */}

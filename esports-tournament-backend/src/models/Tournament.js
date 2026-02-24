@@ -73,6 +73,20 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'prize_pool',
         },
+        isPaid: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            field: 'is_paid',
+        },
+        entryFee: {
+            type: DataTypes.DECIMAL(10, 2),
+            defaultValue: 0,
+            field: 'entry_fee',
+        },
+        currency: {
+            type: DataTypes.STRING,
+            defaultValue: 'INR',
+        },
     },
     {
         tableName: 'tournaments',

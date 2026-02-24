@@ -22,7 +22,8 @@ export async function createTournament(req, res, next) {
 
         const {
             organizationId, name, game, description, format,
-            startDate, endDate, maxTeams, registrationDeadline, isPublic
+            startDate, endDate, maxTeams, registrationDeadline, isPublic,
+            isPaid, entryFee, currency
         } = req.body;
 
         const organization = await Organization.findByPk(organizationId);
@@ -50,6 +51,9 @@ export async function createTournament(req, res, next) {
             registrationDeadline: registrationDeadline || null,
             isPublic: isPublic !== false,
             status: 'draft',
+            isPaid: isPaid === true || isPaid === 'true',
+            entryFee: entryFee || 0,
+            currency: currency || 'INR',
         };
 
         const tournament = await Tournament.create(sanitizedData);

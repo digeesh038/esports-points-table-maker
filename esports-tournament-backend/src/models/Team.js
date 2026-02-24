@@ -50,6 +50,26 @@ const Team = sequelize.define(
             defaultValue: DataTypes.NOW,
             field: 'registered_at',
         },
+        paymentStatus: {
+            type: DataTypes.ENUM('none', 'pending', 'completed', 'failed'),
+            defaultValue: 'none',
+            field: 'payment_status',
+        },
+        razorpayPaymentId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'razorpay_payment_id',
+        },
+        razorpayOrderId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'razorpay_order_id',
+        },
+        razorpaySignature: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'razorpay_signature',
+        },
     },
     {
         tableName: 'teams',

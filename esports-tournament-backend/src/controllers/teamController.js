@@ -47,6 +47,40 @@ export async function createTeam(req, res, next) {
         // Ensure at least one player is present if not provided, or use provided list
         const finalPlayers = (players && players.length > 0) ? players : [];
 
+        // Payment Verification Logic
+        let paymentStatus = 'none';
+        let razorpayDetails = {};
+
+        if (tournament.isPaid) {
+            const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
+
+            if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Payment details are required for this paid tournament'
+                });
+            }
+
+            // Verify signature
+            const crypto = await import('crypto');
+            const sign = razorpayOrderId + "|" + razorpayPaymentId;
+            const expectedSign = crypto.default
+                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your_key_secret')
+                .update(sign.toString())
+                .digest("hex");
+
+            if (razorpaySignature !== expectedSign) {
+                return res.status(400).json({ success: false, message: 'Invalid payment signature' });
+            }
+
+            paymentStatus = 'completed';
+            razorpayDetails = {
+                razorpayPaymentId,
+                razorpayOrderId,
+                razorpaySignature
+            };
+        }
+
         const team = await Team.create({
             tournamentId,
             name,
@@ -56,6 +90,8 @@ export async function createTeam(req, res, next) {
             contactName: finalName,
             contactPhone: finalPhone,
             status: 'approved',
+            paymentStatus,
+            ...razorpayDetails
         });
 
         // Create players if provided
