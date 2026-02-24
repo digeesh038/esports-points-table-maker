@@ -89,10 +89,13 @@ const StandingsOverlay = () => {
 
     const handleUpdatePoints = async () => {
         if (isGuest) return;
+        if (selectedStageId === 'overall') {
+            toast.error('Recalculation unavailable for overall view. please select a specific stage.');
+            return;
+        }
         try {
             const tid = toast.loading('Synchronizing points...');
-            const targetId = selectedStageId === 'overall' ? selectedTournamentId : selectedStageId;
-            await leaderboardAPI.recalculate(targetId);
+            await leaderboardAPI.recalculate(selectedStageId);
             await fetchStandings();
             toast.success('Scores updated.', { id: tid });
         } catch (err) {
@@ -180,41 +183,41 @@ const StandingsOverlay = () => {
                                 </motion.h1>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-10 scroll-smooth">
+                            <div className="flex-1 overflow-y-auto lg:overflow-y-auto pr-2 custom-scrollbar space-y-6 md:space-y-10 scroll-smooth">
                                 {/* Phase Navigation */}
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2 px-1 opacity-40">
                                         <LayoutGrid className="w-4 h-4 text-white" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Navigation</span>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar">
                                         <button
                                             onClick={() => setSelectedStageId('overall')}
-                                            className={`w-full text-left p-5 rounded-2xl border transition-all flex items-center justify-between group ${selectedStageId === 'overall'
+                                            className={`flex-shrink-0 md:w-full text-left p-3 md:p-5 rounded-xl md:rounded-2xl border transition-all flex items-center justify-between group ${selectedStageId === 'overall'
                                                 ? 'bg-neon-blue/10 border-neon-blue/40 text-white shadow-[0_0_25px_rgba(0,183,255,0.1)]'
                                                 : 'bg-white/5 border-white/5 text-gray-500 hover:bg-white/10 hover:border-white/10 hover:text-white'
                                                 }`}
                                         >
-                                            <div className="flex items-center gap-4">
-                                                <Trophy className={`w-4 h-4 ${selectedStageId === 'overall' ? 'text-neon-blue' : 'text-gray-700 group-hover:text-neon-blue'}`} />
-                                                <span className="font-bold uppercase tracking-tight text-sm">Overall</span>
+                                            <div className="flex items-center gap-3 md:gap-4">
+                                                <Trophy className={`w-3 h-3 md:w-4 md:h-4 ${selectedStageId === 'overall' ? 'text-neon-blue' : 'text-gray-700 group-hover:text-neon-blue'}`} />
+                                                <span className="font-bold uppercase tracking-tight text-[10px] md:text-sm">Overall</span>
                                             </div>
-                                            <ChevronRight className={`w-4 h-4 transition-transform ${selectedStageId === 'overall' ? 'translate-x-1 text-neon-blue' : 'opacity-0'}`} />
+                                            <ChevronRight className={`hidden md:block w-4 h-4 transition-transform ${selectedStageId === 'overall' ? 'translate-x-1 text-neon-blue' : 'opacity-0'}`} />
                                         </button>
                                         {tournament?.stages?.map((stage, idx) => (
                                             <button
                                                 key={stage.id}
                                                 onClick={() => setSelectedStageId(stage.id)}
-                                                className={`w-full text-left p-5 rounded-2xl border transition-all flex items-center justify-between group ${selectedStageId === stage.id
+                                                className={`flex-shrink-0 md:w-full text-left p-3 md:p-5 rounded-xl md:rounded-2xl border transition-all flex items-center justify-between group ${selectedStageId === stage.id
                                                     ? 'bg-neon-blue/10 border-neon-blue/40 text-white shadow-[0_0_25px_rgba(0,183,255,0.1)]'
                                                     : 'bg-white/5 border-white/5 text-gray-500 hover:bg-white/10 hover:border-white/10 hover:text-white'
                                                     }`}
                                             >
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 md:gap-4">
                                                     <span className={`text-[10px] font-mono font-black ${selectedStageId === stage.id ? 'text-neon-blue' : 'text-gray-700'}`}>0{idx + 1}</span>
-                                                    <span className="font-bold text-sm tracking-tight uppercase truncate">{stage.name}</span>
+                                                    <span className="font-bold text-[10px] md:text-sm tracking-tight uppercase truncate max-w-[80px] md:max-w-none">{stage.name}</span>
                                                 </div>
-                                                {selectedStageId === stage.id && <div className="w-1.5 h-1.5 bg-neon-blue rounded-full shadow-[0_0_10px_rgba(0,183,255,0.8)]"></div>}
+                                                {selectedStageId === stage.id && <div className="hidden md:block w-1.5 h-1.5 bg-neon-blue rounded-full shadow-[0_0_10px_rgba(0,183,255,0.8)]"></div>}
                                             </button>
                                         ))}
                                     </div>
@@ -226,7 +229,7 @@ const StandingsOverlay = () => {
                                         <Target className="w-4 h-4 text-white" />
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Switch Context</span>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar">
                                         {tournaments.map((t) => (
                                             <button
                                                 key={t.id}
@@ -234,7 +237,7 @@ const StandingsOverlay = () => {
                                                     setSelectedTournamentId(t.id);
                                                     setSelectedStageId('overall');
                                                 }}
-                                                className={`w-full text-left px-5 py-4 rounded-xl border transition-all text-[11px] font-black uppercase tracking-tight truncate ${selectedTournamentId === t.id
+                                                className={`flex-shrink-0 md:w-full text-left px-4 md:px-5 py-3 md:py-4 rounded-lg md:rounded-xl border transition-all text-[10px] md:text-[11px] font-black uppercase tracking-tight truncate max-w-[120px] md:max-w-none ${selectedTournamentId === t.id
                                                     ? 'bg-dark-800 border-neon-blue/30 text-neon-blue shadow-lg'
                                                     : 'bg-white/3 border-white/3 text-gray-600 hover:text-gray-400 hover:border-white/10'
                                                     }`}
@@ -297,9 +300,13 @@ const StandingsOverlay = () => {
                                         {!isGuest && (
                                             <button
                                                 onClick={handleUpdatePoints}
-                                                className="px-4 md:px-8 h-10 md:h-12 bg-neon-blue text-black font-black text-[10px] tracking-widest hover:bg-white transition-all flex items-center gap-3 uppercase rounded-xl shadow-[0_0_30px_rgba(0,183,255,0.3)] group active:scale-95 whitespace-nowrap"
+                                                disabled={selectedStageId === 'overall'}
+                                                className={`px-4 md:px-8 h-10 md:h-12 font-black text-[10px] tracking-widest transition-all flex items-center gap-3 uppercase rounded-xl shadow-[0_0_30px_rgba(0,183,255,0.3)] group active:scale-95 whitespace-nowrap ${selectedStageId === 'overall'
+                                                    ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-white/5'
+                                                    : 'bg-neon-blue text-black hover:bg-white animate-in slide-in-from-right duration-500'
+                                                    }`}
                                             >
-                                                <Zap className="w-4 h-4 group-hover:animate-bounce" />
+                                                <Zap className={`w-4 h-4 ${selectedStageId !== 'overall' ? 'group-hover:animate-bounce' : ''}`} />
                                                 <span className="sm:inline">Update Node</span>
                                             </button>
                                         )}
