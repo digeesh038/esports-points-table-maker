@@ -57,22 +57,34 @@ const ProfilePage = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-8 pb-20"
+            className="space-y-10 pb-20 relative"
         >
-            {/* Holographic Header */}
-            <motion.div variants={itemVariants} className="relative">
-                <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-neon-blue via-neon-purple to-transparent hidden md:block"></div>
-                <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic uppercase tracking-tighter flex items-center gap-4">
-                    <Terminal className="w-8 h-8 md:w-12 md:h-12 text-neon-blue" />
-                    Operative Profile
-                </h1>
-                <div className="flex items-center gap-3 mt-2">
-                    <div className="flex gap-1">
-                        {[1, 2, 3].map(i => <div key={i} className="w-1 md:w-2 h-1 bg-neon-blue/30 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.2}s` }}></div>)}
+            {/* Ambient Background Glows */}
+            <div className="absolute top-0 -right-20 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-40 -left-20 w-[500px] h-[500px] bg-neon-purple/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+            {/* Elite Header */}
+            <motion.div variants={itemVariants} className="relative z-10">
+                <div className="flex items-center gap-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-neon-blue/20 blur-xl animate-pulse"></div>
+                        <Terminal className="w-12 h-12 text-neon-blue relative drop-shadow-[0_0_10px_#00f0ff]" />
                     </div>
-                    <p className="text-gray-400 text-xs md:text-base font-mono uppercase tracking-widest opacity-60">
-                        {isGuest ? 'AUTH_STATUS: TEMPORARY_VISITOR' : 'AUTH_STATUS: ESTABLISHED_NODE'}
-                    </p>
+                    <div>
+                        <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-white to-white/30 bg-clip-text text-transparent italic uppercase tracking-tighter">
+                            Operative Profile
+                        </h1>
+                        <div className="flex items-center gap-4 mt-2">
+                            <div className="flex gap-1.5">
+                                {[1, 2, 3, 4, 5].map(i => (
+                                    <div key={i} className={`w-3 h-1 rounded-full ${i <= 3 ? 'bg-neon-blue shadow-[0_0_8px_#00f0ff]' : 'bg-white/10'}`}></div>
+                                ))}
+                            </div>
+                            <span className="text-[10px] md:text-xs font-mono font-bold text-neon-blue/60 uppercase tracking-[0.4em] animate-pulse">
+                                System Status: Optimized
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </motion.div>
 
@@ -123,11 +135,19 @@ const ProfilePage = () => {
                                 </div>
                             </div>
 
-                            <div className="relative px-6 py-1.5 overflow-hidden rounded-md border border-neon-purple/30 bg-neon-purple/10 mb-8">
-                                <span className="relative z-10 text-neon-purple font-mono text-[10px] md:text-xs font-black tracking-[0.2em] uppercase">
-                                    {isGuest ? 'GUEST_PROTO_USER' : (user?.role === 'admin' ? 'SYSTEM_ADMINISTRATOR' : 'ORGANIZATION_LEADER')}
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+                            <div className="w-full space-y-4 mb-8">
+                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                    <span>System Reputation</span>
+                                    <span className="text-neon-blue">Elite</span>
+                                </div>
+                                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: "85%" }}
+                                        transition={{ duration: 1.5, ease: "easeOut" }}
+                                        className="h-full bg-gradient-to-r from-neon-blue to-neon-purple shadow-[0_0_15px_#00f0ff]"
+                                    ></motion.div>
+                                </div>
                             </div>
 
                             <button
@@ -162,10 +182,13 @@ const ProfilePage = () => {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-neon-blue/5 rounded-full blur-3xl"></div>
 
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-xl font-black text-white flex items-center italic tracking-tight">
-                                <Shield className="w-6 h-6 text-neon-blue mr-3" />
-                                SECURITY_DOSSIER
-                            </h3>
+                            <div>
+                                <h3 className="text-xl font-black text-white flex items-center italic tracking-tight uppercase">
+                                    <Shield className="w-6 h-6 text-neon-blue mr-3 drop-shadow-[0_0_8px_#00f0ff]" />
+                                    Security Dossier
+                                </h3>
+                                <p className="text-gray-500 text-[10px] font-mono mt-1 tracking-widest">VERIFIED_PROTOCOL_ECHO_7</p>
+                            </div>
                             <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-6"></div>
                         </div>
 
@@ -219,24 +242,25 @@ const ProfilePage = () => {
                     {/* Operational Metrics (DYNAMIC) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Status Panel */}
-                        <Card className={`p-8 border relative overflow-hidden flex flex-col justify-center min-h-[160px] ${isGuest ? 'bg-neon-blue/5 border-neon-blue/20' : 'bg-yellow-500/5 border-yellow-500/20'}`}>
-                            <div className="absolute top-2 right-2 opacity-5">
-                                {isGuest ? <Shield className="w-32 h-32" /> : <Award className="w-32 h-32" />}
-                            </div>
+                        <motion.div
+                            whileHover={{ y: -5 }}
+                            className={`p-8 border relative overflow-hidden flex flex-col justify-center min-h-[160px] rounded-[32px] shadow-2xl ${isGuest ? 'bg-neon-blue/5 border-neon-blue/20' : 'bg-[#1a1500] border-yellow-500/30'}`}
+                        >
+                            <div className={`absolute top-0 right-0 w-32 h-32 blur-[60px] rounded-full ${isGuest ? 'bg-neon-blue/10' : 'bg-yellow-500/10'}`}></div>
                             <div className="flex items-start gap-4 relative z-10">
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border ${isGuest ? 'bg-neon-blue/10 border-neon-blue/20 text-neon-blue' : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'}`}>
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border-2 ${isGuest ? 'bg-neon-blue/10 border-neon-blue/20 text-neon-blue' : 'bg-yellow-500/10 border-yellow-500/40 text-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.3)]'}`}>
                                     {isGuest ? <Shield className="w-7 h-7" /> : <Award className="w-7 h-7" />}
                                 </div>
                                 <div className="flex-1">
                                     <h4 className={`font-black text-lg md:text-xl uppercase italic tracking-tighter ${isGuest ? 'text-neon-blue' : 'text-yellow-500'}`}>
-                                        {isGuest ? 'RESTRICTED_MODE' : 'PRO_LICENSE_ACTIVE'}
+                                        {isGuest ? 'Restricted Mode' : 'Pro License Active'}
                                     </h4>
-                                    <p className="text-gray-400 text-xs mt-1 font-medium leading-relaxed">
-                                        {isGuest ? 'System is running in simulation. Profile data will not be persisted.' : 'Total access to tournament cloud authorized. Match processing tools active.'}
+                                    <p className="text-gray-400 text-[10px] md:text-xs mt-1 font-medium leading-relaxed opacity-80 uppercase tracking-widest">
+                                        {isGuest ? 'Sandbox mode enabled. Persistence disabled.' : 'Full access to tournament command authorized.'}
                                     </p>
                                 </div>
                             </div>
-                        </Card>
+                        </motion.div>
 
                         {/* Real Stats Panel */}
                         <Card className="bg-dark-800/40 border-white/5 p-8 flex flex-col justify-center">
