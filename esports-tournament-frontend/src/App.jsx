@@ -45,6 +45,7 @@ function App() {
                             </Route>
 
                             {/* 🔐 Auth */}
+                            <Route path="/login" element={<GoogleSignInPage />} />
                             <Route path="/auth" element={<GoogleSignInPage />} />
                             <Route path="/signup" element={<GoogleSignInPage />} />
 
