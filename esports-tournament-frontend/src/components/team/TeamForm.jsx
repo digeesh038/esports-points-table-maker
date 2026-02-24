@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity } from 'lucide-react';
+import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity, Receipt, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
@@ -15,9 +15,16 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
         players: [
             { inGameName: '', inGameId: '', role: '' }
         ],
+        paymentProof: '',
     });
 
     const [logoPreview, setLogoPreview] = useState(null);
+    const [proofPreview, setProofPreview] = useState(null);
+    const [showPaymentInfo, setShowPaymentInfo] = useState(false);
+
+    // Find current tournament if ID is selected
+    const selectedT = tournaments.find(t => t.id === formData.tournamentId);
+    const isManualPayment = selectedT?.isPaid && selectedT?.paymentMethod === 'manual';
 
     const handleChange = (e) => {
         setFormData({
@@ -53,6 +60,28 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
         setLogoPreview(null);
     };
 
+    const handleProofChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error('Proof file size must be less than 2MB');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                setFormData({ ...formData, paymentProof: base64String });
+                setProofPreview(base64String);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeProof = () => {
+        setFormData({ ...formData, paymentProof: '' });
+        setProofPreview(null);
+    };
+
     const handlePlayerChange = (index, field, value) => {
         const updatedPlayers = [...formData.players];
         updatedPlayers[index][field] = value;
@@ -81,6 +110,11 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
 
         if (!formData.logo) {
             toast.error('Team logo is mandatory');
+            return;
+        }
+
+        if (isManualPayment && !formData.paymentProof) {
+            toast.error('Payment proof screenshot is required');
             return;
         }
 
@@ -307,6 +341,76 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                     ))}
                 </div>
             </div>
+
+            {/* --- PAYMENT PROOF (Conditional) --- */}
+            {isManualPayment && (
+                <div className="relative p-8 bg-dark-900/40 rounded-[2.5rem] border border-neon-purple/20 overflow-hidden animate-in zoom-in-95 duration-500">
+                    <div className="absolute top-0 right-0 p-8 opacity-5">
+                        <Receipt className="w-24 h-24 text-neon-purple" />
+                    </div>
+
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="p-3 bg-neon-purple/10 rounded-2xl border border-neon-purple/30 shadow-[0_0_15px_rgba(188,19,254,0.1)]">
+                            <QrCode className="w-5 h-5 text-neon-purple" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Manual Payment</h3>
+                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">FOLLOW INSTRUCTIONS BELOW</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="bg-black/60 p-6 rounded-3xl border border-white/5 space-y-3">
+                            <p className="text-[10px] font-black text-neon-purple uppercase tracking-widest">Organizer Instructions:</p>
+                            <p className="text-sm text-gray-300 leading-relaxed font-medium">
+                                {selectedT.paymentInstructions || 'Please contact organizer for payment details.'}
+                            </p>
+                            <div className="pt-2">
+                                <span className="text-[10px] font-black text-neon-pink uppercase">Amount Due: </span>
+                                <span className="text-xl font-black text-white italic">{selectedT.currency} {selectedT.entryFee}</span>
+                            </div>
+
+                            {selectedT.paymentQrCode && (
+                                <div className="mt-6 p-4 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center gap-3">
+                                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Scan QR to Pay</p>
+                                    <div className="p-3 bg-white rounded-xl">
+                                        <img src={selectedT.paymentQrCode} alt="Payment QR" className="w-32 h-32 object-contain" />
+                                    </div>
+                                    <p className="text-[8px] text-gray-600 font-mono text-center">SCAN USING ANY UPI/BANK APP</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 ml-1">
+                                Upload Payment Screenshot <span className="text-neon-pink">*</span>
+                            </label>
+
+                            {proofPreview ? (
+                                <div className="relative group/proof rounded-3xl overflow-hidden border border-neon-purple/30 bg-black/40 p-4 flex items-center gap-6">
+                                    <img src={proofPreview} alt="Payment Proof" className="w-20 h-20 object-cover rounded-xl border border-white/10" />
+                                    <div>
+                                        <p className="text-xs font-black text-white uppercase tracking-widest mb-1">Screenshot Uploaded</p>
+                                        <button
+                                            type="button"
+                                            onClick={removeProof}
+                                            className="text-[10px] text-red-500 hover:underline uppercase font-bold"
+                                        >
+                                            Remove & Change
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-neon-purple/20 rounded-[2.5rem] cursor-pointer hover:border-neon-purple/50 hover:bg-neon-purple/[0.03] transition-all bg-black/20 group/upload">
+                                    <Upload className="w-6 h-6 text-neon-purple mb-2 group-hover/upload:scale-110 transition-transform" />
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest group-hover/upload:text-white">Select Screenshot</span>
+                                    <input type="file" accept="image/*" onChange={handleProofChange} className="hidden" />
+                                </label>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="pt-6">
                 <button

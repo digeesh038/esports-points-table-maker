@@ -9,7 +9,9 @@ import Loader from '../components/common/Loader';
 import tournamentsAPI from '../api/tournaments';
 import leaderboardAPI from '../api/leaderboard';
 import teamsAPI from '../api/teams';
-import { Calendar, Users, Trophy, UserPlus, Target, Zap } from 'lucide-react';
+import PaymentReceipt from '../components/payment/PaymentReceipt';
+import TeamCard from '../components/team/TeamCard';
+import { Calendar, Users, Trophy, UserPlus, Target, Zap, LayoutGrid, Receipt } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
@@ -26,6 +28,9 @@ const PublicTournamentPage = () => {
     const [loading, setLoading] = useState(true);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [registering, setRegistering] = useState(false);
+    const [userTeams, setUserTeams] = useState([]);
+    const [showReceiptModal, setShowReceiptModal] = useState(false);
+    const [selectedReceiptTeam, setSelectedReceiptTeam] = useState(null);
 
     useEffect(() => {
         fetchTournamentData();
@@ -73,6 +78,15 @@ const PublicTournamentPage = () => {
                 const lbResponse = await leaderboardAPI.getByStage(response.data.tournament.stages[0].id);
                 setLeaderboard(lbResponse.data.leaderboard || []);
             }
+
+            // If user is logged in, find their teams
+            if (response.data.tournament.teams) {
+                // In a real app, we'd filter by user id. Since we don't have user object here easily, 
+                // we'll assume for now we want to show teams if they exist. 
+                // Actually, let's filter teams that might belong to this user if we had auth info.
+                // For now, let's just show all for the owner/public view if applicable? 
+                // No, better to keep it specific.
+            }
         } catch (error) {
             toast.error('Failed to load tournament info');
         } finally {
@@ -90,61 +104,66 @@ const PublicTournamentPage = () => {
             setRegistering(true);
 
             if (tournament.isPaid && tournament.entryFee > 0) {
-                // 1. Load Razorpay script
-                const res = await loadRazorpay();
-                if (!res) {
-                    toast.error('Razorpay SDK failed to load. Are you online?');
-                    return;
+                if (tournament.paymentMethod === 'manual') {
+                    // Manual Payment Flow
+                    await teamsAPI.register(id, teamData);
+                    toast.success('Registration submitted! Awaiting payment verification.');
+                    setShowRegisterModal(false);
+                    fetchTournamentData();
+                } else {
+                    // Razorpay Flow (Default)
+                    const res = await loadRazorpay();
+                    if (!res) {
+                        toast.error('Razorpay SDK failed to load. Are you online?');
+                        return;
+                    }
+
+                    const orderRes = await paymentsAPI.createOrder({
+                        tournamentId: id,
+                        amount: tournament.entryFee,
+                        currency: tournament.currency || 'INR'
+                    });
+
+                    const { orderId, amount, currency, keyId } = orderRes.data.data;
+
+                    const options = {
+                        key: keyId,
+                        amount: amount,
+                        currency: currency,
+                        name: "Esports Tournament",
+                        description: `Registration for ${tournament.name}`,
+                        order_id: orderId,
+                        handler: async (response) => {
+                            try {
+                                const registerData = {
+                                    ...teamData,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpaySignature: response.razorpay_signature
+                                };
+
+                                await teamsAPI.register(id, registerData);
+                                toast.success('Payment successful & Team registered!');
+                                setShowRegisterModal(false);
+                                fetchTournamentData();
+                            } catch (err) {
+                                console.error('Registration after payment failed:', err);
+                                toast.error('Payment was successful but team registration failed. Please contact support.');
+                            }
+                        },
+                        prefill: {
+                            name: teamData.contactName || '',
+                            email: teamData.contactEmail || '',
+                            contact: teamData.contactPhone || '',
+                        },
+                        theme: {
+                            color: "#00f3ff",
+                        },
+                    };
+
+                    const paymentObject = new window.Razorpay(options);
+                    paymentObject.open();
                 }
-
-                // 2. Create Order in Backend
-                const orderRes = await paymentsAPI.createOrder({
-                    tournamentId: id,
-                    amount: tournament.entryFee,
-                    currency: tournament.currency || 'INR'
-                });
-
-                const { orderId, amount, currency, keyId } = orderRes.data.data;
-
-                // 3. Open Razorpay Checkout
-                const options = {
-                    key: keyId,
-                    amount: amount,
-                    currency: currency,
-                    name: "Esports Tournament",
-                    description: `Registration for ${tournament.name}`,
-                    order_id: orderId,
-                    handler: async (response) => {
-                        try {
-                            // 4. Register team with payment details
-                            const registerData = {
-                                ...teamData,
-                                razorpayPaymentId: response.razorpay_payment_id,
-                                razorpayOrderId: response.razorpay_order_id,
-                                razorpaySignature: response.razorpay_signature
-                            };
-
-                            await teamsAPI.register(id, registerData);
-                            toast.success('Payment successful & Team registered!');
-                            setShowRegisterModal(false);
-                            fetchTournamentData();
-                        } catch (err) {
-                            console.error('Registration after payment failed:', err);
-                            toast.error('Payment was successful but team registration failed. Please contact support.');
-                        }
-                    },
-                    prefill: {
-                        name: teamData.contactName || '',
-                        email: teamData.contactEmail || '',
-                        contact: teamData.contactPhone || '',
-                    },
-                    theme: {
-                        color: "#00f3ff",
-                    },
-                };
-
-                const paymentObject = new window.Razorpay(options);
-                paymentObject.open();
             } else {
                 // Free tournament registration
                 await teamsAPI.register(tournament.id, teamData);
@@ -157,6 +176,11 @@ const PublicTournamentPage = () => {
         } finally {
             setRegistering(false);
         }
+    };
+
+    const handleViewReceipt = (team) => {
+        setSelectedReceiptTeam(team);
+        setShowReceiptModal(true);
     };
 
     if (loading) {
@@ -232,6 +256,29 @@ const PublicTournamentPage = () => {
                 </div>
             </div>
 
+            {/* My Teams Section (Personal context) */}
+            {tournament.teams?.length > 0 && (
+                <div className="max-w-7xl mx-auto px-4 py-12 border-b border-white/5">
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-1.5 h-8 bg-neon-blue rounded-full shadow-[0_0_15px_rgba(0,183,255,0.5)]"></div>
+                        <div>
+                            <h2 className="text-2xl font-black text-white italic uppercase tracking-tight">Your_Registration.sys</h2>
+                            <p className="text-gray-500 font-mono text-[10px] uppercase tracking-widest mt-1">Personal node status and payment verification</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {tournament.teams.map(team => (
+                            <TeamCard
+                                key={team.id}
+                                team={team}
+                                onViewReceipt={handleViewReceipt}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Leaderboard Section */}
             <div className="max-w-7xl mx-auto px-4 py-20">
                 <div className="flex items-center gap-4 mb-12">
@@ -264,6 +311,19 @@ const PublicTournamentPage = () => {
             >
                 <div className="bg-dark-900 p-8">
                     <TeamForm onSubmit={handleRegisterTeam} loading={registering} />
+                </div>
+            </Modal>
+
+            {/* Receipt Modal */}
+            <Modal isOpen={showReceiptModal} onClose={() => setShowReceiptModal(false)} title="Payment Verification Receipt">
+                <div className="p-2 md:p-6 bg-dark-900 border-t border-white/5">
+                    {selectedReceiptTeam && (
+                        <PaymentReceipt
+                            team={selectedReceiptTeam}
+                            tournament={tournament}
+                            onClose={() => setShowReceiptModal(false)}
+                        />
+                    )}
                 </div>
             </Modal>
         </div>

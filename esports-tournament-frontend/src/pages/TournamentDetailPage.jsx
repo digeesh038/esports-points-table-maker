@@ -9,6 +9,7 @@ import StageForm from '../components/tournament/StageForm';
 import TeamList from '../components/team/TeamList';
 import RosterManager from '../components/team/RosterManager';
 import TeamForm from '../components/team/TeamForm';
+import PaymentReceipt from '../components/payment/PaymentReceipt';
 import Button from '../components/common/Button';
 import apiClient from '../api/client';
 import { Calendar, Users, Trophy, Plus, Target, Zap, UserPlus, Trash2 } from 'lucide-react';
@@ -30,6 +31,8 @@ const TournamentDetailPage = () => {
     const [selectedTeamId, setSelectedTeamId] = useState(null);
     const [creatingStage, setCreatingStage] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [showReceiptModal, setShowReceiptModal] = useState(false);
+    const [selectedReceiptTeam, setSelectedReceiptTeam] = useState(null);
 
     const activeTeam = teams.find(t => t.id === selectedTeamId);
 
@@ -119,61 +122,66 @@ const TournamentDetailPage = () => {
             setSubmitting(true);
 
             if (tournament.isPaid && tournament.entryFee > 0) {
-                // 1. Load Razorpay script
-                const res = await loadRazorpay();
-                if (!res) {
-                    toast.error('Razorpay SDK failed to load. Are you online?');
-                    return;
+                if (tournament.paymentMethod === 'manual') {
+                    // Manual Payment Flow
+                    await teamsAPI.register(id, teamData);
+                    toast.success('Registration submitted! Awaiting payment verification.');
+                    setShowTeamModal(false);
+                    fetchTournamentData();
+                } else {
+                    // Razorpay Flow (Default)
+                    const res = await loadRazorpay();
+                    if (!res) {
+                        toast.error('Razorpay SDK failed to load. Are you online?');
+                        return;
+                    }
+
+                    const orderRes = await paymentsAPI.createOrder({
+                        tournamentId: id,
+                        amount: tournament.entryFee,
+                        currency: tournament.currency || 'INR'
+                    });
+
+                    const { orderId, amount, currency, keyId } = orderRes.data.data;
+
+                    const options = {
+                        key: keyId,
+                        amount: amount,
+                        currency: currency,
+                        name: "Esports Tournament",
+                        description: `Registration for ${tournament.name}`,
+                        order_id: orderId,
+                        handler: async (response) => {
+                            try {
+                                const registerData = {
+                                    ...teamData,
+                                    razorpayPaymentId: response.razorpay_payment_id,
+                                    razorpayOrderId: response.razorpay_order_id,
+                                    razorpaySignature: response.razorpay_signature
+                                };
+
+                                await teamsAPI.register(id, registerData);
+                                toast.success('Payment successful & Team registered!');
+                                setShowTeamModal(false);
+                                fetchTournamentData();
+                            } catch (err) {
+                                console.error('Registration after payment failed:', err);
+                                toast.error('Payment was successful but team registration failed. Please contact support.');
+                            }
+                        },
+                        prefill: {
+                            name: teamData.contactName || '',
+                            email: teamData.contactEmail || '',
+                            contact: teamData.contactPhone || '',
+                        },
+                        theme: {
+                            color: "#00f3ff",
+                        },
+                    };
+
+                    const paymentObject = new window.Razorpay(options);
+                    paymentObject.open();
                 }
-
-                // 2. Create Order in Backend
-                const orderRes = await paymentsAPI.createOrder({
-                    tournamentId: id,
-                    amount: tournament.entryFee,
-                    currency: tournament.currency || 'INR'
-                });
-
-                const { orderId, amount, currency, keyId } = orderRes.data.data;
-
-                // 3. Open Razorpay Checkout
-                const options = {
-                    key: keyId,
-                    amount: amount,
-                    currency: currency,
-                    name: "Esports Tournament",
-                    description: `Registration for ${tournament.name}`,
-                    order_id: orderId,
-                    handler: async (response) => {
-                        try {
-                            // 4. Register team with payment details
-                            const registerData = {
-                                ...teamData,
-                                razorpayPaymentId: response.razorpay_payment_id,
-                                razorpayOrderId: response.razorpay_order_id,
-                                razorpaySignature: response.razorpay_signature
-                            };
-
-                            await teamsAPI.register(id, registerData);
-                            toast.success('Payment successful & Team registered!');
-                            setShowTeamModal(false);
-                            fetchTournamentData();
-                        } catch (err) {
-                            console.error('Registration after payment failed:', err);
-                            toast.error('Payment was successful but team registration failed. Please contact support.');
-                        }
-                    },
-                    prefill: {
-                        name: teamData.contactName || '',
-                        email: teamData.contactEmail || '',
-                        contact: teamData.contactPhone || '',
-                    },
-                    theme: {
-                        color: "#00f3ff",
-                    },
-                };
-
-                const paymentObject = new window.Razorpay(options);
-                paymentObject.open();
             } else {
                 // Free tournament registration
                 await teamsAPI.register(id, teamData);
@@ -188,7 +196,10 @@ const TournamentDetailPage = () => {
         }
     };
 
-
+    const handleViewReceipt = (team) => {
+        setSelectedReceiptTeam(team);
+        setShowReceiptModal(true);
+    };
 
     const handleApproveTeam = async (teamId) => {
         if (isGuest) return;
@@ -456,6 +467,7 @@ const TournamentDetailPage = () => {
                                     onReject={handleRejectTeam}
                                     onDelete={handleDeleteTeam}
                                     onAddPlayer={handleManageRoster}
+                                    onViewReceipt={handleViewReceipt}
                                     className="grid grid-cols-1 gap-6"
                                 />
                             </div>
@@ -478,6 +490,19 @@ const TournamentDetailPage = () => {
                         <RosterManager
                             team={activeTeam}
                             onUpdate={fetchTournamentData}
+                        />
+                    )}
+                </div>
+            </Modal>
+
+            {/* Receipt Modal */}
+            <Modal isOpen={showReceiptModal} onClose={() => setShowReceiptModal(false)} title="Payment Verification Receipt">
+                <div className="p-2 md:p-6 bg-dark-900 border-t border-white/5">
+                    {selectedReceiptTeam && (
+                        <PaymentReceipt
+                            team={selectedReceiptTeam}
+                            tournament={tournament}
+                            onClose={() => setShowReceiptModal(false)}
                         />
                     )}
                 </div>

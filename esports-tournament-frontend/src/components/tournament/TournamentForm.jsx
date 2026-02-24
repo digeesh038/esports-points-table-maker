@@ -8,7 +8,7 @@ import organizationsAPI from '../../api/organizations';
 import tournamentsAPI from '../../api/tournaments';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard } from 'lucide-react';
+import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard, QrCode, Upload, X } from 'lucide-react';
 
 const GAME_OPTIONS = [
     { value: 'free_fire', label: 'Free Fire' },
@@ -41,7 +41,12 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         isPublic: true,
         isPaid: false,
         entryFee: 0,
+        paymentMethod: 'razorpay',
+        paymentInstructions: '',
+        paymentQrCode: '',
     });
+
+    const [qrPreview, setQrPreview] = useState(null);
 
     const [organizations, setOrganizations] = useState([]);
     const [loadingOrgs, setLoadingOrgs] = useState(true);
@@ -85,6 +90,28 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
             ...formData,
             [name]: type === 'checkbox' ? checked : value,
         });
+    };
+
+    const handleQrChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                toast.error('QR code file size must be less than 2MB');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                setFormData({ ...formData, paymentQrCode: base64String });
+                setQrPreview(base64String);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeQr = () => {
+        setFormData({ ...formData, paymentQrCode: '' });
+        setQrPreview(null);
     };
 
     const handleSubmit = (e) => {
@@ -308,7 +335,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 </div>
 
                 {formData.isPaid && (
-                    <div className="animate-in slide-in-from-top-2 duration-300">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-in slide-in-from-top-2 duration-300">
                         <Input
                             label="Entry Fee (INR)"
                             icon={<CreditCard className="w-3.5 h-3.5" />}
@@ -320,6 +347,58 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                             min="0"
                             required
                         />
+                        <Select
+                            label="Payment Collection Method"
+                            icon={<CreditCard className="w-3.5 h-3.5" />}
+                            name="paymentMethod"
+                            value={formData.paymentMethod}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="razorpay">Razorpay (Automatic)</option>
+                            <option value="manual">Manual (QR / UPI / Bank)</option>
+                        </Select>
+
+                        {formData.paymentMethod === 'manual' && (
+                            <div className="md:col-span-2">
+                                <Textarea
+                                    label="Payment Instructions (e.g. UPI ID or QR Link)"
+                                    icon={<QrCode className="w-3.5 h-3.5" />}
+                                    name="paymentInstructions"
+                                    value={formData.paymentInstructions}
+                                    onChange={handleChange}
+                                    placeholder="Enter your UPI ID or payment details where teams should pay."
+                                    rows={3}
+                                    required
+                                />
+                                <div className="mt-4">
+                                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 mb-2">
+                                        Upload QR Code (Optional)
+                                    </label>
+                                    {qrPreview ? (
+                                        <div className="relative inline-block group/qr">
+                                            <img src={qrPreview} alt="QR Preview" className="w-24 h-24 rounded-2xl border border-white/10 shadow-lg" />
+                                            <button
+                                                type="button"
+                                                onClick={removeQr}
+                                                className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all opacity-0 group-hover/qr:opacity-100"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <label className="flex items-center gap-3 p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-neon-purple/50 transition-all group">
+                                            <Upload className="w-5 h-5 text-gray-500 group-hover:text-neon-purple" />
+                                            <span className="text-[10px] font-black text-gray-500 group-hover:text-white uppercase">Upload QR Graphic</span>
+                                            <input type="file" accept="image/*" onChange={handleQrChange} className="hidden" />
+                                        </label>
+                                    )}
+                                </div>
+                                <p className="mt-2 text-[10px] font-mono text-gray-500 uppercase italic">
+                                    Teams will be asked to upload a screenshot of their transaction.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

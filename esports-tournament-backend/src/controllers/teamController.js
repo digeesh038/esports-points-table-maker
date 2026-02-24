@@ -50,35 +50,47 @@ export async function createTeam(req, res, next) {
         // Payment Verification Logic
         let paymentStatus = 'none';
         let razorpayDetails = {};
+        let finalPaymentMethod = tournament.paymentMethod || 'razorpay';
+        let paymentProof = req.body.paymentProof || null;
 
         if (tournament.isPaid) {
-            const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
+            if (finalPaymentMethod === 'razorpay') {
+                const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
 
-            if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Payment details are required for this paid tournament'
-                });
+                if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Payment details are required for this paid tournament'
+                    });
+                }
+
+                // Verify signature
+                const crypto = await import('crypto');
+                const sign = razorpayOrderId + "|" + razorpayPaymentId;
+                const expectedSign = crypto.default
+                    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your_key_secret')
+                    .update(sign.toString())
+                    .digest("hex");
+
+                if (razorpaySignature !== expectedSign) {
+                    return res.status(400).json({ success: false, message: 'Invalid payment signature' });
+                }
+
+                paymentStatus = 'completed';
+                razorpayDetails = {
+                    razorpayPaymentId,
+                    razorpayOrderId,
+                    razorpaySignature
+                };
+            } else if (finalPaymentMethod === 'manual') {
+                if (!paymentProof) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Payment proof (screenshot) is required for manual payment'
+                    });
+                }
+                paymentStatus = 'pending'; // Admin needs to verify
             }
-
-            // Verify signature
-            const crypto = await import('crypto');
-            const sign = razorpayOrderId + "|" + razorpayPaymentId;
-            const expectedSign = crypto.default
-                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your_key_secret')
-                .update(sign.toString())
-                .digest("hex");
-
-            if (razorpaySignature !== expectedSign) {
-                return res.status(400).json({ success: false, message: 'Invalid payment signature' });
-            }
-
-            paymentStatus = 'completed';
-            razorpayDetails = {
-                razorpayPaymentId,
-                razorpayOrderId,
-                razorpaySignature
-            };
         }
 
         const team = await Team.create({
@@ -89,8 +101,10 @@ export async function createTeam(req, res, next) {
             contactEmail: finalEmail,
             contactName: finalName,
             contactPhone: finalPhone,
-            status: 'approved',
+            status: finalPaymentMethod === 'manual' ? 'pending' : 'approved',
             paymentStatus,
+            paymentMethod: finalPaymentMethod,
+            paymentProof,
             ...razorpayDetails
         });
 

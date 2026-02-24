@@ -70,6 +70,16 @@ const Team = sequelize.define(
             allowNull: true,
             field: 'razorpay_signature',
         },
+        paymentMethod: {
+            type: DataTypes.ENUM('razorpay', 'manual'),
+            defaultValue: 'razorpay',
+            field: 'payment_method',
+        },
+        paymentProof: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            field: 'payment_proof',
+        },
     },
     {
         tableName: 'teams',
