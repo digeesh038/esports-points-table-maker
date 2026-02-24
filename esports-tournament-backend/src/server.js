@@ -23,9 +23,43 @@ const startServer = async () => {
         // 1. Test database connection
         await testConnection();
 
-        // 2. Sync database tables
+        // 2a. Pre-sync: add 'none' to payment_method ENUMs outside transaction
+        //     PostgreSQL requires ALTER TYPE ADD VALUE to run outside a transaction block.
+        const enumFixes = [
+            `DO $$ BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM pg_enum
+                    WHERE enumlabel = 'none'
+                    AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'enum_teams_payment_method')
+                ) THEN
+                    ALTER TYPE enum_teams_payment_method ADD VALUE 'none';
+                END IF;
+            EXCEPTION WHEN undefined_object THEN null;
+            END $$;`,
+            `DO $$ BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM pg_enum
+                    WHERE enumlabel = 'none'
+                    AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'enum_tournaments_payment_method')
+                ) THEN
+                    ALTER TYPE enum_tournaments_payment_method ADD VALUE 'none';
+                END IF;
+            EXCEPTION WHEN undefined_object THEN null;
+            END $$;`,
+        ];
+        for (const sql of enumFixes) {
+            try {
+                await sequelize.query(sql);
+            } catch (e) {
+                console.warn('⚠️  Enum pre-fix skipped (may already exist):', e.message);
+            }
+        }
+        console.log('✅ Enum types checked/updated\n');
+
+        // 2b. Sync database tables
         await sequelize.sync({ alter: true });
         console.log('✅ Database tables synced successfully\n');
+
 
         // 3. Start HTTP server
         server.listen(PORT, () => {
