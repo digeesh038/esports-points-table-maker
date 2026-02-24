@@ -1,17 +1,13 @@
-import apiClient from './client';
+import axiosInstance from './axiosInstance';
 
 const paymentsAPI = {
-    // Create a Razorpay order for team entry fee
-    createOrder: (data) => apiClient.post('/payments/create-order', data),
+    // Get UPI ID + entry fee info for a tournament
+    getPaymentInfo: (tournamentId) =>
+        axiosInstance.get(`/payments/info/${tournamentId}`),
 
-    // Create a Razorpay order for platform activation fee (organizer)
-    createPlatformOrder: (data) => apiClient.post('/payments/platform-order', data),
-
-    // Verify HMAC signature on server then atomically create tournament
-    verifyAndCreateTournament: (data) => apiClient.post('/payments/verify-and-create-tournament', data),
-
-    // Verify payment signature only
-    verifyPayment: (data) => apiClient.post('/payments/verify-payment', data),
+    // Organizer: approve or reject a team's payment by UPI Transaction ID
+    verifyTeamPayment: (teamId, action) =>
+        axiosInstance.post(`/payments/verify-team/${teamId}`, { action }),
 };
 
 export default paymentsAPI;
