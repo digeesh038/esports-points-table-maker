@@ -55,16 +55,16 @@ const LeaderboardTable = ({ leaderboard, loading }) => {
     };
 
     return (
-        <div className="w-full">
-            <table className="w-full text-left border-separate border-spacing-y-4">
+        <div className="w-full overflow-x-auto custom-scrollbar">
+            <table className="w-full text-left border-separate border-spacing-y-2 md:border-spacing-y-4 min-w-[600px] md:min-w-0">
                 <thead>
                     <tr>
-                        <th className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic"># Rank</th>
-                        <th className="px-6 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 italic">Squad Identifier</th>
-                        <th className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic">WWCD</th>
-                        <th className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic">Pos</th>
-                        <th className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic">Fin</th>
-                        <th className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-28 text-center italic">Total</th>
+                        <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic"># Rank</th>
+                        <th className="px-3 md:px-6 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 italic">Squad Identifier</th>
+                        <th className="hidden sm:table-cell px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic">WWCD</th>
+                        <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic">Pos</th>
+                        <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic">Fin</th>
+                        <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-20 md:w-28 text-center italic">Total</th>
                     </tr>
                 </thead>
                 <motion.tbody
@@ -101,28 +101,28 @@ const LeaderboardTable = ({ leaderboard, loading }) => {
                                 >
                                     {/* RANK */}
                                     <td className="p-0">
-                                        <div className={`h-16 w-16 mx-auto flex items-center justify-center font-black text-2xl italic rounded-2xl transition-all duration-300 group-hover:scale-110 ${rankColors}`}>
+                                        <div className={`h-12 w-12 md:h-16 md:w-16 mx-auto flex items-center justify-center font-black text-xl md:text-2xl italic rounded-xl md:rounded-2xl transition-all duration-300 group-hover:scale-110 ${rankColors}`}>
                                             {rank < 10 ? `0${rank}` : rank}
                                         </div>
                                     </td>
 
                                     {/* TEAM ENTITY */}
                                     <td className="p-0">
-                                        <div className="h-16 bg-white/[0.02] border border-white/5 rounded-2xl ml-3 flex items-center px-8 relative overflow-hidden group-hover:bg-white/[0.05] group-hover:border-white/10 transition-all duration-300">
-                                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${teamAccent} shadow-[0_0_15px_rgba(0,183,255,0.3)] group-hover:w-3 transition-all`}></div>
-                                            <span className="text-base font-black uppercase tracking-wider text-white group-hover:text-neon-blue group-hover:translate-x-2 transition-all">
+                                        <div className="h-12 md:h-16 bg-white/[0.02] border border-white/5 rounded-xl md:rounded-2xl ml-2 md:ml-3 flex items-center px-4 md:px-8 relative overflow-hidden group-hover:bg-white/[0.05] group-hover:border-white/10 transition-all duration-300">
+                                            <div className={`absolute left-0 top-0 bottom-0 w-1 md:w-1.5 ${teamAccent} shadow-[0_0_15px_rgba(0,183,255,0.3)] group-hover:w-2 md:group-hover:w-3 transition-all`}></div>
+                                            <span className="text-sm md:text-base font-black uppercase tracking-wider text-white group-hover:text-neon-blue group-hover:translate-x-2 transition-all truncate max-w-[120px] md:max-w-none">
                                                 {teamName}
                                             </span>
                                             {isTop3 && (
-                                                <div className="ml-auto opacity-20 group-hover:opacity-100 transition-opacity">
-                                                    <Trophy className={`w-5 h-5 ${rank === 1 ? 'text-yellow-500' : rank === 2 ? 'text-slate-300' : 'text-[#CD7F32]'}`} />
+                                                <div className="ml-auto opacity-20 group-hover:opacity-100 transition-opacity hidden sm:block">
+                                                    <Trophy className={`w-4 h-4 md:w-5 md:h-5 ${rank === 1 ? 'text-yellow-500' : rank === 2 ? 'text-slate-300' : 'text-[#CD7F32]'}`} />
                                                 </div>
                                             )}
                                         </div>
                                     </td>
 
                                     {/* WINS */}
-                                    <td className="p-0">
+                                    <td className="hidden sm:table-cell p-0">
                                         <div className="h-16 flex items-center justify-center">
                                             <span className={`font-mono text-lg font-bold ${wins > 0 ? 'text-neon-blue' : 'text-gray-800'}`}>
                                                 {wins > 0 ? (wins < 10 ? `0${wins}` : wins) : '--'}
@@ -132,22 +132,22 @@ const LeaderboardTable = ({ leaderboard, loading }) => {
 
                                     {/* PLACEMENT POINTS */}
                                     <td className="p-0">
-                                        <div className="h-16 bg-white/[0.01] border border-white/2 rounded-2xl mx-1.5 flex items-center justify-center font-mono text-base font-bold text-gray-500 group-hover:text-white transition-colors">
+                                        <div className="h-12 md:h-16 bg-white/[0.01] border border-white/2 rounded-xl md:rounded-2xl mx-1 md:mx-1.5 flex items-center justify-center font-mono text-sm md:text-base font-bold text-gray-500 group-hover:text-white transition-colors">
                                             {posPoints < 10 && posPoints >= 0 ? `0${posPoints}` : posPoints}
                                         </div>
                                     </td>
 
                                     {/* KILLS */}
                                     <td className="p-0">
-                                        <div className="h-16 bg-white/[0.01] border border-white/2 rounded-2xl mx-1.5 flex items-center justify-center font-mono text-base font-bold text-gray-500 group-hover:text-white transition-colors">
+                                        <div className="h-12 md:h-16 bg-white/[0.01] border border-white/2 rounded-xl md:rounded-2xl mx-1 md:mx-1.5 flex items-center justify-center font-mono text-sm md:text-base font-bold text-gray-500 group-hover:text-white transition-colors">
                                             {totalKills < 10 ? `0${totalKills}` : totalKills}
                                         </div>
                                     </td>
 
                                     {/* TOTAL SCORE */}
                                     <td className="p-0">
-                                        <div className="h-16 bg-dark-800/60 border border-white/5 rounded-2xl ml-2 flex items-center justify-center relative overflow-hidden group-hover:border-neon-blue/40 group-hover:bg-dark-800 transition-all duration-300">
-                                            <span className={`text-2xl font-black tracking-tighter ${isTop3 ? 'text-neon-blue animate-pulse' : 'text-white'}`}>
+                                        <div className="h-12 md:h-16 bg-dark-800/60 border border-white/5 rounded-xl md:rounded-2xl ml-1.5 md:ml-2 flex items-center justify-center relative overflow-hidden group-hover:border-neon-blue/40 group-hover:bg-dark-800 transition-all duration-300">
+                                            <span className={`text-xl md:text-2xl font-black tracking-tighter ${isTop3 ? 'text-neon-blue animate-pulse' : 'text-white'}`}>
                                                 {totalPoints < 10 ? `0${totalPoints}` : totalPoints}
                                             </span>
                                             {isTop3 && (

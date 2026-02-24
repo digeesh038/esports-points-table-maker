@@ -128,7 +128,7 @@ const StandingsOverlay = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[40] bg-[#050508] flex flex-col pt-20 overflow-hidden"
+                    className="fixed inset-0 z-[100] bg-[#050508] flex flex-col pt-4 md:pt-20 overflow-hidden"
                 >
                     {/* Background Visuals */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
@@ -142,7 +142,7 @@ const StandingsOverlay = () => {
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="absolute top-2 left-1/2 -translate-x-1/2 z-[50]"
+                        className="absolute top-4 md:top-2 right-4 md:left-1/2 md:-translate-x-1/2 z-[110]"
                     >
                         <button
                             onClick={closeStandings}
@@ -152,14 +152,14 @@ const StandingsOverlay = () => {
                         </button>
                     </motion.div>
 
-                    <div className="flex-1 flex gap-8 px-10 pb-10 mt-10 relative z-10 min-h-0">
+                    <div className="flex-1 flex flex-col lg:flex-row gap-8 px-4 md:px-10 pb-10 mt-6 md:mt-10 relative z-10 min-h-0 overflow-y-auto lg:overflow-hidden">
 
                         {/* ── LEFT SIDEBAR ── */}
                         <motion.aside
                             initial={{ x: -100, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ delay: 0.2, type: 'spring', damping: 20 }}
-                            className="w-80 flex flex-col shrink-0 gap-8 h-full min-h-0"
+                            className="w-full lg:w-80 flex flex-col shrink-0 gap-8 h-auto lg:h-full min-h-0"
                         >
                             <div className="pt-4 shrink-0">
                                 <motion.span
@@ -174,7 +174,7 @@ const StandingsOverlay = () => {
                                     key={tournament?.id}
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    className="text-8xl font-black italic tracking-tighter text-white uppercase leading-none mt-2"
+                                    className="text-4xl md:text-8xl font-black italic tracking-tighter text-white uppercase leading-none mt-2"
                                 >
                                     {tournament?.name?.split(' ')[0] || 'FFMC'}
                                 </motion.h1>
@@ -270,48 +270,48 @@ const StandingsOverlay = () => {
                             initial={{ y: 100, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.25, type: 'spring', damping: 25 }}
-                            className="flex-1 flex flex-col h-full min-h-0"
+                            className="flex-1 flex flex-col h-auto lg:h-full min-h-0"
                         >
 
                             {/* Header Controls */}
-                            <header className="flex items-start justify-between mb-8 shrink-0">
-                                <div className="flex items-center gap-6">
+                            <header className="flex flex-col sm:flex-row items-start justify-between gap-6 mb-8 shrink-0">
+                                <div className="flex items-center gap-4 md:gap-6">
                                     <motion.div
-                                        animate={{ height: [40, 64, 40] }}
+                                        animate={{ height: [30, 50, 30] }}
                                         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                                        className="w-2 bg-neon-blue shadow-[0_0_20px_rgba(0,183,255,0.6)]"
+                                        className="w-1.5 bg-neon-blue shadow-[0_0_20px_rgba(0,183,255,0.6)]"
                                     ></motion.div>
                                     <div>
-                                        <h2 className="text-7xl font-black italic tracking-tighter text-white leading-none uppercase">
+                                        <h2 className="text-3xl md:text-7xl font-black italic tracking-tighter text-white leading-none uppercase">
                                             STANDINGS <span className="text-neon-blue animate-pulse">.</span>
                                         </h2>
                                         <div className="flex items-center gap-4 mt-2 opacity-30">
-                                            <span className="text-[9px] font-mono tracking-[0.5em] uppercase text-white">OFFICIAL BROADCAST FEED</span>
-                                            <div className="h-[1px] w-48 bg-gradient-to-r from-white to-transparent"></div>
+                                            <span className="text-[9px] font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase text-white">OFFICIAL BROADCAST FEED</span>
+                                            <div className="hidden md:block h-[1px] w-48 bg-gradient-to-r from-white to-transparent"></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col items-end gap-5 p-2">
-                                    <div className="flex items-center gap-4">
+                                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-5 p-2 w-full sm:w-auto">
+                                    <div className="flex items-center gap-2 md:gap-4 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 custom-scrollbar">
                                         {!isGuest && (
                                             <button
                                                 onClick={handleUpdatePoints}
-                                                className="px-8 h-12 bg-neon-blue text-black font-black text-[10px] tracking-widest hover:bg-white transition-all flex items-center gap-3 uppercase rounded-xl shadow-[0_0_30px_rgba(0,183,255,0.3)] group active:scale-95"
+                                                className="px-4 md:px-8 h-10 md:h-12 bg-neon-blue text-black font-black text-[10px] tracking-widest hover:bg-white transition-all flex items-center gap-3 uppercase rounded-xl shadow-[0_0_30px_rgba(0,183,255,0.3)] group active:scale-95 whitespace-nowrap"
                                             >
                                                 <Zap className="w-4 h-4 group-hover:animate-bounce" />
-                                                Update Node
+                                                <span className="sm:inline">Update Node</span>
                                             </button>
                                         )}
-                                        <button onClick={fetchStandings} className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 hover:text-white transition-all hover:bg-white/10 active:scale-90">
-                                            <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                                        <button onClick={fetchStandings} className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 hover:text-white transition-all hover:bg-white/10 active:scale-90 shrink-0">
+                                            <RefreshCw className={`w-4 h-4 md:w-5 md:h-5 ${loading ? 'animate-spin' : ''}`} />
                                         </button>
                                         <button
                                             onClick={handleExportPDF}
-                                            className="px-8 h-12 bg-dark-800 border border-white/10 rounded-xl text-white font-black text-[10px] tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-3 uppercase shadow-xl active:scale-95"
+                                            className="px-4 md:px-8 h-10 md:h-12 bg-dark-800 border border-white/10 rounded-xl text-white font-black text-[10px] tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-3 uppercase shadow-xl active:scale-95 whitespace-nowrap shrink-0"
                                         >
                                             <FileText className="w-4 h-4" />
-                                            Export
+                                            <span className="hidden sm:inline">Export</span>
                                         </button>
                                     </div>
                                     <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 rounded-full">
@@ -325,10 +325,10 @@ const StandingsOverlay = () => {
                             </header>
 
                             {/* Table Container */}
-                            <div className="flex-1 bg-white/[0.015] border border-white/5 rounded-[50px] p-12 flex flex-col min-h-0 overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+                            <div className="flex-1 bg-white/[0.015] border border-white/5 rounded-3xl md:rounded-[50px] p-4 md:p-12 flex flex-col min-h-[400px] lg:min-h-0 overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-sm">
                                 {/* Watermark */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none opacity-[0.03] select-none scale-[2.5] transform -rotate-12">
-                                    <h3 className="text-[150px] font-black italic tracking-tighter text-white uppercase truncate max-w-[1200px]">
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none opacity-[0.03] select-none scale-[1.5] md:scale-[2.5] transform -rotate-12">
+                                    <h3 className="text-[80px] md:text-[150px] font-black italic tracking-tighter text-white uppercase truncate max-w-[1200px]">
                                         {tournament?.name || 'SYNC'}
                                     </h3>
                                 </div>

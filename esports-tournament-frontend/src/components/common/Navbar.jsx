@@ -168,6 +168,19 @@ const Navbar = () => {
                         ))}
 
                         <button
+                            onClick={() => {
+                                const match = location.pathname.match(/\/tournaments\/([a-f0-9-]+)/);
+                                const tId = match ? match[1] : null;
+                                openStandings(tId);
+                                setIsMobileMenuOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-3 rounded-lg text-sm font-bold uppercase tracking-wider text-neon-blue hover:bg-neon-blue/10 transition-all flex items-center gap-2 group"
+                        >
+                            <Trophy className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span>Points Table</span>
+                        </button>
+
+                        <button
                             onClick={logout}
                             className="w-full text-left px-4 py-3 rounded-lg text-sm font-bold uppercase tracking-wider text-red-500 hover:bg-red-500/10 transition-all flex items-center gap-2"
                         >
