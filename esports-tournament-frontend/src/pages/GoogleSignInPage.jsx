@@ -35,120 +35,121 @@ const GoogleSignInPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#050508]">
             <GamingBackground />
 
             {/* Content Container */}
             <div className="w-full max-w-md px-6 relative z-20">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <div className="bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-[32px] shadow-2xl p-8 border border-white/10 relative overflow-hidden group hover:border-neon-blue/40 transition-all duration-700">
-                        {/* Internal Glow */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-neon-blue to-transparent" />
+                    <div className="bg-[#0a0a0f]/90 backdrop-blur-3xl rounded-[40px] shadow-[0_0_100px_rgba(0,0,0,0.5)] p-10 border border-white/10 relative overflow-hidden group">
+                        {/* Interactive Corner Accents */}
+                        <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-neon-blue/30 rounded-tl-[40px] pointer-events-none" />
+                        <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-neon-purple/30 rounded-br-[40px] pointer-events-none" />
 
                         {/* Header Section */}
-                        <div className="text-center mb-10">
+                        <div className="text-center mb-12 relative">
                             <motion.div
                                 animate={{
-                                    rotateY: [0, 360],
-                                    scale: [1, 1.1, 1]
+                                    boxShadow: ["0 0 20px rgba(0,240,255,0.2)", "0 0 40px rgba(0,240,255,0.4)", "0 0 20px rgba(0,240,255,0.2)"]
                                 }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="inline-block mb-6 p-4 rounded-2xl bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 border border-neon-blue/20 shadow-[0_0_20px_rgba(0,240,255,0.1)]"
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="inline-flex mb-8 p-5 rounded-3xl bg-dark-800 border border-neon-blue/30 relative z-10"
                             >
-                                <Gamepad2 className="w-12 h-12 text-neon-blue drop-shadow-[0_0_10px_#00f0ff]" />
+                                <Gamepad2 className="w-14 h-14 text-neon-blue drop-shadow-[0_0_15px_#00f0ff]" />
                             </motion.div>
 
-                            <div className="relative group">
-                                <h1 className="text-4xl md:text-5xl font-black text-white italic tracking-tighter uppercase mb-3 relative z-10">
-                                    <span className="text-neon-blue">Tournament</span> Console
+                            <div className="relative mb-6">
+                                <h1 className="text-5xl font-black text-white italic tracking-tighter uppercase relative z-10 leading-none">
+                                    <span className="text-neon-blue">TOURNAMENT</span><br />CONSOLE
                                 </h1>
-                                {/* Glitch Layers */}
-                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-red-500 italic tracking-tighter uppercase mb-3 opacity-30 animate-glitch-1 select-none pointer-events-none">
-                                    <span className="text-red-500">Tournament</span> Console
+                                {/* Glitch Layers - Constant subtle movement */}
+                                <h1 className="absolute inset-0 text-5xl font-black text-red-500 italic tracking-tighter uppercase opacity-30 animate-glitch-1 select-none pointer-events-none translate-x-[2px]">
+                                    <span className="text-red-500">TOURNAMENT</span><br />CONSOLE
                                 </h1>
-                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-cyan-500 italic tracking-tighter uppercase mb-3 opacity-30 animate-glitch-2 select-none pointer-events-none">
-                                    <span className="text-cyan-500">Tournament</span> Console
+                                <h1 className="absolute inset-0 text-5xl font-black text-neon-blue italic tracking-tighter uppercase opacity-30 animate-glitch-2 select-none pointer-events-none -translate-x-[2px]">
+                                    <span className="text-neon-blue">TOURNAMENT</span><br />CONSOLE
                                 </h1>
                             </div>
 
-                            <div className="flex items-center justify-center gap-2">
-                                <span className="h-px w-8 bg-neon-blue/20" />
-                                <p className="text-[10px] font-mono text-neon-blue/60 uppercase tracking-[0.3em] animate-pulse">
-                                    Identity Verification Required
+                            <div className="flex items-center justify-center gap-4">
+                                <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-neon-blue/20" />
+                                <p className="text-[10px] font-mono text-neon-blue font-bold uppercase tracking-[0.4em] animate-pulse">
+                                    V_AUTHENTICATION_REQ
                                 </p>
-                                <span className="h-px w-8 bg-neon-blue/20" />
+                                <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-neon-blue/20" />
                             </div>
                         </div>
 
-                        {/* Terms Section */}
-                        <div className="mb-8 p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4">
-                            <label className="flex items-start gap-4 cursor-pointer group">
-                                <div className="relative flex items-center mt-0.5">
+                        {/* Terms Section - Redesigned for mobile */}
+                        <div className="mb-10 p-6 rounded-[24px] bg-white/[0.02] border border-white/5 group-hover:border-neon-blue/20 transition-all duration-500">
+                            <label className="flex items-start gap-4 cursor-pointer">
+                                <div className="relative flex items-center mt-1">
                                     <input
                                         type="checkbox"
                                         checked={agreed}
                                         onChange={(e) => setAgreed(e.target.checked)}
                                         className="peer hidden"
                                     />
-                                    <div className="w-5 h-5 rounded border border-white/20 bg-dark-900 transition-all peer-checked:bg-neon-blue peer-checked:border-neon-blue group-hover:border-neon-blue" />
+                                    <div className="w-6 h-6 rounded-lg border-2 border-white/10 bg-dark-900 transition-all peer-checked:bg-neon-blue peer-checked:border-neon-blue peer-checked:shadow-[0_0_15px_#00f0ff]" />
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 peer-checked:opacity-100 transition-opacity">
-                                        <Zap className="w-3 h-3 text-black fill-current" />
+                                        <Zap className="w-3.5 h-3.5 text-black fill-current" />
                                     </div>
                                 </div>
-                                <div className="text-[11px] leading-relaxed text-gray-400 select-none">
-                                    I confirm I am <span className="text-neon-blue font-bold">18 years or older</span>. I accept the <Link to="/privacy" className="text-white hover:text-neon-blue transition-colors underline decoration-neon-blue/30" target="_blank">Privacy Clause</Link> and <Link to="/terms" className="text-white hover:text-neon-blue transition-colors underline decoration-neon-blue/30" target="_blank">Operations Manual</Link>.
+                                <div className="text-[12px] leading-relaxed text-gray-400 font-medium select-none">
+                                    Confirmed <span className="text-white font-bold underline decoration-neon-blue/50 underline-offset-4">18+ Operative</span> status. Accept all <Link to="/terms" className="text-neon-blue hover:text-white transition-colors">Strategic Protocols</Link>.
                                 </div>
                             </label>
                         </div>
 
-                        {/* Google Action Button Section */}
-                        <div className={`relative transition-all duration-500 rounded-2xl border ${!agreed ? 'opacity-20 pointer-events-none filter grayscale' : 'opacity-100 border-white/10 hover:border-neon-blue/40'}`}>
-                            <div className="absolute inset-0 bg-gradient-to-r from-neon-blue/5 via-transparent to-neon-purple/5 pointer-events-none rounded-2xl" />
-                            <div className="flex justify-center items-center py-4 bg-white/[0.02] w-full rounded-2xl">
-                                <GoogleLogin
-                                    onSuccess={handleSuccess}
-                                    onError={handleError}
-                                    theme="filled_black"
-                                    size="large"
-                                    text="signin_with"
-                                    shape="rectangular"
-                                    width="230"
-                                />
+                        {/* Google Action Button Container - Fixed Sizing & Polish */}
+                        <div className={`relative p-1 rounded-[24px] transition-all duration-700 ${!agreed ? 'opacity-10 filter grayscale blur-[1px]' : 'opacity-100'}`}>
+                            {/* Outer Glow Ring */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-neon-blue/40 via-neon-purple/40 to-neon-blue/40 rounded-[24px] animate-shimmer opacity-20" />
+
+                            <div className="relative bg-[#0a0a0f] rounded-[22px] p-6 border border-white/10 flex flex-col items-center justify-center gap-6 overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+                                <div className="scale-[1.15] md:scale-[1.25] origin-center -ml-1">
+                                    <div className="min-w-[230px] flex justify-center">
+                                        <GoogleLogin
+                                            onSuccess={handleSuccess}
+                                            onError={handleError}
+                                            theme="filled_black"
+                                            size="large"
+                                            text="signin_with"
+                                            shape="pill"
+                                            width="230"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 opacity-30">
+                                    <Shield className="w-3 h-3 text-neon-blue" />
+                                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white">Google Encrypted Pipeline</span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Connection Warning (Conditional) */}
-                        <div className="mt-6 text-center">
-                            <p className="text-[10px] text-amber-500/80 uppercase tracking-widest font-mono animate-pulse">
-                                note: disable adblocker if button fails
+                        {/* Connection Warning */}
+                        <div className="mt-8 text-center">
+                            <p className="text-[9px] text-amber-500/60 uppercase tracking-widest font-black italic">
+                                deactivate ad-block if terminal stays hidden
                             </p>
                         </div>
 
                         {/* Bottom Status Branding */}
-                        <div className="mt-10 flex items-center justify-between text-[8px] font-mono text-gray-600 uppercase tracking-widest px-2">
+                        <div className="mt-12 flex items-center justify-between text-[9px] font-mono text-gray-700 uppercase tracking-widest px-2">
                             <div className="flex items-center gap-2">
-                                <div className="w-1 h-1 bg-neon-green rounded-full shadow-[0_0_5px_#39ff14] animate-pulse" />
-                                <span>Global Nodes: ACTIVE</span>
+                                <div className="w-1.5 h-1.5 bg-neon-green rounded-full shadow-[0_0_10px_#39ff14] animate-pulse" />
+                                <span>SECURE_LINK: ACTIVE</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Shield className="w-2.5 h-2.5" />
-                                <span>Secured by Google</span>
-                            </div>
+                            <span>V4.0.2 // R5</span>
                         </div>
                     </div>
-                </motion.div>
-
-                {/* Background Floating Elements */}
-                <motion.div
-                    animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-                    transition={{ duration: 6, repeat: Infinity }}
-                    className="absolute -top-12 -right-12 text-neon-blue/20 blur-[1px] hidden md:block"
-                >
-                    <Rocket className="w-24 h-24" />
                 </motion.div>
             </div>
         </div>
@@ -156,4 +157,3 @@ const GoogleSignInPage = () => {
 };
 
 export default GoogleSignInPage;
-
