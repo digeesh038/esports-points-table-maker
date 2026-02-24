@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import matchesAPI from '../api/matches';
+import tournamentsAPI from '../api/tournaments';
 import teamsAPI from '../api/teams';
 import Loader from '../components/common/Loader';
 import MatchList from '../components/match/MatchList';
@@ -143,7 +144,7 @@ const MatchesPage = () => {
                         </div>
                         <div className="min-w-0">
                             <span className="text-neon-blue text-[9px] font-black tracking-[0.3em] uppercase opacity-50 block mb-0.5">Tactical Command</span>
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
+                            <h1 className="text-2xl xs:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
                                 MY MATCHES
                             </h1>
                         </div>
@@ -152,7 +153,7 @@ const MatchesPage = () => {
             </div>
 
             {/* Quick Filter Bar */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 custom-scrollbar">
                 {[
                     { id: 'all', label: 'All', icon: <Target className="w-5 h-5 text-neon-blue" />, color: 'neon-blue' },
                     { id: 'live', label: 'Live', icon: <Target className="w-5 h-5 text-neon-green animate-pulse" />, color: 'neon-green' },
@@ -161,7 +162,7 @@ const MatchesPage = () => {
                     <Card
                         key={filter.id}
                         onClick={() => setStatusFilter(filter.id)}
-                        className={`bg-dark-800/20 p-4 flex items-center justify-between group transition-all cursor-pointer ${statusFilter === filter.id
+                        className={`flex-shrink-0 w-[200px] xs:w-[240px] md:w-auto bg-dark-800/20 p-4 flex items-center justify-between group transition-all cursor-pointer ${statusFilter === filter.id
                             ? `border-${filter.color} shadow-[0_0_15px_rgba(0,183,255,0.1)]`
                             : 'border-dark-700/50 hover:border-dark-400'
                             }`}
@@ -171,8 +172,8 @@ const MatchesPage = () => {
                                 {filter.icon}
                             </div>
                             <div>
-                                <p className="text-xs font-mono text-gray-500 uppercase">Filter</p>
-                                <p className={`font-bold transition-colors ${statusFilter === filter.id ? `text-${filter.color}` : 'text-white'}`}>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase">Filter</p>
+                                <p className={`font-bold text-sm md:text-base transition-colors ${statusFilter === filter.id ? `text-${filter.color}` : 'text-white'}`}>
                                     {filter.label}
                                 </p>
                             </div>
