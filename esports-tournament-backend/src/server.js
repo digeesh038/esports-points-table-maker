@@ -23,18 +23,17 @@ const startServer = async () => {
         // 1. Test database connection
         await testConnection();
 
-        // 2a. Pre-sync fixes — must run BEFORE sequelize.sync({ alter: true })
-        //     Sequelize fails to ALTER an ENUM column when a DEFAULT is still set.
-        //     We drop defaults first, then add 'none' to enum types.
+        // 2a. Pre-sync: force payment_method columns to VARCHAR so Sequelize stops
+        //     trying to ALTER ENUM types (which always fails mid-transaction in PG).
         const preSyncFixes = [
             `ALTER TABLE IF EXISTS "tournaments" ALTER COLUMN "payment_method" DROP DEFAULT`,
+            `ALTER TABLE IF EXISTS "tournaments" ALTER COLUMN "payment_method" TYPE VARCHAR(255) USING "payment_method"::text`,
             `ALTER TABLE IF EXISTS "teams" ALTER COLUMN "payment_method" DROP DEFAULT`,
-            `ALTER TYPE enum_teams_payment_method ADD VALUE IF NOT EXISTS 'none'`,
-            `ALTER TYPE enum_tournaments_payment_method ADD VALUE IF NOT EXISTS 'none'`,
+            `ALTER TABLE IF EXISTS "teams" ALTER COLUMN "payment_method" TYPE VARCHAR(255) USING "payment_method"::text`,
         ];
         for (const sql of preSyncFixes) {
             try { await sequelize.query(sql); }
-            catch (e) { /* table/type may not exist on first deploy — fine */ }
+            catch (e) { /* table/column may not exist on first deploy — fine */ }
         }
 
         // 2b. Sync database tables

@@ -88,7 +88,7 @@ const Tournament = sequelize.define(
             defaultValue: 'INR',
         },
         paymentMethod: {
-            type: DataTypes.ENUM('none', 'razorpay', 'manual'),
+            type: DataTypes.STRING,
             defaultValue: 'manual',
             field: 'payment_method',
         },

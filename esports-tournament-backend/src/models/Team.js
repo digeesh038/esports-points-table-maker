@@ -57,7 +57,7 @@ const Team = sequelize.define(
             field: 'payment_status',
         },
         paymentMethod: {
-            type: DataTypes.ENUM('none', 'razorpay', 'manual'),
+            type: DataTypes.STRING,
             defaultValue: 'none',
             field: 'payment_method',
         },
