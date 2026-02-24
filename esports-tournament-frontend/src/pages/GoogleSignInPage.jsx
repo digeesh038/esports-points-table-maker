@@ -119,6 +119,7 @@ const GoogleSignInPage = () => {
                                             <GoogleLogin
                                                 onSuccess={handleSuccess}
                                                 onError={handleError}
+                                                use_fedcm_for_prompt={true}
                                                 theme="outline"
                                                 size="large"
                                                 text="signin_with"
@@ -130,6 +131,7 @@ const GoogleSignInPage = () => {
                                             <GoogleLogin
                                                 onSuccess={handleSuccess}
                                                 onError={handleError}
+                                                use_fedcm_for_prompt={true}
                                                 theme="outline"
                                                 size="large"
                                                 text="signin_with"
@@ -149,8 +151,11 @@ const GoogleSignInPage = () => {
 
                         {/* Connection Warning */}
                         <div className="mt-6 text-center">
-                            <p className="text-[8px] text-amber-500/50 uppercase tracking-[0.2em] font-black italic">
-                                disable ad-block if terminal fails
+                            <p className="text-[10px] text-amber-500 font-bold uppercase tracking-[0.2em] animate-pulse">
+                                CRITICAL: Disable Ad-Blocker if login fails
+                            </p>
+                            <p className="text-[8px] text-gray-600 uppercase tracking-widest mt-1">
+                                security layers may block authentication popup
                             </p>
                         </div>
 
