@@ -63,14 +63,14 @@ const GoogleSignInPage = () => {
                             </motion.div>
 
                             <div className="relative mb-6">
-                                <h1 className="text-5xl font-black text-white italic tracking-tighter uppercase relative z-10 leading-none">
+                                <h1 className="text-3xl xs:text-4xl md:text-5xl font-black text-white italic tracking-tighter uppercase relative z-10 leading-none">
                                     <span className="text-neon-blue">TOURNAMENT</span><br />CONSOLE
                                 </h1>
                                 {/* Glitch Layers - Constant subtle movement */}
-                                <h1 className="absolute inset-0 text-5xl font-black text-red-500 italic tracking-tighter uppercase opacity-30 animate-glitch-1 select-none pointer-events-none translate-x-[2px]">
+                                <h1 className="absolute inset-0 text-3xl xs:text-4xl md:text-5xl font-black text-red-500 italic tracking-tighter uppercase opacity-30 animate-glitch-1 select-none pointer-events-none translate-x-[2px]">
                                     <span className="text-red-500">TOURNAMENT</span><br />CONSOLE
                                 </h1>
-                                <h1 className="absolute inset-0 text-5xl font-black text-neon-blue italic tracking-tighter uppercase opacity-30 animate-glitch-2 select-none pointer-events-none -translate-x-[2px]">
+                                <h1 className="absolute inset-0 text-3xl xs:text-4xl md:text-5xl font-black text-neon-blue italic tracking-tighter uppercase opacity-30 animate-glitch-2 select-none pointer-events-none -translate-x-[2px]">
                                     <span className="text-neon-blue">TOURNAMENT</span><br />CONSOLE
                                 </h1>
                             </div>
