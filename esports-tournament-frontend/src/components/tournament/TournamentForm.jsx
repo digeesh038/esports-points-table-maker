@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Input from '../common/Input';
 import Select from '../common/Select';
 import Textarea from '../common/Textarea';
@@ -7,7 +6,8 @@ import Button from '../common/Button';
 import organizationsAPI from '../../api/organizations';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard, QrCode, Upload, X, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, CreditCard, QrCode, Zap, CheckCircle } from 'lucide-react';
 
 const GAME_OPTIONS = [
     { value: 'free_fire', label: 'Free Fire' },
@@ -26,6 +26,13 @@ const FORMAT_OPTIONS = [
     { value: 'double_elimination', label: 'Double Elimination' },
 ];
 
+// Generates a real scannable UPI QR code URL
+const getUpiQrUrl = (upiId, amount, name = 'Tournament') => {
+    if (!upiId) return null;
+    const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent('Tournament Entry Fee')}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}&bgcolor=ffffff&color=000000&margin=10`;
+};
+
 const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
     const [formData, setFormData] = useState({
         organizationId: '',
@@ -43,12 +50,10 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         paymentMethod: 'manual',
         paymentInstructions: '',
         upiId: '',
-        paymentQrCode: '',
     });
 
     const [organizations, setOrganizations] = useState([]);
     const [loadingOrgs, setLoadingOrgs] = useState(true);
-    const [qrPreview, setQrPreview] = useState(null);
 
     useEffect(() => { fetchOrganizations(); }, []);
 
@@ -67,12 +72,10 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 isPublic: initialData.isPublic !== false,
                 isPaid: initialData.isPaid || false,
                 entryFee: initialData.entryFee || 0,
-                paymentMethod: initialData.paymentMethod || 'manual',
+                paymentMethod: 'manual',
                 paymentInstructions: initialData.paymentInstructions || '',
                 upiId: initialData.upiId || '',
-                paymentQrCode: initialData.paymentQrCode || '',
             });
-            if (initialData.paymentQrCode) setQrPreview(initialData.paymentQrCode);
         }
     }, [initialData]);
 
@@ -96,29 +99,17 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
     };
 
-    const handleQrUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { toast.error('QR image must be < 2MB'); return; }
-        if (!file.type.startsWith('image/')) { toast.error('Upload an image file'); return; }
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setFormData({ ...formData, paymentQrCode: reader.result });
-            setQrPreview(reader.result);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    const removeQr = () => {
-        setFormData({ ...formData, paymentQrCode: '' });
-        setQrPreview(null);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Always manual UPI for paid tournaments
+        if (formData.isPaid && !formData.upiId.trim()) {
+            toast.error('Please enter your UPI ID for paid tournaments');
+            return;
+        }
         onSubmit({ ...formData, paymentMethod: 'manual' });
     };
+
+    // Live QR preview
+    const qrUrl = getUpiQrUrl(formData.upiId, formData.entryFee, formData.name || 'Tournament');
 
     if (loadingOrgs) {
         return (
@@ -132,10 +123,8 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
     if (organizations.length === 0) {
         return (
             <Card className="bg-dark-800/30 border-2 border-dashed border-dark-600 p-12 text-center rounded-2xl">
-                <div className="w-16 h-16 bg-neon-blue/10 border border-neon-blue/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Building2 className="w-8 h-8 text-neon-blue/50" />
-                </div>
-                <p className="text-gray-400 mb-6 text-sm font-medium">You need an organization first.</p>
+                <Building2 className="w-10 h-10 text-neon-blue/40 mx-auto mb-4" />
+                <p className="text-gray-400 mb-6 text-sm">You need an organization first.</p>
                 <Link to="/dashboard/organizations" className="btn-primary inline-flex items-center gap-2 py-3 px-8 text-sm font-bold">
                     <Building2 className="w-4 h-4" /> Create Organization
                 </Link>
@@ -234,7 +223,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-white">Paid Tournament</p>
-                                <p className="text-[11px] text-gray-500">Require entry fee (UPI)</p>
+                                <p className="text-[11px] text-gray-500">Entry fee via UPI</p>
                             </div>
                         </div>
                         <div className={`w-12 h-6 rounded-full transition-all duration-300 flex-shrink-0 relative ${formData.isPaid ? 'bg-neon-pink' : 'bg-white/10'}`}>
@@ -244,57 +233,72 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                     </label>
                 </div>
 
-                {/* UPI / QR Payment Setup */}
+                {/* UPI Payment Setup */}
                 {formData.isPaid && (
                     <div className="space-y-5 animate-in slide-in-from-top-2 duration-300">
 
-                        {/* Entry fee */}
-                        <Input label="Entry Fee (₹)" icon={<CreditCard className="w-3.5 h-3.5" />}
-                            type="number" name="entryFee" value={formData.entryFee} onChange={handleChange}
-                            placeholder="e.g. 100" min="1" required />
-
-                        {/* UPI ID */}
-                        <Input label="Your UPI ID" icon={<Zap className="w-3.5 h-3.5" />}
-                            type="text" name="upiId" value={formData.upiId} onChange={handleChange}
-                            placeholder="e.g. yourname@paytm or 9876543210@upi" />
-
-                        {/* QR Code Upload */}
-                        <div className="space-y-3">
-                            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                <QrCode className="w-3.5 h-3.5" /> Upload Payment QR Code
-                            </label>
-                            {qrPreview ? (
-                                <div className="flex items-center gap-5 p-4 bg-white/5 border border-neon-purple/20 rounded-2xl">
-                                    <div className="p-2 bg-white rounded-xl shadow-lg">
-                                        <img src={qrPreview} alt="QR Code" className="w-24 h-24 object-contain" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-white mb-1">QR Code Uploaded ✓</p>
-                                        <p className="text-[10px] text-gray-500 mb-3">Players will see this to pay.</p>
-                                        <button type="button" onClick={removeQr}
-                                            className="flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 font-bold uppercase">
-                                            <X className="w-3 h-3" /> Remove
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-neon-purple/20 rounded-2xl cursor-pointer hover:border-neon-purple/50 hover:bg-neon-purple/[0.03] transition-all bg-black/20 group">
-                                    <Upload className="w-6 h-6 text-neon-purple mb-2 group-hover:scale-110 transition-transform" />
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest group-hover:text-white">
-                                        Upload your UPI QR Code
-                                    </span>
-                                    <span className="text-[9px] text-gray-700 mt-1">PNG, JPG — max 2MB</span>
-                                    <input type="file" accept="image/*" onChange={handleQrUpload} className="hidden" />
-                                </label>
-                            )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <Input label="Entry Fee (₹)" icon={<CreditCard className="w-3.5 h-3.5" />}
+                                type="number" name="entryFee" value={formData.entryFee} onChange={handleChange}
+                                placeholder="e.g. 100" min="1" required />
+                            <Input label="Your UPI ID *" icon={<Zap className="w-3.5 h-3.5" />}
+                                type="text" name="upiId" value={formData.upiId} onChange={handleChange}
+                                placeholder="e.g. 9876543210@paytm" required />
                         </div>
 
-                        {/* Instructions */}
-                        <Textarea label="Payment Instructions (shown to players)"
+                        {/* Live QR Preview */}
+                        {formData.upiId && formData.entryFee > 0 ? (
+                            <div className="p-5 bg-neon-green/5 border border-neon-green/20 rounded-2xl">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <CheckCircle className="w-4 h-4 text-neon-green" />
+                                    <span className="text-[10px] font-black text-neon-green uppercase tracking-widest">
+                                        Payment QR — Auto Generated ✓
+                                    </span>
+                                </div>
+                                <div className="flex flex-col md:flex-row items-center gap-6">
+                                    <div className="p-3 bg-white rounded-2xl shadow-lg shadow-neon-green/10 flex-shrink-0">
+                                        <img
+                                            src={qrUrl}
+                                            alt="UPI QR Code"
+                                            className="w-36 h-36 object-contain"
+                                            onError={(e) => { e.target.style.display = 'none'; }}
+                                        />
+                                    </div>
+                                    <div className="space-y-2 text-center md:text-left">
+                                        <p className="text-white font-black text-lg">₹{formData.entryFee}</p>
+                                        <p className="text-[11px] text-gray-400 font-mono">{formData.upiId}</p>
+                                        <p className="text-[10px] text-gray-500 max-w-xs">
+                                            Players will see this QR when registering. They scan it, pay ₹{formData.entryFee}, then enter their UPI Transaction ID as proof.
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {['Google Pay', 'PhonePe', 'Paytm', 'BHIM'].map(app => (
+                                                <span key={app} className="text-[9px] font-black px-2 py-0.5 bg-white/5 border border-white/10 rounded-full text-gray-500 uppercase">
+                                                    {app}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="p-5 bg-white/[0.02] border border-dashed border-white/10 rounded-2xl flex items-center gap-4">
+                                <QrCode className="w-10 h-10 text-gray-700 flex-shrink-0" />
+                                <div>
+                                    <p className="text-sm font-bold text-gray-500">QR will auto-generate here</p>
+                                    <p className="text-[11px] text-gray-700 mt-1">Enter your UPI ID and Entry Fee above — QR appears instantly.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        <Textarea
+                            label="Payment Instructions (optional — shown to players)"
                             icon={<AlignLeft className="w-3.5 h-3.5" />}
-                            name="paymentInstructions" value={formData.paymentInstructions} onChange={handleChange}
-                            placeholder="e.g. Pay via Google Pay / PhonePe to the UPI ID shown. Upload screenshot after payment. Join Discord before registering."
-                            rows={3} />
+                            name="paymentInstructions"
+                            value={formData.paymentInstructions}
+                            onChange={handleChange}
+                            placeholder="e.g. Scan QR & pay entry fee. Enter your UPI Transaction ID after payment. Join Discord server before registering."
+                            rows={2}
+                        />
                     </div>
                 )}
             </div>

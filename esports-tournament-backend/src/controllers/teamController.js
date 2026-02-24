@@ -7,7 +7,7 @@ export async function createTeam(req, res, next) {
         const {
             tournamentId, name, tag, logo,
             contactEmail, contactName, contactPhone,
-            captainEmail, captainName, captainPhone, // Support both naming styles
+            captainEmail, captainName, captainPhone,
             players
         } = req.body;
 
@@ -31,7 +31,6 @@ export async function createTeam(req, res, next) {
             }
         }
 
-        // Validate required fields
         if (!name) {
             return res.status(400).json({ success: false, message: 'Team name is required' });
         }
@@ -39,64 +38,28 @@ export async function createTeam(req, res, next) {
             return res.status(400).json({ success: false, message: 'Team logo is mandatory for registry' });
         }
 
-        // Optimized for: Multi-unit deployment (Logo + Players)
         const finalEmail = contactEmail || captainEmail || 'admin@tournament.com';
         const finalPhone = contactPhone || captainPhone || '0000000000';
         const finalName = contactName || captainName || name;
-
-        // Ensure at least one player is present if not provided, or use provided list
         const finalPlayers = (players && players.length > 0) ? players : [];
 
-        // Payment Verification Logic
+        // ── Payment (Manual UPI only) ──────────────────────────────────────────
+        // paymentAmount is AUTO-SET from tournament.entryFee (1 team = 1 × entry fee)
         let paymentStatus = 'none';
-        let razorpayDetails = {};
-        let finalPaymentMethod = tournament.paymentMethod || 'razorpay';
-        let paymentProof = req.body.paymentProof || null;
+        let paymentMethod = 'none';
+        let paymentAmount = null;
+        let upiTransactionId = req.body.upiTransactionId?.trim() || null;
 
-        if (tournament.isPaid) {
-            if (finalPaymentMethod === 'razorpay') {
-                const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
-
-                if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Payment details are required for this paid tournament'
-                    });
-                }
-
-                // Verify HMAC signature — NO fallback allowed
-                const crypto = await import('crypto');
-                const rzpSecret = process.env.RAZORPAY_KEY_SECRET;
-                if (!rzpSecret) {
-                    console.error('CRITICAL: RAZORPAY_KEY_SECRET not set');
-                    return res.status(500).json({ success: false, message: 'Payment gateway not configured on server' });
-                }
-                const sign = razorpayOrderId + '|' + razorpayPaymentId;
-                const expectedSign = crypto.default
-                    .createHmac('sha256', rzpSecret)
-                    .update(sign)
-                    .digest('hex');
-
-                if (razorpaySignature !== expectedSign) {
-                    console.warn(`🚫 Fake payment blocked — Order: ${razorpayOrderId}`);
-                    return res.status(400).json({ success: false, message: '🚫 Payment signature invalid — possible fraud attempt' });
-                }
-
-                paymentStatus = 'completed';
-                razorpayDetails = {
-                    razorpayPaymentId,
-                    razorpayOrderId,
-                    razorpaySignature
-                };
-            } else if (finalPaymentMethod === 'manual') {
-                if (!paymentProof) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Payment proof (screenshot) is required for manual payment'
-                    });
-                }
-                paymentStatus = 'pending'; // Admin needs to verify
+        if (tournament.isPaid && tournament.entryFee > 0) {
+            if (!upiTransactionId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'UPI Transaction ID is required. Pay the entry fee and paste the Transaction ID from your UPI app.'
+                });
             }
+            paymentAmount = tournament.entryFee; // auto — no manual input needed
+            paymentStatus = 'pending';           // organizer verifies txn ID
+            paymentMethod = 'manual';
         }
 
         const team = await Team.create({
@@ -107,14 +70,14 @@ export async function createTeam(req, res, next) {
             contactEmail: finalEmail,
             contactName: finalName,
             contactPhone: finalPhone,
-            status: finalPaymentMethod === 'manual' ? 'pending' : 'approved',
+            status: tournament.isPaid ? 'pending' : 'approved',
             paymentStatus,
-            paymentMethod: finalPaymentMethod,
-            paymentProof,
-            ...razorpayDetails
+            paymentMethod,
+            paymentAmount,    // ← auto from tournament.entryFee
+            upiTransactionId, // ← submitted by player after paying
         });
 
-        // Create players if provided
+        // Create players
         console.log(`👤 Registering ${finalPlayers.length} players for team: ${name}`);
         await Player.bulkCreate(
             finalPlayers.map(p => ({
@@ -128,12 +91,11 @@ export async function createTeam(req, res, next) {
             include: [{ model: Player, as: 'players' }],
         });
 
-        console.log('✅ Team fully registered with players:', teamWithPlayers.players?.length || 0);
+        console.log('✅ Team registered:', teamWithPlayers.name, '| Payment:', paymentStatus);
 
         // Invalidate leaderboard cache
-        const { clearCachePattern, deleteCache } = await import('../config/redis.js');
+        const { deleteCache } = await import('../config/redis.js');
         await deleteCache(`leaderboard:tournament:${tournamentId}`);
-
         const stages = await import('../models/index.js').then(m => m.Stage.findAll({ where: { tournamentId } }));
         for (const stage of stages) {
             await deleteCache(`leaderboard:stage:${stage.id}`);
@@ -141,7 +103,9 @@ export async function createTeam(req, res, next) {
 
         res.status(201).json({
             success: true,
-            message: 'Team registered successfully',
+            message: tournament.isPaid
+                ? 'Team registered! Payment pending organizer verification.'
+                : 'Team registered successfully.',
             data: { team: teamWithPlayers },
         });
     } catch (error) {

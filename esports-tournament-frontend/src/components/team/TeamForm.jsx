@@ -4,6 +4,12 @@ import Button from '../common/Button';
 import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity, Receipt, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const getUpiQrUrl = (upiId, amount, name = 'Tournament') => {
+    if (!upiId) return null;
+    const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent('Tournament Entry Fee')}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}&bgcolor=ffffff&color=000000&margin=10`;
+};
+
 const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) => {
     const [formData, setFormData] = useState({
         tournamentId: '',
@@ -15,17 +21,15 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
         players: [
             { inGameName: '', inGameId: '', role: '' }
         ],
-        paymentProof: '',
+        upiTransactionId: '',
     });
 
     const [logoPreview, setLogoPreview] = useState(null);
-    const [proofPreview, setProofPreview] = useState(null);
-    const [showPaymentInfo, setShowPaymentInfo] = useState(false);
 
     // Use directly-passed tournament OR find from dropdown selection
     const selectedT = tournament || tournaments.find(t => t.id === formData.tournamentId);
-    // Show payment section for any paid tournament (manual UPI/QR is the only method)
     const isManualPayment = selectedT?.isPaid && selectedT?.entryFee > 0;
+    const qrUrl = getUpiQrUrl(selectedT?.upiId, selectedT?.entryFee, selectedT?.name);
 
     const handleChange = (e) => {
         setFormData({
@@ -61,27 +65,6 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
         setLogoPreview(null);
     };
 
-    const handleProofChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                toast.error('Proof file size must be less than 2MB');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result;
-                setFormData({ ...formData, paymentProof: base64String });
-                setProofPreview(base64String);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const removeProof = () => {
-        setFormData({ ...formData, paymentProof: '' });
-        setProofPreview(null);
-    };
 
     const handlePlayerChange = (index, field, value) => {
         const updatedPlayers = [...formData.players];
@@ -114,8 +97,8 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
             return;
         }
 
-        if (isManualPayment && !formData.paymentProof) {
-            toast.error('Payment proof screenshot is required');
+        if (isManualPayment && !formData.upiTransactionId?.trim()) {
+            toast.error('Enter your UPI Transaction ID after paying');
             return;
         }
 
@@ -343,92 +326,71 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
                 </div>
             </div>
 
-            {/* --- PAYMENT PROOF (Conditional) --- */}
+            {/* --- UPI PAYMENT --- */}
             {isManualPayment && (
-                <div className="relative p-8 bg-dark-900/40 rounded-[2.5rem] border border-neon-purple/20 overflow-hidden animate-in zoom-in-95 duration-500">
-                    <div className="absolute top-0 right-0 p-8 opacity-5">
-                        <Receipt className="w-24 h-24 text-neon-purple" />
-                    </div>
-
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="p-3 bg-neon-purple/10 rounded-2xl border border-neon-purple/30 shadow-[0_0_15px_rgba(188,19,254,0.1)]">
-                            <QrCode className="w-5 h-5 text-neon-purple" />
+                <div className="relative p-8 bg-dark-900/40 rounded-[2.5rem] border border-neon-green/20 overflow-hidden animate-in zoom-in-95 duration-500">
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-neon-green/10 rounded-2xl border border-neon-green/30">
+                            <QrCode className="w-5 h-5 text-neon-green" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Manual Payment</h3>
-                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">FOLLOW INSTRUCTIONS BELOW</p>
+                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Pay Entry Fee</h3>
+                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">SCAN QR TO PAY · THEN ENTER TRANSACTION ID</p>
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="bg-black/60 p-6 rounded-3xl border border-white/5 space-y-3">
-                            <p className="text-[10px] font-black text-neon-purple uppercase tracking-widest">Organizer Instructions:</p>
-                            <p className="text-sm text-gray-300 leading-relaxed font-medium">
-                                {selectedT.paymentInstructions || 'Please contact organizer for payment details.'}
-                            </p>
-                            <div className="pt-2">
-                                <span className="text-[10px] font-black text-neon-pink uppercase">Amount Due: </span>
-                                <span className="text-xl font-black text-white italic">{selectedT.currency} {selectedT.entryFee}</span>
+                    {/* Amount + UPI */}
+                    <div className="flex flex-col md:flex-row items-center gap-6 p-5 bg-black/40 rounded-3xl border border-white/5 mb-6">
+                        {/* Auto QR */}
+                        {qrUrl ? (
+                            <div className="flex-shrink-0 p-3 bg-white rounded-2xl shadow-2xl shadow-neon-green/10">
+                                <img
+                                    src={qrUrl}
+                                    alt="Pay via UPI"
+                                    className="w-36 h-36 object-contain"
+                                    onError={(e) => e.target.style.display = 'none'}
+                                />
                             </div>
+                        ) : (
+                            <div className="w-36 h-36 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center">
+                                <QrCode className="w-10 h-10 text-gray-600" />
+                            </div>
+                        )}
 
-                            {selectedT.paymentQrCode && (
-                                <div className="mt-6 p-4 bg-white/5 rounded-2xl border border-white/10 flex flex-col items-center gap-3">
-                                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Scan QR to Pay</p>
-                                    <div className="p-3 bg-white rounded-xl">
-                                        <img src={selectedT.paymentQrCode} alt="Payment QR" className="w-32 h-32 object-contain" />
-                                    </div>
-                                    <p className="text-[8px] text-gray-600 font-mono text-center">SCAN USING ANY UPI/BANK APP</p>
-                                </div>
-                            )}
-
+                        <div className="space-y-3 text-center md:text-left">
+                            <div>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Entry Fee</p>
+                                <p className="text-3xl font-black text-white italic">₹{selectedT.entryFee}</p>
+                            </div>
                             {selectedT.upiId && (
-                                <div className="mt-6 p-6 bg-neon-purple/5 border border-neon-purple/20 rounded-3xl flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 bg-neon-purple rounded-full animate-ping"></div>
-                                        <span className="text-[10px] font-black text-neon-purple uppercase tracking-widest">Direct UPI Gateway</span>
-                                    </div>
-                                    <div className="p-4 bg-white rounded-2xl shadow-2xl">
-                                        <img
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${selectedT.upiId}&pn=${selectedT.name}&am=${selectedT.entryFee}&tn=Registration for ${selectedT.name}`)}`}
-                                            alt="Functional UPI QR"
-                                            className="w-32 h-32 object-contain"
-                                        />
-                                    </div>
-                                    <p className="text-[9px] text-gray-500 font-mono text-center uppercase tracking-widest italic">
-                                        Scan to open Payment Gateway
-                                    </p>
+                                <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 inline-block">
+                                    <p className="text-[9px] text-gray-500 uppercase tracking-widest">Pay to UPI ID</p>
+                                    <p className="text-sm font-black text-neon-green font-mono">{selectedT.upiId}</p>
                                 </div>
                             )}
-                        </div>
-
-                        <div className="space-y-4">
-                            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 ml-1">
-                                Upload Payment Screenshot <span className="text-neon-pink">*</span>
-                            </label>
-
-                            {proofPreview ? (
-                                <div className="relative group/proof rounded-3xl overflow-hidden border border-neon-purple/30 bg-black/40 p-4 flex items-center gap-6">
-                                    <img src={proofPreview} alt="Payment Proof" className="w-20 h-20 object-cover rounded-xl border border-white/10" />
-                                    <div>
-                                        <p className="text-xs font-black text-white uppercase tracking-widest mb-1">Screenshot Uploaded</p>
-                                        <button
-                                            type="button"
-                                            onClick={removeProof}
-                                            className="text-[10px] text-red-500 hover:underline uppercase font-bold"
-                                        >
-                                            Remove & Change
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-neon-purple/20 rounded-[2.5rem] cursor-pointer hover:border-neon-purple/50 hover:bg-neon-purple/[0.03] transition-all bg-black/20 group/upload">
-                                    <Upload className="w-6 h-6 text-neon-purple mb-2 group-hover/upload:scale-110 transition-transform" />
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest group-hover/upload:text-white">Select Screenshot</span>
-                                    <input type="file" accept="image/*" onChange={handleProofChange} className="hidden" />
-                                </label>
+                            <p className="text-[10px] text-gray-500">
+                                Scan QR with Google Pay, PhonePe, Paytm, or BHIM
+                            </p>
+                            {selectedT.paymentInstructions && (
+                                <p className="text-xs text-gray-400 italic">{selectedT.paymentInstructions}</p>
                             )}
                         </div>
                     </div>
+
+                    {/* Transaction ID */}
+                    <Input
+                        label="UPI Transaction ID *"
+                        icon={<Zap className="w-4 h-4" />}
+                        type="text"
+                        name="upiTransactionId"
+                        value={formData.upiTransactionId || ''}
+                        onChange={handleChange}
+                        placeholder="e.g. 402312345678 (copy from your payment app)"
+                        required={isManualPayment}
+                    />
+                    <p className="text-[10px] text-gray-600 mt-2 ml-1">
+                        After paying, open your UPI app → go to transaction history → copy the 12-digit Transaction ID.
+                    </p>
                 </div>
             )}
 

@@ -88,8 +88,8 @@ const Tournament = sequelize.define(
             defaultValue: 'INR',
         },
         paymentMethod: {
-            type: DataTypes.ENUM('razorpay', 'manual'),
-            defaultValue: 'razorpay',
+            type: DataTypes.STRING,  // 'manual' | 'none'
+            defaultValue: 'manual',
             field: 'payment_method',
         },
         paymentInstructions: {
@@ -97,11 +97,7 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'payment_instructions',
         },
-        paymentQrCode: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-            field: 'payment_qr_code',
-        },
+        // paymentQrCode removed — QR is now auto-generated from upiId + entryFee
         upiId: {
             type: DataTypes.STRING,
             allowNull: true,
