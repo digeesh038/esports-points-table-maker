@@ -63,6 +63,9 @@ export default {
                     "100%": { width: "0%" },
                 },
             },
+            screens: {
+                'xs': '480px',
+            },
         },
     },
     plugins: [],

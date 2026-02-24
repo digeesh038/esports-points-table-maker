@@ -43,7 +43,7 @@ const OrganizationCard = ({ org, onDelete }) => {
                     </p>
                 </div>
 
-                <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+                <div className="mt-auto pt-4 border-t border-white/5 flex flex-col xs:flex-row items-center justify-between gap-4">
                     <div className="flex items-center">
                         {org.website && (
                             <a
@@ -59,7 +59,7 @@ const OrganizationCard = ({ org, onDelete }) => {
                     </div>
                     <Link
                         to={`/dashboard/organizations/${org.id}`}
-                        className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-neon-blue group-hover:text-white transition-all bg-neon-blue/5 h-8 px-4 rounded-lg border border-neon-blue/20 hover:bg-neon-blue"
+                        className="w-full xs:w-auto flex items-center justify-center text-[10px] font-black uppercase tracking-[0.2em] text-neon-blue group-hover:text-white transition-all bg-neon-blue/5 h-10 md:h-8 px-6 md:px-4 rounded-xl md:rounded-lg border border-neon-blue/20 hover:bg-neon-blue"
                     >
                         MANAGE
                         <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
