@@ -23,14 +23,18 @@ const startServer = async () => {
         // 1. Test database connection
         await testConnection();
 
-        // 2a. Pre-sync: add 'none' to payment_method ENUMs (must run outside a transaction)
-        const enumFixes = [
+        // 2a. Pre-sync fixes — must run BEFORE sequelize.sync({ alter: true })
+        //     Sequelize fails to ALTER an ENUM column when a DEFAULT is still set.
+        //     We drop defaults first, then add 'none' to enum types.
+        const preSyncFixes = [
+            `ALTER TABLE IF EXISTS "tournaments" ALTER COLUMN "payment_method" DROP DEFAULT`,
+            `ALTER TABLE IF EXISTS "teams" ALTER COLUMN "payment_method" DROP DEFAULT`,
             `ALTER TYPE enum_teams_payment_method ADD VALUE IF NOT EXISTS 'none'`,
             `ALTER TYPE enum_tournaments_payment_method ADD VALUE IF NOT EXISTS 'none'`,
         ];
-        for (const sql of enumFixes) {
+        for (const sql of preSyncFixes) {
             try { await sequelize.query(sql); }
-            catch (e) { /* enum type may not exist yet on first deploy — that's fine */ }
+            catch (e) { /* table/type may not exist on first deploy — fine */ }
         }
 
         // 2b. Sync database tables
