@@ -22,8 +22,8 @@ const HomePage = () => {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-neon-blue text-xs font-bold uppercase tracking-widest mb-4">
                     <Target className="w-4 h-4" /> Tournament Manager
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic uppercase text-white leading-tight">
-                    SIMPLIFY YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple text-shadow-neon">ESPORTS</span>
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic uppercase text-white leading-tight pr-4">
+                    SIMPLIFY YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple text-shadow-neon pr-4">ESPORTS</span>
                 </h1>
                 <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed">
                     Manage your organizations, tournaments, and matches in one place. No clutter, just control.
@@ -64,7 +64,7 @@ const HomePage = () => {
                     <div className="w-16 h-16 bg-neon-blue/10 rounded-2xl flex items-center justify-center mb-6 text-neon-blue group-hover:scale-110 transition-transform">
                         <Building2 className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-black text-white italic uppercase mb-3">Create Organization</h3>
+                    <h3 className="text-2xl font-black text-white italic uppercase mb-3 pr-4">Create Organization</h3>
                     <p className="text-gray-400 leading-relaxed">First, set up your organization profile. This is the central hub for all your competitive events.</p>
                 </div>
 
@@ -74,7 +74,7 @@ const HomePage = () => {
                     <div className="w-16 h-16 bg-neon-purple/10 rounded-2xl flex items-center justify-center mb-6 text-neon-purple group-hover:scale-110 transition-transform">
                         <Trophy className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-black text-white italic uppercase mb-3">Launch Tournament</h3>
+                    <h3 className="text-2xl font-black text-white italic uppercase mb-3 pr-4">New Tournament</h3>
                     <p className="text-gray-400 leading-relaxed">Create a tournament under your org. Configure scoring rules, stages, and registration requirements.</p>
                 </div>
 
@@ -84,7 +84,7 @@ const HomePage = () => {
                     <div className="w-16 h-16 bg-neon-pink/10 rounded-2xl flex items-center justify-center mb-6 text-neon-pink group-hover:scale-110 transition-transform">
                         <Target className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-black text-white italic uppercase mb-3">Manage Matches</h3>
+                    <h3 className="text-2xl font-black text-white italic uppercase mb-3 pr-4">Manage Matches</h3>
                     <p className="text-gray-400 leading-relaxed">Register teams and track match results. Points and leaderboards are updated automatically in real-time.</p>
                 </div>
             </div>

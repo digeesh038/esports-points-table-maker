@@ -167,7 +167,7 @@ const DashboardPage = () => {
 
                 {tournaments.length === 0 ? (
                     <Card className="bg-dark-800/30 border-dark-600 border-dashed py-12 text-center">
-                        <p className="text-gray-500 italic">
+                        <p className="text-gray-500 italic pr-4">
                             No active tournaments found.
                         </p>
                     </Card>

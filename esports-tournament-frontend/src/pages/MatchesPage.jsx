@@ -141,7 +141,7 @@ const MatchesPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
-                        Admin // Matches
+                        Manage // Matches
                     </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
@@ -191,7 +191,7 @@ const MatchesPage = () => {
             <div className="bg-dark-800/20 backdrop-blur-md rounded-2xl border border-dark-600 p-8 shadow-2xl">
                 {filteredMatches.length === 0 ? (
                     <div className="py-20 text-center">
-                        <p className="text-gray-500 italic text-xl uppercase tracking-widest">
+                        <p className="text-gray-500 italic text-xl uppercase tracking-widest pr-4">
                             No {statusFilter} matches found.
                         </p>
                     </div>
