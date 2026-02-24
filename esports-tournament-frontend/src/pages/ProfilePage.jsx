@@ -213,34 +213,6 @@ const ProfilePage = () => {
                                 </div>
                             ))}
 
-                            {/* System ID Field - Hidden by default */}
-                            <div className="md:col-span-2 bg-white/[0.02] p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group/key">
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center text-gray-500">
-                                        <HardDrive className="w-3.5 h-3.5 mr-2 text-gray-400" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">System Access Key</span>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowKey(!showKey)}
-                                        className="text-[9px] font-black uppercase text-neon-blue hover:text-white transition-colors"
-                                    >
-                                        {showKey ? '[ HIDE_KEY ]' : '[ REVEAL_KEY ]'}
-                                    </button>
-                                </div>
-                                <div className="flex items-center justify-between gap-4">
-                                    <div className={`font-mono text-xs transition-all duration-300 flex-1 truncate ${showKey ? 'text-gray-300 opacity-100' : 'text-gray-700 opacity-30 select-none blur-sm'}`}>
-                                        {showKey ? (!isGuest ? user?.id : 'GUEST_PROTO_KEY_RESTRICTED') : '••••••••••••••••••••••••••••••••'}
-                                    </div>
-                                    {showKey && !isGuest && (
-                                        <button
-                                            onClick={() => copyToClipboard(user?.id)}
-                                            className="p-2 bg-neon-blue/10 text-neon-blue rounded-lg hover:bg-neon-blue hover:text-black transition-all"
-                                        >
-                                            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
                         </div>
                     </Card>
 
@@ -308,38 +280,6 @@ const ProfilePage = () => {
                 </motion.div>
             </div>
 
-            {/* System Key Section - Moved to bottom for clarity */}
-            {!isGuest && (
-                <motion.div variants={itemVariants} className="max-w-xl mx-auto md:mx-0">
-                    <div className="bg-dark-900/40 p-6 rounded-3xl border border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex-1">
-                            <div className="flex items-center text-gray-600 mb-2">
-                                <HardDrive className="w-4 h-4 mr-3" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">System ID Key</span>
-                            </div>
-                            <div className={`font-mono text-xs truncate transition-all duration-500 ${showKey ? 'text-gray-300 blur-0' : 'text-gray-800 blur-sm select-none'}`}>
-                                {showKey ? user?.id : '••••••••••••••••••••••••••••••••'}
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => setShowKey(!showKey)}
-                                className="px-4 py-2 border border-white/10 rounded-xl text-[10px] font-black uppercase text-gray-400 hover:text-white transition-colors"
-                            >
-                                {showKey ? 'Hide' : 'Reveal'}
-                            </button>
-                            {showKey && (
-                                <button
-                                    onClick={() => copyToClipboard(user?.id)}
-                                    className="px-4 py-2 bg-neon-blue text-black rounded-xl text-[10px] font-black uppercase shadow-[0_0_15px_#00f0ff] active:scale-95 transition-all"
-                                >
-                                    Copy
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </motion.div>
-            )}
         </motion.div>
     );
 };
