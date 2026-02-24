@@ -94,7 +94,7 @@ const StandingsOverlay = () => {
             return;
         }
         try {
-            const tid = toast.loading('Synchronizing points...');
+            const tid = toast.loading('Updating standings...');
             await leaderboardAPI.recalculate(selectedStageId);
             await fetchStandings();
             toast.success('Scores updated.', { id: tid });
@@ -188,7 +188,7 @@ const StandingsOverlay = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2 px-1 opacity-40">
                                         <LayoutGrid className="w-4 h-4 text-white" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Navigation</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Menu</span>
                                     </div>
                                     <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar">
                                         <button
@@ -227,7 +227,7 @@ const StandingsOverlay = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2 px-1 opacity-40">
                                         <Target className="w-4 h-4 text-white" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Switch Context</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Tournament Choice</span>
                                     </div>
                                     <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar">
                                         {tournaments.map((t) => (
@@ -252,7 +252,7 @@ const StandingsOverlay = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2 px-1 opacity-40">
                                         <BarChart3 className="w-4 h-4 text-white" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Telemetry</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Stats</span>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 pb-4">
                                         <div className="bg-white/3 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
@@ -285,11 +285,11 @@ const StandingsOverlay = () => {
                                         className="w-1.5 bg-neon-blue shadow-[0_0_20px_rgba(0,183,255,0.6)]"
                                     ></motion.div>
                                     <div>
-                                        <h2 className="text-3xl md:text-7xl font-black italic tracking-tighter text-white leading-none uppercase">
+                                        <h2 className="text-3xl md:text-7xl font-black italic tracking-tighter text-white leading-none uppercase pr-4">
                                             STANDINGS <span className="text-neon-blue animate-pulse">.</span>
                                         </h2>
                                         <div className="flex items-center gap-4 mt-2 opacity-30">
-                                            <span className="text-[9px] font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase text-white">OFFICIAL BROADCAST FEED</span>
+                                            <span className="text-[9px] font-mono tracking-[0.2em] md:tracking-[0.5em] uppercase text-white">OFFICIAL STANDINGS</span>
                                             <div className="hidden md:block h-[1px] w-48 bg-gradient-to-r from-white to-transparent"></div>
                                         </div>
                                     </div>
@@ -307,7 +307,7 @@ const StandingsOverlay = () => {
                                                     }`}
                                             >
                                                 <Zap className={`w-4 h-4 ${selectedStageId !== 'overall' ? 'group-hover:animate-bounce' : ''}`} />
-                                                <span className="sm:inline">Update Node</span>
+                                                <span className="sm:inline">Update Standings</span>
                                             </button>
                                         )}
                                         <button onClick={fetchStandings} className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 hover:text-white transition-all hover:bg-white/10 active:scale-90 shrink-0">
@@ -322,7 +322,7 @@ const StandingsOverlay = () => {
                                         </button>
                                     </div>
                                     <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 rounded-full">
-                                        <span className="text-[9px] text-gray-600 font-bold uppercase tracking-widest italic">Signal Status</span>
+                                        <span className="text-[9px] text-gray-600 font-bold uppercase tracking-widest italic pr-4">Connection Status</span>
                                         <div className="flex gap-1.5 items-center">
                                             <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_12px_rgba(40,255,0,0.8)] animate-pulse"></div>
                                             <span className="text-[9px] text-neon-green font-black uppercase tracking-wider">Secure</span>
@@ -349,7 +349,7 @@ const StandingsOverlay = () => {
                                     <div className="flex items-center gap-12">
                                         <div className="flex items-center gap-3">
                                             <Users className="w-5 h-5 text-white" />
-                                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white italic">{leaderboard.length} Squads Online</span>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white italic pr-4">{leaderboard.length} Teams Registered</span>
                                         </div>
                                         <span className="text-[10px] font-mono tracking-[0.2em] text-white">UID: {location.pathname.split('/').pop() || 'GLOBAL'}</span>
                                     </div>
@@ -359,7 +359,7 @@ const StandingsOverlay = () => {
                                         className="flex items-center gap-3 text-neon-blue"
                                     >
                                         <Zap className="w-4 h-4" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest italic font-mono">ENCRYPTED_SIGNAL_STABLE</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest italic font-mono pr-4">SYSTEM RUNNING STABLE</span>
                                     </motion.div>
                                 </footer>
                             </div>

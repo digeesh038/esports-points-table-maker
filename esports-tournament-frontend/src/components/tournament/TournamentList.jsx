@@ -11,7 +11,7 @@ const TournamentList = ({ tournaments, loading }) => {
                     <div className="w-20 h-20 border-2 border-neon-blue/20 rounded-full animate-ping absolute inset-0"></div>
                     <div className="w-20 h-20 border-t-2 border-neon-blue rounded-full animate-spin"></div>
                 </div>
-                <p className="text-neon-blue font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Syncing Registry...</p>
+                <p className="text-neon-blue font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Loading Tournaments...</p>
             </div>
         );
     }
@@ -27,8 +27,8 @@ const TournamentList = ({ tournaments, loading }) => {
                     <div className="absolute inset-0 bg-neon-purple/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <Trophy className="w-10 h-10 text-gray-800 group-hover:text-neon-purple transition-colors relative z-10" />
                 </div>
-                <h3 className="text-3xl font-black italic tracking-tighter text-white mb-3">NO TELEMETRY DETECTED</h3>
-                <p className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.4em]">Zero records matching current search vector.</p>
+                <h3 className="text-3xl font-black italic tracking-tighter text-white mb-3 pr-4">NO TOURNAMENTS FOUND</h3>
+                <p className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.4em]">No records match your search criteria.</p>
                 <div className="mt-8 flex gap-2">
                     <div className="w-1.5 h-1.5 bg-neon-purple/40 rounded-full"></div>
                     <div className="w-1.5 h-1.5 bg-neon-purple/20 rounded-full"></div>

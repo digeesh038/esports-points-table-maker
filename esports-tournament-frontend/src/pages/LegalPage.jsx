@@ -118,7 +118,7 @@ const LegalPage = () => {
                         <div className="bg-neon-purple/5 backdrop-blur-3xl border border-neon-purple/10 rounded-[32px] p-8 hidden lg:block">
                             <ShieldAlert className="w-8 h-8 text-neon-purple mb-6" />
                             <p className="text-[10px] leading-relaxed text-gray-500 uppercase tracking-widest font-black italic">
-                                Unauthorized breaches of these operational mandates will result in permanent entity deletion from the grid.
+                                Unauthorized violations of these rules will result in account suspension.
                             </p>
                         </div>
                     </div>
@@ -133,7 +133,7 @@ const LegalPage = () => {
                                 </div>
                                 <div>
                                     <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none pr-4">Terms of Service</h2>
-                                    <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Protocol: OPERATIONAL_MANDATE // 01</p>
+                                    <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Policy: TERMS OF SERVICE // 01</p>
                                 </div>
                             </div>
 
@@ -142,21 +142,21 @@ const LegalPage = () => {
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
                                         <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">1. Grid Entry & Conduct</h3>
                                         <p>
-                                            By accessing the <span className="text-neon-blue">Tournament Console</span> node, you effectively link your digital presence to our competitive infrastructure. Tactical integrity is paramount. Users are prohibited from utilizing automated scripts, external advantage software, or any protocol-breaking exploits during combat scenarios.
+                                            By accessing the <span className="text-neon-blue">Tournament Console</span>, you agree to our competitive rules. Fair play is mandatory. Users are prohibited from using cheats or automated scripts.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
                                         <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Entity Responsibility</h3>
                                         <p>
-                                            You are solely responsible for the security of your linked Google credentials. Any synchronization unauthorized by typical behavioral patterns must be reported to the central command hub immediately.
+                                            You are responsible for your account security. Any unauthorized access should be reported to support immediately.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
                                         <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Competitive Termination</h3>
                                         <p>
-                                            The platform reserves the absolute right to sever your connection to the grid if your actions degrade the competitive quality of the arena. This includes toxic signal transmissions and unsportsmanlike tactical maneuvers.
+                                            The platform reserves the right to suspend accounts that disrupt the competitive balance or behave inappropriately.
                                         </p>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@ const LegalPage = () => {
                                 </div>
                                 <div>
                                     <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none pr-4">Privacy Protocol</h2>
-                                    <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Protocol: DATA_ENCRYPTION // 02</p>
+                                    <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Policy: PRIVACY POLICY // 02</p>
                                 </div>
                             </div>
 
@@ -183,21 +183,21 @@ const LegalPage = () => {
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
                                         <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">1. Signal Capture</h3>
                                         <p>
-                                            We intercept and archive only the telemetry necessary for tournament orchestration. This includes your <span className="text-neon-purple">Google Identity Token</span>, designated alias, and performance metrics across organized combat stages.
+                                            We archive only the data necessary for tournament management. This includes your <span className="text-neon-purple">Google Profile</span> information and performance metrics across matches.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Tactical Telemetry</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Match Statistics</h3>
                                         <p>
-                                            Your match data—including eliminations, positioning, and survival duration—is broadcasted across the public leaderboard grid. By participating, you authorize this data transmission to the public sector.
+                                            Your match data—including scores and rankings—is displayed on public leaderboards. By participating, you authorize this data display.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Encryption Shielding</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Data Security</h3>
                                         <p>
-                                            All data packets are routed through high-level encrypted tunnels. We do not expose your primary authentication vectors to third-party data harvesters or rogue syndicates.
+                                            All data is handled through secure encrypted channels. We do not expose your primary login credentials to third-party data harvesters or unauthorized parties.
                                         </p>
                                     </div>
                                 </div>
@@ -217,12 +217,12 @@ const LegalPage = () => {
                 >
                     <div className="flex items-center gap-8 mb-8">
                         <div className="h-px w-20 bg-gradient-to-r from-transparent to-white/10" />
-                        <span className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.6em]">Protocol_EOF</span>
+                        <span className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.6em]">END OF POLICY</span>
                         <div className="h-px w-20 bg-gradient-to-l from-transparent to-white/10" />
                     </div>
                     <p className="text-[9px] font-mono text-gray-700 uppercase tracking-widest max-w-lg leading-loose">
-                        Synchronized with GLOBAL_LEGAL_GRID_INTERFACE_V4 <br />
-                        All rights encrypted &copy; 2026 Tournament Command
+                        Management System v4.0.2 <br />
+                        All rights reserved &copy; 2026 Tournament Command
                     </p>
                 </motion.div>
             </div>

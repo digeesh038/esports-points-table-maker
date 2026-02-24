@@ -78,7 +78,7 @@ const DashboardPage = () => {
     };
 
     if (loading) {
-        return <Loader text="Synchronizing dashboard..." />;
+        return <Loader text="Loading dashboard..." />;
     }
 
     return (
@@ -88,7 +88,7 @@ const DashboardPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
-                        Overview // Control Center
+                        Overview // Home
                     </span>
                 </div>
                 <h1 className="text-3xl xs:text-4xl md:text-5xl lg:text-7xl font-black italic leading-tight tracking-tighter uppercase">
@@ -96,7 +96,7 @@ const DashboardPage = () => {
                 </h1>
                 <p className="text-gray-500 mt-2 text-sm md:text-base font-medium flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-neon-green shadow-[0_0_8px_#39ff14] animate-pulse" />
-                    {isGuest ? 'GUEST_PROTO_RESTRICTED: Limited functionality enabled.' : `Welcome back, ${user?.name}`}
+                    {isGuest ? 'Guest Mode: Limited functionality enabled.' : `Welcome back, ${user?.name}`}
                 </p>
             </div>
 

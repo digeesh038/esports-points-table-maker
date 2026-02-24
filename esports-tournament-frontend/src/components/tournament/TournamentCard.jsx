@@ -16,11 +16,11 @@ const TournamentCard = ({ tournament }) => {
     };
 
     const statusConfig = {
-        draft: { label: 'INTERNAL DRAFT', color: 'text-gray-500 border-gray-800' },
-        registration_open: { label: 'ENROLLMENT LIVE', color: 'text-neon-green border-neon-green/30 shadow-[0_0_10px_rgba(40,255,0,0.1)]' },
-        ongoing: { label: 'BROADCAST ACTIVE', color: 'text-neon-blue border-neon-blue/30 shadow-[0_0_10px_rgba(0,183,255,0.1)]' },
-        completed: { label: 'MISSION CONCLUDED', color: 'text-neon-purple border-neon-purple/30' },
-        cancelled: { label: 'NODE TERMINATED', color: 'text-red-500 border-red-500/30' },
+        draft: { label: 'DRAFT', color: 'text-gray-500 border-gray-800' },
+        registration_open: { label: 'REGISTRATION OPEN', color: 'text-neon-green border-neon-green/30 shadow-[0_0_10px_rgba(40,255,0,0.1)]' },
+        ongoing: { label: 'ONGOING', color: 'text-neon-blue border-neon-blue/30 shadow-[0_0_10px_rgba(0,183,255,0.1)]' },
+        completed: { label: 'COMPLETED', color: 'text-neon-purple border-neon-purple/30' },
+        cancelled: { label: 'CANCELLED', color: 'text-red-500 border-red-500/30' },
     };
 
     const status = statusConfig[tournament.status] || statusConfig.draft;
@@ -46,7 +46,7 @@ const TournamentCard = ({ tournament }) => {
                 {/* Header: Game & Status */}
                 <div className="flex items-center justify-between mb-10">
                     <div className={`px-4 py-2 rounded-xl border text-[9px] font-black tracking-[0.2em] uppercase backdrop-blur-md ${gameColors[tournament.game] || gameColors.free_fire}`}>
-                        {tournament.game?.replace('_', ' ') || 'SYNTHETIC_NODE'}
+                        {tournament.game?.replace('_', ' ') || 'GAME'}
                     </div>
                     <div className={`flex items-center gap-2`}>
                         <div className={`w-1.5 h-1.5 rounded-full animate-pulse shadow-[0_0_8px_currentColor] ${statusConfig[tournament.status]?.color?.split(' ')[0] || 'text-gray-500'}`} />
@@ -65,7 +65,7 @@ const TournamentCard = ({ tournament }) => {
                 </div>
 
                 <p className="text-gray-500 text-[13px] font-medium leading-relaxed mb-10 line-clamp-2 h-10 opacity-80 group-hover:opacity-100 transition-opacity">
-                    {tournament.description || 'System encryption error: No descriptive records found for this tournament identifier.'}
+                    {tournament.description || 'No description available for this tournament.'}
                 </p>
 
                 {/* Specs Grid */}
@@ -73,10 +73,10 @@ const TournamentCard = ({ tournament }) => {
                     <div className="bg-[#050508]/60 border border-white/5 p-5 rounded-[24px] flex flex-col gap-1 hover:border-white/10 transition-colors group/item">
                         <span className="text-[8px] font-bold text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/item:text-neon-blue transition-colors">
                             <Calendar className="w-2.5 h-2.5" />
-                            Deployed
+                            Date
                         </span>
                         <span className="text-[11px] font-black text-white/80 tracking-tight">
-                            {tournament.startDate ? format(new Date(tournament.startDate), 'MMM dd | yyyy') : 'TBD_NODE'}
+                            {tournament.startDate ? format(new Date(tournament.startDate), 'MMM dd | yyyy') : 'TBD'}
                         </span>
                     </div>
 
@@ -103,7 +103,7 @@ const TournamentCard = ({ tournament }) => {
 
                         <Target className="w-4 h-4 text-gray-600 group-hover/btn:text-black transition-colors" />
                         <span className="text-[11px] font-black text-white group-hover/btn:text-black tracking-[0.4em] uppercase">
-                            {isDashboard ? 'Access Console' : 'Engage Node'}
+                            {isDashboard ? 'Manage' : 'View Hub'}
                         </span>
                         <ChevronRight className="w-4 h-4 text-gray-800 group-hover/btn:text-black group-hover/btn:translate-x-1 transition-all" />
                     </Link>

@@ -61,12 +61,12 @@ const PointsTable = ({ tournamentId, stageId, teams = [] }) => {
     const handleRecalculate = async () => {
         try {
             setSyncing(true);
-            const toastId = toast.loading('Recalibrating node scores...');
+            const toastId = toast.loading('Updating standings...');
             await leaderboardAPI.recalculate(stageId);
             await fetchData();
             toast.success('Standings synchronized successfully!', { id: toastId });
         } catch (error) {
-            toast.error('Recalculation protocol failed.');
+            toast.error('Failed to update standings.');
         } finally {
             setSyncing(false);
         }
@@ -85,7 +85,7 @@ const PointsTable = ({ tournamentId, stageId, teams = [] }) => {
                             Points Table
                             {syncing && <span className="text-[10px] text-neon-blue animate-pulse font-mono tracking-widest ml-2">UPDATING...</span>}
                         </h3>
-                        <p className="text-[9px] font-mono text-gray-500 uppercase tracking-[0.3em]">Phase Telemetry & Rankings</p>
+                        <p className="text-[9px] font-mono text-gray-500 uppercase tracking-[0.3em]">Phase Standings & Rankings</p>
                     </div>
                 </div>
 
@@ -124,10 +124,10 @@ const PointsTable = ({ tournamentId, stageId, teams = [] }) => {
                         <div className="w-16 h-16 bg-dark-800 rounded-2xl flex items-center justify-center mb-6 border border-white/5 shadow-inner">
                             <Target className="w-8 h-8 text-gray-700 opacity-20" />
                         </div>
-                        <h4 className="text-xl font-bold text-gray-500 italic uppercase">Awaiting Deployments</h4>
-                        <p className="text-xs text-gray-600 font-mono mt-2 max-w-xs mx-auto">Standings will materialize once match data is processed for this phase.</p>
+                        <h4 className="text-xl font-bold text-gray-500 italic uppercase pr-4">Awaiting Matches</h4>
+                        <p className="text-xs text-gray-600 font-mono mt-2 max-w-xs mx-auto">Standings will be updated once match data is processed for this phase.</p>
                         <Button variant="outline" size="sm" onClick={handleRecalculate} className="mt-8 border-neon-blue/20 text-neon-blue/60 hover:text-neon-blue">
-                            Force Node Update
+                            Refresh Standings
                         </Button>
                     </div>
                 ) : (
@@ -146,11 +146,11 @@ const PointsTable = ({ tournamentId, stageId, teams = [] }) => {
                         <span className="text-[9px] font-mono text-gray-500 uppercase">Live Feed</span>
                     </div>
                     <div className="h-3 w-px bg-white/10"></div>
-                    <span className="text-[9px] font-mono text-gray-500 uppercase">{leaderboard.length} Entities Indexed</span>
+                    <span className="text-[9px] font-mono text-gray-500 uppercase">{leaderboard.length} Teams Ranked</span>
                 </div>
-                <div className="text-[9px] font-mono text-gray-700 flex items-center gap-2 italic">
+                <div className="text-[9px] font-mono text-gray-700 flex items-center gap-2 italic pr-4">
                     <Zap className="w-3 h-3" />
-                    SYNC_STABLE
+                    SYNC STABLE
                 </div>
             </div>
         </Card>
