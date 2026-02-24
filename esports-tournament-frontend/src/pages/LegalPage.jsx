@@ -188,16 +188,16 @@ const LegalPage = () => {
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Match Statistics</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Tactical Telemetry</h3>
                                         <p>
                                             Your match data—including scores and rankings—is displayed on public leaderboards. By participating, you authorize this data display.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Data Security</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Encryption Shielding</h3>
                                         <p>
-                                            All data is handled through secure encrypted channels. We do not expose your primary login credentials to third-party data harvesters or unauthorized parties.
+                                            All data packets are routed through high-level encrypted tunnels. We do not expose your primary authentication vectors to third-party data harvesters or rogue syndicates.
                                         </p>
                                     </div>
                                 </div>
@@ -217,12 +217,12 @@ const LegalPage = () => {
                 >
                     <div className="flex items-center gap-8 mb-8">
                         <div className="h-px w-20 bg-gradient-to-r from-transparent to-white/10" />
-                        <span className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.6em]">END OF POLICY</span>
+                        <span className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.6em]">Protocol_EOF</span>
                         <div className="h-px w-20 bg-gradient-to-l from-transparent to-white/10" />
                     </div>
                     <p className="text-[9px] font-mono text-gray-700 uppercase tracking-widest max-w-lg leading-loose">
-                        Management System v4.0.2 <br />
-                        All rights reserved &copy; 2026 Tournament Command
+                        Synchronized with GLOBAL_LEGAL_GRID_INTERFACE_V4 <br />
+                        All rights encrypted &copy; 2026 Tournament Command
                     </p>
                 </motion.div>
             </div>

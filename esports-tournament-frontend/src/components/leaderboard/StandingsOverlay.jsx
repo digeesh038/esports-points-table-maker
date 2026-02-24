@@ -307,7 +307,7 @@ const StandingsOverlay = () => {
                                                     }`}
                                             >
                                                 <Zap className={`w-4 h-4 ${selectedStageId !== 'overall' ? 'group-hover:animate-bounce' : ''}`} />
-                                                <span className="sm:inline">Update Standings</span>
+                                                <span className="sm:inline">Update Scores</span>
                                             </button>
                                         )}
                                         <button onClick={fetchStandings} className="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 hover:text-white transition-all hover:bg-white/10 active:scale-90 shrink-0">
@@ -383,8 +383,9 @@ const StandingsOverlay = () => {
                         }
                     `}</style>
                 </motion.div>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 };
 

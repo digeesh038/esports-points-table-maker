@@ -59,7 +59,7 @@ const DashboardStats = ({ stats }) => {
                                 </div>
                                 <div>
                                     <p className="text-gray-500 font-bold text-[9px] uppercase tracking-[0.3em] leading-none mb-1">
-                                        Status // Summary
+                                        Status // Active
                                     </p>
                                     <h4 className="text-gray-400 font-black text-[10px] uppercase tracking-widest leading-none">
                                         {item.label}

@@ -117,7 +117,7 @@ const OrganizationsPage = () => {
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                     <div className="flex-1">
-                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none pr-4">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
                             <span className="text-white">MY</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)] pr-4">ORGANIZATIONS</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-blue/30 pl-4 py-1">

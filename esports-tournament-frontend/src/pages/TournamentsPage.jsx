@@ -40,7 +40,7 @@ const TournamentsPage = () => {
             const data = response?.data?.tournaments || response?.tournaments || [];
             setTournaments(data);
         } catch (error) {
-            toast.error('Failed to sync tournament registry');
+            toast.error('Failed to load tournaments');
         } finally {
             setLoading(false);
         }
@@ -64,13 +64,13 @@ const TournamentsPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-purple/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-purple uppercase tracking-[0.4em] opacity-60">
-                        Admin // Tournaments
+                        Manage // Tournaments
                     </span>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
                     <div className="flex-1">
-                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none pr-4">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
                             <span className="text-white">MY</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-purple to-purple-600 drop-shadow-[0_0_15px_rgba(188,19,254,0.3)] pr-4">TOURNAMENTS</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-purple/30 pl-4 py-1">
@@ -141,7 +141,7 @@ const TournamentsPage = () => {
                             >
                                 <option value="">Filter by Status</option>
                                 <option value="draft">Drafts</option>
-                                <option value="registration_open">Recruiting</option>
+                                <option value="registration_open">Registration Open</option>
                                 <option value="ongoing">Active</option>
                                 <option value="completed">Finished</option>
                             </select>

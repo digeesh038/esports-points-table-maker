@@ -22,7 +22,7 @@ const HomePage = () => {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-neon-blue text-xs font-bold uppercase tracking-widest mb-4">
                     <Target className="w-4 h-4" /> Tournament Manager
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic uppercase text-white leading-tight pr-4">
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic uppercase text-white leading-tight">
                     SIMPLIFY YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple text-shadow-neon">ESPORTS</span>
                 </h1>
                 <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed">
@@ -74,7 +74,7 @@ const HomePage = () => {
                     <div className="w-16 h-16 bg-neon-purple/10 rounded-2xl flex items-center justify-center mb-6 text-neon-purple group-hover:scale-110 transition-transform">
                         <Trophy className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-black text-white italic uppercase mb-3">New Tournament</h3>
+                    <h3 className="text-2xl font-black text-white italic uppercase mb-3">Launch Tournament</h3>
                     <p className="text-gray-400 leading-relaxed">Create a tournament under your org. Configure scoring rules, stages, and registration requirements.</p>
                 </div>
 
