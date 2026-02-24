@@ -63,7 +63,7 @@ const GoogleSignInPage = () => {
                             </motion.div>
 
                             <div className="relative mb-6 px-4">
-                                <h1 className="text-2xl xs:text-3xl md:text-5xl font-black text-white italic tracking-tighter uppercase relative z-10 leading-none drop-shadow-[0_0_10px_rgba(0,240,255,0.3)]">
+                                <h1 className="text-2xl xs:text-3xl md:text-5xl font-black text-white italic tracking-tighter uppercase relative z-10 leading-none drop-shadow-[0_0_10px_rgba(0,240,255,0.3)] pr-4">
                                     <span className="text-neon-blue inline-block pl-2">TOURNAMENT</span><br />CONSOLE
                                 </h1>
                                 {/* Glitch Layers */}

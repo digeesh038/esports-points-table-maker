@@ -285,7 +285,7 @@ const TeamsPage = () => {
                             </button>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none pr-4">
                             <span className="text-white">TEAM</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)] pr-4">REGISTRY</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-pink/30 pl-4 py-1">
@@ -323,7 +323,7 @@ const TeamsPage = () => {
             {/* Content View */}
             {filteredTeams.length === 0 ? (
                 <Card className="bg-dark-800/30 border-dashed border-2 border-dark-600 py-20 text-center rounded-2xl">
-                    <p className="text-gray-500 italic text-xl">
+                    <p className="text-gray-500 italic text-xl pr-4">
                         No {activeTab === 'registry' ? 'teams' : 'squads'} found matching your search.
                     </p>
                 </Card>
