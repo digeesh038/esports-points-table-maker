@@ -71,8 +71,8 @@ const ProfilePage = () => {
                         <Terminal className="w-12 h-12 text-neon-blue relative drop-shadow-[0_0_10px_#00f0ff]" />
                     </div>
                     <div>
-                        <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-white to-white/30 bg-clip-text text-transparent italic uppercase tracking-tighter">
-                            Operative Profile
+                        <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-white to-white/30 bg-clip-text text-transparent italic uppercase tracking-tighter pr-4">
+                            My Profile
                         </h1>
                         <div className="flex items-center gap-4 mt-2">
                             <div className="flex gap-1.5">
@@ -127,7 +127,7 @@ const ProfilePage = () => {
                             </div>
 
                             <div className="flex items-center gap-3 mb-2">
-                                <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic">
+                                <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic pr-4">
                                     {user?.name}
                                 </h2>
                                 <div className={`px-2 py-0.5 rounded border text-[9px] font-black font-mono shadow-[0_0_10px_rgba(0,0,0,0.5)] ${isGuest ? 'border-neon-blue/40 text-neon-blue' : 'border-neon-green/40 text-neon-green bg-neon-green/5'}`}>
@@ -138,11 +138,11 @@ const ProfilePage = () => {
                             {/* Account Privileges List */}
                             <div className="w-full bg-black/20 rounded-2xl p-6 border border-white/5 space-y-4 mb-8">
                                 <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 text-left border-b border-white/5 pb-2">
-                                    Account Capabilities
+                                    Account Permissions
                                 </div>
                                 <div className="space-y-3 text-left">
                                     {[
-                                        { label: 'Create Tournament Nodes', active: !isGuest },
+                                        { label: 'Create Tournaments', active: !isGuest },
                                         { label: 'Manage Roster Data', active: !isGuest },
                                         { label: 'Process Match Scores', active: !isGuest },
                                         { label: 'Export Global Standings', active: !isGuest },
@@ -188,18 +188,18 @@ const ProfilePage = () => {
 
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <h3 className="text-xl font-black text-white flex items-center italic tracking-tight uppercase">
+                                <h3 className="text-xl font-black text-white flex items-center italic tracking-tight uppercase pr-4">
                                     <Shield className="w-6 h-6 text-neon-blue mr-3 drop-shadow-[0_0_8px_#00f0ff]" />
-                                    Security Dossier
+                                    Account Details
                                 </h3>
-                                <p className="text-gray-500 text-[10px] font-mono mt-1 tracking-widest">VERIFIED_PROTOCOL_ECHO_7</p>
+                                <p className="text-gray-500 text-[10px] font-mono mt-1 tracking-widest">VERIFIED ACCOUNT</p>
                             </div>
                             <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-6"></div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {[
-                                { label: 'Registered Email', value: isGuest ? 'guest@simulation.node' : user?.email, icon: Mail, color: 'text-neon-blue' },
+                                { label: 'Registered Email', value: isGuest ? 'guest@example.com' : user?.email, icon: Mail, color: 'text-neon-blue' },
                                 { label: 'Latest Check-in', value: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }), icon: Clock, color: 'text-neon-green' }
                             ].map((field, idx) => (
                                 <div key={idx} className="bg-white/[0.02] p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group/field">
@@ -229,7 +229,7 @@ const ProfilePage = () => {
                                     {isGuest ? <Shield className="w-7 h-7" /> : <Award className="w-7 h-7" />}
                                 </div>
                                 <div className="flex-1">
-                                    <h4 className={`font-black text-lg md:text-xl uppercase italic tracking-tighter ${isGuest ? 'text-neon-blue' : 'text-yellow-500'}`}>
+                                    <h4 className={`font-black text-lg md:text-xl uppercase italic tracking-tighter ${isGuest ? 'text-neon-blue' : 'text-yellow-500'} pr-4`}>
                                         {isGuest ? 'Restricted Mode' : 'Pro License Active'}
                                     </h4>
                                     <p className="text-gray-400 text-[10px] md:text-xs mt-1 font-medium leading-relaxed opacity-80 uppercase tracking-widest">
@@ -243,15 +243,15 @@ const ProfilePage = () => {
                         <Card className="bg-dark-800/40 border-white/5 p-8 flex flex-col justify-center">
                             <div className="grid grid-cols-2 gap-8">
                                 <div>
-                                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-[0.35em] mb-2">Deployments</div>
-                                    <div className="text-3xl md:text-4xl font-black text-white italic">
+                                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-[0.35em] mb-2">Total Matches</div>
+                                    <div className="text-3xl md:text-4xl font-black text-white italic pr-4">
                                         {loading ? <div className="w-8 h-8 bg-white/5 animate-pulse rounded"></div> : (stats?.tournaments || 0)}
                                     </div>
                                     <div className="text-[9px] font-mono text-neon-blue mt-1 uppercase">Active Tournaments</div>
                                 </div>
                                 <div className="border-l border-white/5 pl-8">
                                     <div className="text-[10px] font-black uppercase text-gray-500 tracking-[0.35em] mb-2">Branches</div>
-                                    <div className="text-3xl md:text-4xl font-black text-white italic">
+                                    <div className="text-3xl md:text-4xl font-black text-white italic pr-4">
                                         {loading ? <div className="w-8 h-8 bg-white/5 animate-pulse rounded"></div> : (stats?.organizations || 0)}
                                     </div>
                                     <div className="text-[9px] font-mono text-neon-purple mt-1 uppercase">Managed Orgs</div>
@@ -265,7 +265,7 @@ const ProfilePage = () => {
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_8px_#39ff14]"></div>
-                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Telemetry: ACTIVE</span>
+                                <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Profile: ACTIVE</span>
                             </div>
                             <div className="w-px h-6 bg-white/5"></div>
                             <div className="flex items-center gap-2">

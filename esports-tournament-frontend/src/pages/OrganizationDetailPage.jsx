@@ -79,7 +79,7 @@ const OrganizationDetailPage = () => {
     if (!organization) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-2xl font-bold text-gray-400">Organization node not found</h2>
+                <h2 className="text-2xl font-bold text-gray-400">Organization not found</h2>
                 <Link to="/dashboard/organizations" className="text-neon-blue mt-4 inline-block hover:underline">
                     Return to Registry
                 </Link>
@@ -100,11 +100,11 @@ const OrganizationDetailPage = () => {
                         )}
                     </div>
                     <div className="flex-1">
-                        <h1 className="text-4xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
+                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2 italic uppercase tracking-tighter pr-4">
                             {organization.name}
                         </h1>
                         <p className="text-gray-400 text-lg max-w-2xl">
-                            {organization.description || 'No descriptive data available for this entity.'}
+                            {organization.description || 'No description available for this organization.'}
                         </p>
                         {organization.website && (
                             <a
@@ -125,7 +125,7 @@ const OrganizationDetailPage = () => {
                                 className="btn-primary py-3 px-8 flex items-center shadow-[0_0_15px_rgba(0,183,255,0.3)]"
                             >
                                 <Trophy className="w-5 h-5 mr-3" />
-                                Launch Tournament
+                                New Tournament
                             </Link>
                         </div>
                     )}
@@ -135,16 +135,16 @@ const OrganizationDetailPage = () => {
             {/* Tournaments list */}
             <div>
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-white flex items-center">
+                    <h2 className="text-2xl font-bold text-white flex items-center italic uppercase tracking-tighter pr-4">
                         <span className="w-2 h-8 bg-neon-purple mr-3 rounded-full shadow-[0_0_10px_rgba(188,19,254,0.5)]"></span>
-                        Deployed Tournaments
+                        Active Tournaments
                     </h2>
                 </div>
 
                 {tournaments.length === 0 ? (
                     <Card className="bg-dark-800/30 border-dashed border-2 border-dark-600 py-16 text-center rounded-2xl">
                         <p className="text-gray-500 italic text-lg mb-6">
-                            No tournament signals detected from this organization.
+                            No tournaments found for this organization.
                         </p>
                         {!isGuest && (
                             <Link to="/dashboard/tournaments/create" className="btn-secondary py-2 px-6">

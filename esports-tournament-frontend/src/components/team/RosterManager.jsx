@@ -35,7 +35,7 @@ const RosterManager = ({ team, onUpdate }) => {
             setPlayers(updatedPlayers);
             localStorage.setItem(`guest_roster_${team.id}`, JSON.stringify(updatedPlayers));
             setNewPlayer({ inGameName: '', inGameId: '', role: '' });
-            toast.success('GUEST_MODE: Data saved locally');
+            toast.success('Settings saved locally');
             if (onUpdate) onUpdate();
             return;
         }
@@ -57,7 +57,7 @@ const RosterManager = ({ team, onUpdate }) => {
             toast.success('Player added successfully');
             if (onUpdate) onUpdate();
         } catch (error) {
-            toast.error('Failed to update squad: ' + (error.response?.data?.message || error.message));
+            toast.error('Failed to update team: ' + (error.response?.data?.message || error.message));
             console.error('Add player error:', error.response || error);
         } finally {
             setLoading(false);
@@ -83,7 +83,7 @@ const RosterManager = ({ team, onUpdate }) => {
             localStorage.setItem(`guest_roster_${team.id}`, JSON.stringify(updatedPlayers));
             setEditingPlayerId(null);
             setEditingPlayer({});
-            toast.success('GUEST_MODE: Updated locally');
+            toast.success('Settings updated locally');
             if (onUpdate) onUpdate();
             return;
         }
@@ -118,7 +118,7 @@ const RosterManager = ({ team, onUpdate }) => {
             const updatedPlayers = players.filter(p => p.id !== playerId);
             setPlayers(updatedPlayers);
             localStorage.setItem(`guest_roster_${team.id}`, JSON.stringify(updatedPlayers));
-            toast.success('GUEST_MODE: Removed');
+            toast.success('Player removed');
             if (onUpdate) onUpdate();
             return;
         }
@@ -149,8 +149,8 @@ const RosterManager = ({ team, onUpdate }) => {
                     <div className="flex items-center gap-3">
                         <XCircle className="w-5 h-5 text-red-500" />
                         <div>
-                            <p className="text-red-500 font-bold text-sm">TEAM DENIED - ROSTER LOCKED</p>
-                            <p className="text-red-400 text-xs mt-1">This team has been rejected. Roster modifications are not allowed.</p>
+                            <p className="text-red-500 font-bold text-sm">TEAM REJECTED</p>
+                            <p className="text-red-400 text-xs mt-1">This team has been rejected. Modifications are no longer allowed.</p>
                         </div>
                     </div>
                 </div>
@@ -161,8 +161,8 @@ const RosterManager = ({ team, onUpdate }) => {
                     <div className="flex items-center gap-3">
                         <Shield className="w-5 h-5 text-neon-blue shadow-[0_0_8px_rgba(0,183,255,0.5)]" />
                         <div>
-                            <p className="text-neon-blue font-bold text-sm uppercase">Guest Sandbox Active</p>
-                            <p className="text-gray-400 text-[10px] uppercase tracking-widest mt-1">Modifications are persisted locally to your session.</p>
+                            <p className="text-neon-blue font-bold text-sm uppercase">Guest Mode Active</p>
+                            <p className="text-gray-400 text-[10px] uppercase tracking-widest mt-1">Changes are saved locally to your browser.</p>
                         </div>
                     </div>
                 </div>

@@ -66,7 +66,7 @@ const EditTournamentPage = () => {
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
                         <Settings className="w-5 h-5 text-neon-purple flex-shrink-0" />
-                        <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                        <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] italic pr-4">
                             EDIT TOURNAMENT
                         </h1>
                     </div>

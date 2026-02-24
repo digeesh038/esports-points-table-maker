@@ -33,7 +33,7 @@ const DashboardLayout = () => {
             <StandingsOverlay />
 
             <main className="p-4 md:p-8 relative z-10">
-                <div className="max-w-[1400px] mx-auto">
+                <div className="max-w-7xl mx-auto">
                     <Outlet />
                 </div>
             </main>

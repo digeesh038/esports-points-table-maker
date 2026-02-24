@@ -107,8 +107,8 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                         <Users className="w-5 h-5 text-neon-blue" />
                     </div>
                     <div>
-                        <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Team Info</h3>
-                        <p className="text-[9px] text-gray-500 font-mono mt-0.5">GENERAL TEAM DETAILS</p>
+                        <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Team Details</h3>
+                        <p className="text-[9px] text-gray-500 font-mono mt-0.5">GENERAL INFORMATION</p>
                     </div>
                 </div>
 
@@ -157,7 +157,6 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                     />
                 </div>
 
-                {/* --- DIGITAL INSIGNIA UPLOAD --- */}
                 <div className="mt-8 pt-8 border-t border-white/5">
                     <div className="mb-4">
                         <label className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] flex items-center gap-2 ml-1">
@@ -215,7 +214,7 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                     </div>
                     <div>
                         <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Contact Info</h3>
-                        <p className="text-[9px] text-gray-500 font-mono mt-0.5">ORGANIZER CONTACT DETAILS</p>
+                        <p className="text-[9px] text-gray-500 font-mono mt-0.5">PRIMARY CONTACT DETAILS</p>
                     </div>
                 </div>
 
@@ -252,8 +251,8 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                             <Users className="w-5 h-5 text-neon-pink" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Team Roster</h3>
-                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">LIST OF PLAYERS</p>
+                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Players</h3>
+                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">MANAGE TEAM MEMBERS</p>
                         </div>
                     </div>
 
@@ -325,7 +324,7 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                         {loading ? (
                             <div className="flex items-center gap-4">
                                 <div className="w-4 h-4 border-2 border-white/20 border-t-neon-blue rounded-full animate-spin"></div>
-                                REGISTERING TEAM...
+                                REGISTERING...
                             </div>
                         ) : (
                             <>

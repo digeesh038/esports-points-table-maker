@@ -329,7 +329,7 @@ const TournamentDetailPage = () => {
                             </span>
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic leading-[1.1] mb-4">
+                            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic leading-[1.1] mb-4 pr-4">
                                 {tournament.name.toUpperCase()}
                             </h1>
                             <p className="border-l-2 border-neon-blue pl-6 py-2 text-gray-400 text-lg font-medium">

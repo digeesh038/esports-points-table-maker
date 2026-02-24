@@ -51,7 +51,7 @@ const TeamsPage = () => {
             const response = await teamsAPI.getAll();
             setTeams(response?.data?.teams || response?.teams || []);
         } catch (error) {
-            toast.error('Failed to load global talent pool');
+            toast.error('Failed to load teams');
         } finally {
             setLoading(false);
         }
@@ -95,7 +95,7 @@ const TeamsPage = () => {
 
     const handleRegisterTeam = async (formData) => {
         if (isGuest) {
-            toast.error('GUEST_ERROR: Squad registration restricted.');
+            toast.error('GUEST: Registration is restricted.');
             return;
         }
 
@@ -182,7 +182,7 @@ const TeamsPage = () => {
         try {
             setSubmitting(true);
             await teamsAPI.register(formData.tournamentId, formData);
-            toast.success('Squad registered successfully');
+            toast.success('Team registered successfully');
             setShowModal(false);
             fetchTeams();
         } catch (error) {
@@ -194,7 +194,7 @@ const TeamsPage = () => {
 
     const handleApprove = async (teamId) => {
         if (isGuest) {
-            toast.error('GUEST_ERROR: Protocol authorization restricted.');
+            toast.error('GUEST: This action is restricted.');
             return;
         }
         try {
@@ -202,13 +202,13 @@ const TeamsPage = () => {
             toast.success('Team approved');
             fetchTeams();
         } catch (error) {
-            toast.error('Protocol failure: Could not approve team');
+            toast.error('Failed to approve team');
         }
     };
 
     const handleReject = async (teamId) => {
         if (isGuest) {
-            toast.error('GUEST_ERROR: Entity termination restricted.');
+            toast.error('GUEST: This action is restricted.');
             return;
         }
         try {
@@ -216,13 +216,13 @@ const TeamsPage = () => {
             toast.success('Team rejected');
             fetchTeams();
         } catch (error) {
-            toast.error('Protocol failure: Action denied');
+            toast.error('Failed to reject team');
         }
     };
 
     const handleDelete = async (teamId) => {
         if (isGuest) {
-            toast.error('GUEST_ERROR: Delete operations are offline.');
+            toast.error('GUEST: Delete operations are disabled.');
             return;
         }
         try {
@@ -230,7 +230,7 @@ const TeamsPage = () => {
             toast.success('Team deleted');
             fetchTeams();
         } catch (error) {
-            toast.error('Critical failure: Could not delete team');
+            toast.error('Failed to delete team');
         }
     };
 
@@ -286,7 +286,7 @@ const TeamsPage = () => {
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
-                            <span className="text-white">SQUAD</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)]">REGISTRY</span>
+                            <span className="text-white">TEAM</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)] pr-4">REGISTRY</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-pink/30 pl-4 py-1">
                             Manage all teams and players across your tournaments.
@@ -315,7 +315,7 @@ const TeamsPage = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-                        <span className="text-[10px] font-mono text-gray-600 border border-white/5 px-2 py-1 rounded-lg uppercase">Search_Engine</span>
+                        <span className="text-[10px] font-mono text-gray-600 border border-white/5 px-2 py-1 rounded-lg uppercase">Search</span>
                     </div>
                 </div>
             </div>
@@ -353,7 +353,7 @@ const TeamsPage = () => {
             <Modal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                title="Register New Squad"
+                title="Register New Team"
             >
                 <TeamForm
                     onSubmit={handleRegisterTeam}

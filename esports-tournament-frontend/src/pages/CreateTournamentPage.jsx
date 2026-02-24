@@ -42,7 +42,7 @@ const CreateTournamentPage = () => {
                 <div>
                     <div className="flex items-center gap-2">
                         <Plus className="w-4 h-4 text-neon-purple" />
-                        <h1 className="text-2xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent italic tracking-tight">
+                        <h1 className="text-2xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent italic tracking-tight pr-4">
                             NEW TOURNAMENT
                         </h1>
                     </div>

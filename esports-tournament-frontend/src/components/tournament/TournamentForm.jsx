@@ -129,7 +129,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
             <div className="space-y-5">
                 <div className="flex items-center gap-3 pb-3 border-b border-white/5">
                     <Trophy className="w-4 h-4 text-neon-purple" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Tournament Identity</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Tournament Details</span>
                 </div>
 
                 {/* Organization */}

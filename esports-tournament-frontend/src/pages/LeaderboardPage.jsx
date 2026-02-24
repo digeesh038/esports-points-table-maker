@@ -205,7 +205,7 @@ const LeaderboardPage = () => {
     }
 
     return (
-        <div className="max-w-[1400px] mx-auto px-4 py-12 space-y-10">
+        <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="flex items-center gap-6">

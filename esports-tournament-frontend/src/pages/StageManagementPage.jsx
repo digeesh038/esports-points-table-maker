@@ -226,7 +226,7 @@ const StageManagementPage = () => {
                                 {tournament?.name || 'Tournament'} / {stage?.name || 'Phase'}
                             </span>
                         </div>
-                        <h1 className="text-4xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic flex items-center italic uppercase">
+                        <h1 className="text-4xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic flex items-center italic uppercase pr-4">
                             Stage Management
                         </h1>
                     </div>

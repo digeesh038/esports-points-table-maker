@@ -92,7 +92,7 @@ const DashboardPage = () => {
                     </span>
                 </div>
                 <h1 className="text-3xl xs:text-4xl md:text-5xl lg:text-7xl font-black italic leading-tight tracking-tighter uppercase">
-                    <span className="text-white">DASHBOARD</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">OVERVIEW</span>
+                    <span className="text-white">DASHBOARD</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)] pr-4">OVERVIEW</span>
                 </h1>
                 <p className="text-gray-500 mt-2 text-sm md:text-base font-medium flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-neon-green shadow-[0_0_8px_#39ff14] animate-pulse" />

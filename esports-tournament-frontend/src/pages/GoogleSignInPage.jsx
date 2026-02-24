@@ -22,16 +22,16 @@ const GoogleSignInPage = () => {
         const res = await googleLogin(credentialResponse.credential);
 
         if (!res?.success) {
-            toast.error(res?.error || 'Google sign-in failed');
+            toast.error(res?.error || 'Sign-in failed');
             return;
         }
 
-        toast.success('System Linked. Welcome, Commander! 🎮');
+        toast.success('Sign-in Successful. Welcome back! 🎮');
         navigate('/dashboard', { replace: true });
     };
 
     const handleError = () => {
-        toast.error('Authentication Error. System access denied.');
+        toast.error('Authentication Error. Access denied.');
     };
 
     return (
@@ -78,7 +78,7 @@ const GoogleSignInPage = () => {
                             <div className="flex items-center justify-center gap-4">
                                 <div className="h-[1px] w-6 md:w-10 bg-gradient-to-r from-transparent to-neon-blue/30" />
                                 <p className="text-[8px] md:text-[9px] font-mono text-neon-blue/80 font-bold uppercase tracking-[0.4em] animate-pulse">
-                                    V_AUTHENTICATION_REQ
+                                    AUTHENTICATION REQUIRED
                                 </p>
                                 <div className="h-[1px] w-6 md:w-10 bg-gradient-to-l from-transparent to-neon-blue/30" />
                             </div>
@@ -100,7 +100,7 @@ const GoogleSignInPage = () => {
                                     </div>
                                 </div>
                                 <div className="text-[10px] md:text-[11px] leading-tight text-gray-400 font-bold select-none">
-                                    Confirmed <span className="text-white underline decoration-neon-blue/50 underline-offset-2">18+ Operative</span>. Accept <Link to="/terms" className="text-neon-blue hover:underline">Strategic Protocols</Link>.
+                                    Confirmed <span className="text-white underline decoration-neon-blue/50 underline-offset-2">I am 18+ years old</span>. I accept the <Link to="/terms" className="text-neon-blue hover:underline">Terms of Service</Link>.
                                 </div>
                             </label>
                         </div>

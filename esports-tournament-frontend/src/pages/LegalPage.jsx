@@ -74,7 +74,7 @@ const LegalPage = () => {
                     </div>
 
                     <div className="relative mb-6">
-                        <h1 className="text-5xl md:text-8xl font-black italic tracking-tighter text-white uppercase leading-none">
+                        <h1 className="text-5xl md:text-8xl font-black italic tracking-tighter text-white uppercase leading-none pr-4">
                             LEGAL <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_20px_rgba(0,240,255,0.3)]">PROTOCOLS</span>
                         </h1>
                         <div className="h-px w-24 bg-neon-blue/40 mx-auto mt-8 animate-pulse" />
@@ -132,7 +132,7 @@ const LegalPage = () => {
                                     <FileText className="w-6 h-6 text-neon-blue group-hover:scale-110 transition-transform" />
                                 </div>
                                 <div>
-                                    <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none">Terms of Service</h2>
+                                    <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none pr-4">Terms of Service</h2>
                                     <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Protocol: OPERATIONAL_MANDATE // 01</p>
                                 </div>
                             </div>
@@ -140,21 +140,21 @@ const LegalPage = () => {
                             <div className="bg-[#0d0d12]/40 backdrop-blur-3xl border border-white/5 rounded-[40px] p-10 md:p-14 relative overflow-hidden">
                                 <div className="prose prose-invert max-w-none text-gray-400 space-y-12 text-base md:text-lg leading-relaxed font-medium">
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">1. Grid Entry & Conduct</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">1. Grid Entry & Conduct</h3>
                                         <p>
                                             By accessing the <span className="text-neon-blue">Tournament Console</span> node, you effectively link your digital presence to our competitive infrastructure. Tactical integrity is paramount. Users are prohibited from utilizing automated scripts, external advantage software, or any protocol-breaking exploits during combat scenarios.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">2. Entity Responsibility</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Entity Responsibility</h3>
                                         <p>
                                             You are solely responsible for the security of your linked Google credentials. Any synchronization unauthorized by typical behavioral patterns must be reported to the central command hub immediately.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-blue/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">3. Competitive Termination</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Competitive Termination</h3>
                                         <p>
                                             The platform reserves the absolute right to sever your connection to the grid if your actions degrade the competitive quality of the arena. This includes toxic signal transmissions and unsportsmanlike tactical maneuvers.
                                         </p>
@@ -173,7 +173,7 @@ const LegalPage = () => {
                                     <Lock className="w-6 h-6 text-neon-purple group-hover:scale-110 transition-transform" />
                                 </div>
                                 <div>
-                                    <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none">Privacy Protocol</h2>
+                                    <h2 className="text-3xl font-black italic tracking-tight text-white uppercase leading-none pr-4">Privacy Protocol</h2>
                                     <p className="text-[10px] font-mono text-gray-600 uppercase tracking-widest mt-2">Protocol: DATA_ENCRYPTION // 02</p>
                                 </div>
                             </div>
@@ -181,21 +181,21 @@ const LegalPage = () => {
                             <div className="bg-[#0d0d12]/40 backdrop-blur-3xl border border-white/5 rounded-[40px] p-10 md:p-14 relative overflow-hidden">
                                 <div className="prose prose-invert max-w-none text-gray-400 space-y-12 text-base md:text-lg leading-relaxed font-medium">
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">1. Signal Capture</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">1. Signal Capture</h3>
                                         <p>
                                             We intercept and archive only the telemetry necessary for tournament orchestration. This includes your <span className="text-neon-purple">Google Identity Token</span>, designated alias, and performance metrics across organized combat stages.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">2. Tactical Telemetry</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">2. Tactical Telemetry</h3>
                                         <p>
                                             Your match data—including eliminations, positioning, and survival duration—is broadcasted across the public leaderboard grid. By participating, you authorize this data transmission to the public sector.
                                         </p>
                                     </div>
 
                                     <div className="relative pl-8 border-l-2 border-neon-purple/20">
-                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4">3. Encryption Shielding</h3>
+                                        <h3 className="text-white font-black italic uppercase tracking-tighter text-xl mb-4 pr-4">3. Encryption Shielding</h3>
                                         <p>
                                             All data packets are routed through high-level encrypted tunnels. We do not expose your primary authentication vectors to third-party data harvesters or rogue syndicates.
                                         </p>
