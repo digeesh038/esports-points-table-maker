@@ -3,7 +3,7 @@ import { Shield, Eye, Lock } from 'lucide-react';
 
 const PrivacyPage = () => {
     return (
-        <MainLayout>
+        
             <div className="max-w-4xl mx-auto px-6 py-16 text-gray-800 bg-white shadow-xl rounded-2xl my-10 border border-gray-200">
                 <div className="border-b border-gray-200 pb-8 mb-8">
                     <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Privacy Policy</h1>
@@ -78,7 +78,6 @@ const PrivacyPage = () => {
                     </div>
                 </div>
             </div>
-        </MainLayout>
     );
 };
 
