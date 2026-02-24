@@ -48,7 +48,7 @@ const Payment = sequelize.define(
             field: 'razorpay_signature',
         },
         status: {
-            type: DataTypes.ENUM('PENDING', 'SUCCESS', 'FAILED'),
+            type: DataTypes.STRING,
             defaultValue: 'PENDING',
         },
         receiptNumber: {

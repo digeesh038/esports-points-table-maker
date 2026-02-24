@@ -1,8 +1,8 @@
 import React from 'react';
-import { Users, User, Trash2, Edit2, Shield, Target } from 'lucide-react';
+import { Users, User, Trash2, Edit2, Shield, Target, Download } from 'lucide-react';
 import Card from '../common/Card';
 
-const SquadListView = ({ teams, onManageRoster, onDelete, showActions }) => {
+const SquadListView = ({ teams, onManageRoster, onDelete, showActions, onDownloadReceipt }) => {
     return (
         <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
             {teams.map((team) => (
@@ -64,6 +64,15 @@ const SquadListView = ({ teams, onManageRoster, onDelete, showActions }) => {
                                     >
                                         <Trash2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                                     </button>
+                                    {team.payment && team.payment.status === 'SUCCESS' && (
+                                        <button
+                                            onClick={() => onDownloadReceipt(team.payment.id, team.payment.receiptNumber)}
+                                            className="p-3 bg-neon-blue/10 hover:bg-neon-blue/20 border border-neon-blue/30 rounded-2xl text-neon-blue transition-all group/btn"
+                                            title="Download Payment Receipt"
+                                        >
+                                            <Download className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>

@@ -1,4 +1,4 @@
-import { Organization, Tournament, Team, Match, Stage } from '../models/index.js';
+import { Organization, Tournament, Team, Match, Stage, Payment } from '../models/index.js';
 
 export async function getDashboardStats(req, res, next) {
     try {
@@ -38,6 +38,11 @@ export async function getDashboardStats(req, res, next) {
             where: { stageId: stageIds }
         });
 
+        // Calculate Revenue
+        const totalRevenue = await Payment.sum('amount', {
+            where: { tournamentId: tournamentIds, status: 'SUCCESS' }
+        }) || 0;
+
         res.json({
             success: true,
             data: {
@@ -45,7 +50,8 @@ export async function getDashboardStats(req, res, next) {
                 tournaments: tournamentIds.length,
                 activeTeams: teamCount,
                 completedMatches: completedMatchCount,
-                totalMatches: totalMatchCount
+                totalMatches: totalMatchCount,
+                revenue: totalRevenue
             }
         });
     } catch (error) {

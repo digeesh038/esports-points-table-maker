@@ -127,7 +127,9 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                             >
                                 <option value="">CHOOSE TOURNAMENT...</option>
                                 {tournaments.map(t => (
-                                    <option key={t.id} value={t.id}>{t.name.toUpperCase()}</option>
+                                    <option key={t.id} value={t.id}>
+                                        {t.name.toUpperCase()} — {t.tournamentType === 'PAID' ? `PAID (₹${t.entryFee})` : 'FREE'}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -328,7 +330,9 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                         ) : (
                             <>
                                 <Zap className="w-5 h-5 mr-4 text-neon-blue group-hover:animate-bounce" />
-                                REGISTER TEAM
+                                {formData.tournamentId && tournaments.find(t => t.id === formData.tournamentId)?.tournamentType === 'PAID'
+                                    ? `PROCESS PAYMENT (₹${tournaments.find(t => t.id === formData.tournamentId).entryFee})`
+                                    : 'REGISTER TEAM'}
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             </>
                         )}

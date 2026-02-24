@@ -225,6 +225,9 @@ export async function deleteTournament(req, res, next) {
             await Team.destroy({ where: { id: teamIds } });
         }
 
+        // Remove payment records
+        await Payment.destroy({ where: { tournamentId } });
+
         await tournament.destroy();
 
         // Flush all relevant caches

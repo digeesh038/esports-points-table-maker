@@ -11,6 +11,8 @@ import TeamForm from '../components/team/TeamForm';
 import RosterManager from '../components/team/RosterManager';
 import SquadListView from '../components/team/SquadListView';
 import { useAuth } from '../contexts/AuthContext';
+import paymentsAPI from '../api/payments';
+import { Download } from 'lucide-react';
 
 const TeamsPage = () => {
     const { isGuest } = useAuth();
@@ -57,11 +59,37 @@ const TeamsPage = () => {
 
     const fetchTournaments = async () => {
         try {
-            // Use mine:true to only show the user's own active tournaments
             const response = await tournamentsAPI.getAll({ mine: true });
             setTournaments(response?.data?.tournaments || []);
         } catch (error) {
             console.error('Failed to fetch tournaments', error);
+        }
+    };
+
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleDownloadReceipt = async (paymentId, receiptNumber) => {
+        try {
+            const response = await paymentsAPI.downloadReceipt(paymentId);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `receipt-${receiptNumber}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error('Receipt Download Error:', error);
+            toast.error('Failed to download receipt');
         }
     };
 
@@ -70,9 +98,89 @@ const TeamsPage = () => {
             toast.error('GUEST_ERROR: Squad registration restricted.');
             return;
         }
+
+        const tournament = tournaments.find(t => t.id === formData.tournamentId);
+        if (!tournament) {
+            toast.error('Please select a valid tournament');
+            return;
+        }
+
+        // Logic for PAID Tournament
+        if (tournament.tournamentType === 'PAID') {
+            try {
+                setSubmitting(true);
+                const isRpayLoaded = await loadRazorpay();
+                if (!isRpayLoaded) {
+                    toast.error('Razorpay SDK failed to load. Are you online?');
+                    return;
+                }
+
+                // Create Order on Backend
+                const orderRes = await paymentsAPI.createOrder(tournament.id);
+                const { order_id, amount, razorpay_key_id } = orderRes.data;
+
+                const options = {
+                    key: razorpay_key_id,
+                    amount: amount,
+                    currency: "INR",
+                    name: "ESPORTS_MANAGER",
+                    description: `Entry Fee for ${tournament.name}`,
+                    order_id: order_id,
+                    handler: async (response) => {
+                        try {
+                            setSubmitting(true);
+                            const verifyRes = await paymentsAPI.verify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                tournamentId: tournament.id,
+                                teamData: formData
+                            });
+
+                            toast.success('Registration & Payment Successful!');
+                            setShowModal(false);
+                            fetchTeams();
+
+                            if (window.confirm('Registration successful! Download your receipt now?')) {
+                                handleDownloadReceipt(verifyRes.data.data.paymentId, verifyRes.data.data.receiptNumber);
+                            }
+                        } catch (err) {
+                            console.error('Verification Error:', err);
+                            toast.error(err.response?.data?.message || 'Payment verification failed');
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    },
+                    prefill: {
+                        name: formData.name,
+                        email: formData.captainEmail,
+                        contact: formData.captainPhone
+                    },
+                    modal: {
+                        ondismiss: () => {
+                            setSubmitting(false);
+                            toast.error('Payment cancelled by user');
+                        }
+                    },
+                    theme: {
+                        color: "#00b7ff"
+                    }
+                };
+
+                const rpay = new window.Razorpay(options);
+                rpay.open();
+            } catch (error) {
+                console.error('Payment/Registration error:', error);
+                toast.error(error.response?.data?.message || 'Action failed');
+            } finally {
+                // Done via rpay handler or modal dismiss
+            }
+            return;
+        }
+
+        // Logic for FREE Tournament
         try {
             setSubmitting(true);
-            // formData will contain tournamentId because we passed the tournaments prop
             await teamsAPI.register(formData.tournamentId, formData);
             toast.success('Squad registered successfully');
             setShowModal(false);
@@ -228,6 +336,7 @@ const TeamsPage = () => {
                         onReject={handleReject}
                         onDelete={handleDelete}
                         onAddPlayer={handleManageRoster}
+                        onDownloadReceipt={handleDownloadReceipt}
                     />
                 </div>
             ) : (
@@ -236,6 +345,7 @@ const TeamsPage = () => {
                     onManageRoster={handleManageRoster}
                     onDelete={handleDelete}
                     showActions={!isGuest}
+                    onDownloadReceipt={handleDownloadReceipt}
                 />
             )}
 

@@ -74,7 +74,7 @@ const Tournament = sequelize.define(
             field: 'prize_pool',
         },
         tournamentType: {
-            type: DataTypes.ENUM('FREE', 'PAID'),
+            type: DataTypes.STRING,
             defaultValue: 'FREE',
             field: 'tournament_type',
         },

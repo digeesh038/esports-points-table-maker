@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { Team, Tournament, Player, MatchResult } from '../models/index.js';
+import { Team, Tournament, Player, MatchResult, Payment } from '../models/index.js';
 import { isValidUUID } from '../utils/helpers.js';
 
 export async function createTeam(req, res, next) {
@@ -203,6 +203,7 @@ export async function getAllTeams(req, res, next) {
             include: [
                 { model: Tournament, as: 'tournament', attributes: ['id', 'name'] },
                 { model: Player, as: 'players' },
+                { model: Payment, as: 'payment', attributes: ['id', 'status', 'receiptNumber'] }
             ],
             order: [['createdAt', 'DESC']]
         });
@@ -226,6 +227,7 @@ export async function getTeam(req, res, next) {
                 { model: Tournament, as: 'tournament' },
                 { model: Player, as: 'players' },
                 { model: MatchResult, as: 'results' },
+                { model: Payment, as: 'payment' }
             ],
         });
 
@@ -275,6 +277,7 @@ export async function deleteTeam(req, res, next) {
         await PlayerMatchResult.destroy({ where: { teamId: id } });
         await MatchResult.destroy({ where: { teamId: id } });
         await Player.destroy({ where: { teamId: id } });
+        await Payment.destroy({ where: { teamId: id } });
 
         await team.destroy();
 
@@ -319,6 +322,7 @@ export async function deleteAllTeams(req, res, next) {
             await PlayerMatchResult.destroy({ where: { teamId: teamIds } });
             await MatchResult.destroy({ where: { teamId: teamIds } });
             await Player.destroy({ where: { teamId: teamIds } });
+            await Payment.destroy({ where: { teamId: teamIds } });
             await Team.destroy({ where: { id: teamIds } });
         }
 
