@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Trophy, LogOut, User, Menu, X } from 'lucide-react';
+import { Trophy, LogOut, User, Menu, X, ChevronRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useStandings } from '../../contexts/StandingsContext';
 
@@ -134,23 +134,28 @@ const Navbar = () => {
                 <div className="md:hidden absolute top-20 left-0 w-full bg-dark-900/95 backdrop-blur-xl border-b border-white/5 animate-fade-in z-40">
                     <div className="px-4 py-4 space-y-2">
                         {/* Mobile User Profile */}
-                        <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl mb-4 border border-white/5">
+                        <Link
+                            to="/dashboard/profile"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl mb-4 border border-white/5 transition-colors group"
+                        >
                             {user?.profilePicture ? (
                                 <img
                                     src={user.profilePicture}
                                     alt={user.name}
-                                    className="w-10 h-10 rounded-full border border-neon-blue"
+                                    className="w-10 h-10 rounded-full border border-neon-blue group-hover:scale-105 transition-transform"
                                 />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center border border-dark-600">
+                                <div className="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center border border-dark-600 group-hover:border-neon-blue/50 transition-colors">
                                     <User className="w-5 h-5 text-neon-blue" />
                                 </div>
                             )}
                             <div>
-                                <div className="text-sm font-bold text-white">{user?.name}</div>
-                                <div className="text-xs text-neon-blue">Online Status: Active</div>
+                                <div className="text-sm font-bold text-white group-hover:text-neon-blue transition-colors">{user?.name}</div>
+                                <div className="text-xs text-neon-blue font-mono">VIEW PROFILE • ONLINE</div>
                             </div>
-                        </div>
+                            <ChevronRight className="w-4 h-4 text-gray-600 ml-auto" />
+                        </Link>
 
                         {/* Mobile Nav Links */}
                         {navLinks.map((link) => (
