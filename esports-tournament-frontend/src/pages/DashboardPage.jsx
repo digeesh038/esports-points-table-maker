@@ -85,10 +85,10 @@ const DashboardPage = () => {
         <div className="space-y-12">
             {/* HEADER */}
             <div>
-                <h1 className="text-4xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic">
+                <h1 className="text-2xl xs:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic leading-tight">
                     {isGuest ? 'Guest Mode' : `WELCOME BACK, ${user?.name?.toUpperCase()}`}
                 </h1>
-                <p className="text-gray-400 mt-2 text-lg font-medium">
+                <p className="text-gray-400 mt-2 text-sm md:text-lg font-medium opacity-80">
                     {isGuest ? 'You are viewing as a guest. Features are limited.' : 'System status: OPTIMAL • Monitoring esports ecosystem.'}
                 </p>
             </div>
