@@ -116,7 +116,7 @@ const GoogleSignInPage = () => {
                                     size="large"
                                     text="signin_with"
                                     shape="rectangular"
-                                    width="320"
+                                    width="250"
                                 />
                             </div>
                         </div>
