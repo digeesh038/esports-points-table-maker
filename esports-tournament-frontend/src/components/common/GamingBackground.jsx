@@ -66,15 +66,44 @@ const GamingBackground = () => {
                 ))}
             </div>
 
+            {/* Floating Particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{
+                            x: Math.random() * window.innerWidth,
+                            y: Math.random() * window.innerHeight,
+                            opacity: 0
+                        }}
+                        animate={{
+                            y: [null, Math.random() * -200],
+                            opacity: [0, 0.4, 0],
+                            rotate: [0, 180]
+                        }}
+                        transition={{
+                            duration: 10 + Math.random() * 20,
+                            repeat: Infinity,
+                            ease: "linear"
+                        }}
+                        className="absolute w-1 h-1 bg-neon-blue shadow-[0_0_5px_#00f0ff]"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                        }}
+                    />
+                ))}
+            </div>
+
             {/* Scanline Effect */}
             <motion.div
                 animate={{ top: ['0%', '100%'] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 right-0 h-px bg-white/5 z-10"
+                className="absolute left-0 right-0 h-[2px] bg-white/5 z-10"
             />
 
             {/* Grain/Noise Overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         </div>
     );
 };

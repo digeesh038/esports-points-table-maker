@@ -67,20 +67,20 @@ const GoogleSignInPage = () => {
                                     <span className="text-neon-blue">Tournament</span> Console
                                 </h1>
                                 {/* Glitch Layers */}
-                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-red-500 italic tracking-tighter uppercase mb-3 opacity-30 group-hover:animate-glitch-1 hidden md:block">
+                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-red-500 italic tracking-tighter uppercase mb-3 opacity-30 animate-glitch-1 select-none pointer-events-none">
                                     <span className="text-red-500">Tournament</span> Console
                                 </h1>
-                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-cyan-500 italic tracking-tighter uppercase mb-3 opacity-30 group-hover:animate-glitch-2 hidden md:block">
+                                <h1 className="absolute inset-0 text-4xl md:text-5xl font-black text-cyan-500 italic tracking-tighter uppercase mb-3 opacity-30 animate-glitch-2 select-none pointer-events-none">
                                     <span className="text-cyan-500">Tournament</span> Console
                                 </h1>
                             </div>
 
                             <div className="flex items-center justify-center gap-2">
-                                <span className="h-px w-8 bg-white/10" />
-                                <p className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.3em]">
+                                <span className="h-px w-8 bg-neon-blue/20" />
+                                <p className="text-[10px] font-mono text-neon-blue/60 uppercase tracking-[0.3em] animate-pulse">
                                     Identity Verification Required
                                 </p>
-                                <span className="h-px w-8 bg-white/10" />
+                                <span className="h-px w-8 bg-neon-blue/20" />
                             </div>
                         </div>
 
