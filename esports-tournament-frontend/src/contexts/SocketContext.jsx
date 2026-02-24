@@ -18,6 +18,7 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        if (!token) return;
 
         const socketInstance = io(SOCKET_URL, {
             auth: { token },
