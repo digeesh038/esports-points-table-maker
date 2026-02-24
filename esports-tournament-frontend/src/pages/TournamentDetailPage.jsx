@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import tournamentsAPI from '../api/tournaments';
 import teamsAPI from '../api/teams';
+import paymentsAPI from '../api/payments';
 import Card from '../components/common/Card';
 import Loader from '../components/common/Loader';
 import Modal from '../components/common/Modal';
@@ -101,6 +102,37 @@ const TournamentDetailPage = () => {
         setShowPlayerModal(true);
     };
 
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            if (window.Razorpay) {
+                resolve(true);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleDownloadReceipt = async (paymentId, receiptNumber) => {
+        try {
+            const blob = await paymentsAPI.getReceipt(paymentId);
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `receipt-${receiptNumber || 'payment'}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            toast.error('Failed to download receipt');
+        }
+    };
+
     const handleRegisterTeam = async (teamData) => {
         if (isGuest) {
             toast.error('Guest access restricted.');
@@ -113,6 +145,79 @@ const TournamentDetailPage = () => {
             return;
         }
 
+        // Logic for PAID Tournament
+        if (tournament.tournamentType === 'PAID') {
+            try {
+                setSubmitting(true);
+                const isRpayLoaded = await loadRazorpay();
+                if (!isRpayLoaded) {
+                    toast.error('Failed to load Razorpay SDK. Please check your connection.');
+                    return;
+                }
+
+                // 1. Create Order
+                const orderResponse = await paymentsAPI.createOrder(id);
+                const { order_id, amount, razorpay_key_id } = orderResponse.data;
+
+                // 2. Open Razorpay Checkout
+                const options = {
+                    key: razorpay_key_id,
+                    amount: amount,
+                    currency: 'INR',
+                    name: 'Esports Points Table',
+                    description: `Entry Fee for ${tournament.name}`,
+                    order_id: order_id,
+                    handler: async (response) => {
+                        try {
+                            setSubmitting(true);
+                            // 3. Verify Payment and Register Team
+                            const verifyRes = await paymentsAPI.verify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                tournamentId: id,
+                                teamData: teamData
+                            });
+
+                            toast.success('Registration & Payment Successful!');
+                            setShowTeamModal(false);
+                            fetchTournamentData();
+
+                            // 4. Receipt Download Option
+                            const paymentId = verifyRes.data.data.paymentId;
+                            const receiptNo = verifyRes.data.data.receiptNumber;
+                            if (window.confirm('Registration successful! Download your receipt now?')) {
+                                handleDownloadReceipt(paymentId, receiptNo);
+                            }
+                        } catch (err) {
+                            toast.error(err.response?.data?.message || 'Payment verification failed');
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    },
+                    prefill: {
+                        name: teamData.contactName || '',
+                        email: teamData.contactEmail || '',
+                        contact: teamData.contactPhone || ''
+                    },
+                    modal: {
+                        ondismiss: () => setSubmitting(false)
+                    },
+                    theme: {
+                        color: '#00F3FF'
+                    }
+                };
+
+                const rpay = new window.Razorpay(options);
+                rpay.open();
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Failed to initialize payment');
+                setSubmitting(false);
+            }
+            return;
+        }
+
+        // Logic for FREE Tournament
         try {
             setSubmitting(true);
             await teamsAPI.register(id, teamData);
@@ -374,7 +479,11 @@ const TournamentDetailPage = () => {
                                         disabled={tournament.maxTeams > 0 && teams.length >= tournament.maxTeams}
                                     >
                                         <Plus className="w-4 h-4 mr-2" />
-                                        {tournament.maxTeams > 0 && teams.length >= tournament.maxTeams ? 'LIMIT REACHED' : 'Register Team'}
+                                        {tournament.maxTeams > 0 && teams.length >= tournament.maxTeams
+                                            ? 'LIMIT REACHED'
+                                            : tournament.tournamentType === 'PAID'
+                                                ? `Register Team (₹${tournament.entryFee})`
+                                                : 'Register Team'}
                                     </Button>
                                 </div>
                             )}
@@ -392,6 +501,7 @@ const TournamentDetailPage = () => {
                                     onReject={handleRejectTeam}
                                     onDelete={handleDeleteTeam}
                                     onAddPlayer={handleManageRoster}
+                                    onDownloadReceipt={handleDownloadReceipt}
                                     className="grid grid-cols-1 gap-6"
                                 />
                             </div>

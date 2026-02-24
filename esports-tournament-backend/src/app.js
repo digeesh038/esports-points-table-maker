@@ -16,6 +16,7 @@ import teamRoutes from './routes/teamRoutes.js';
 import matchRoutes from './routes/matchRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 // Import middlewares
 import errorHandler from './middlewares/errorHandler.js';
@@ -86,6 +87,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

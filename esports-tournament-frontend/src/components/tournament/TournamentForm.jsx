@@ -8,7 +8,7 @@ import organizationsAPI from '../../api/organizations';
 import tournamentsAPI from '../../api/tournaments';
 import Card from '../common/Card';
 import toast from 'react-hot-toast';
-import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy } from 'lucide-react';
+import { Building2, Gamepad2, AlignLeft, CalendarDays, Users, Globe, Swords, Trophy, Zap, CreditCard } from 'lucide-react';
 
 const GAME_OPTIONS = [
     { value: 'free_fire', label: 'Free Fire' },
@@ -39,6 +39,8 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         maxTeams: '',
         registrationDeadline: '',
         isPublic: true,
+        tournamentType: 'FREE',
+        entryFee: 0,
     });
 
     const [organizations, setOrganizations] = useState([]);
@@ -55,6 +57,8 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 startDate: initialData.startDate?.split('T')[0] || '',
                 endDate: initialData.endDate?.split('T')[0] || '',
                 registrationDeadline: initialData.registrationDeadline?.split('T')[0] || '',
+                tournamentType: initialData.tournamentType || 'FREE',
+                entryFee: initialData.entryFee || 0,
             });
         }
     }, [initialData]);
@@ -280,6 +284,42 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                         />
                     </div>
                 </label>
+            </div>
+
+            {/* Section: Entry Fee */}
+            <div className="space-y-5">
+                <div className="flex items-center gap-3 pb-3 border-b border-white/5">
+                    <CreditCard className="w-4 h-4 text-neon-blue" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Registration Type</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <Select
+                        label="Tournament Type"
+                        icon={<Trophy className="w-3.5 h-3.5" />}
+                        name="tournamentType"
+                        value={formData.tournamentType}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="FREE">FREE</option>
+                        <option value="PAID">PAID</option>
+                    </Select>
+
+                    {formData.tournamentType === 'PAID' && (
+                        <Input
+                            label="Entry Fee (INR)"
+                            icon={<Zap className="w-3.5 h-3.5" />}
+                            type="number"
+                            name="entryFee"
+                            value={formData.entryFee}
+                            onChange={handleChange}
+                            placeholder="e.g. 100"
+                            min="1"
+                            required
+                        />
+                    )}
+                </div>
             </div>
 
             {/* Submit */}

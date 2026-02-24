@@ -9,6 +9,7 @@ import Player from './Player.js';
 import Match from './Match.js';
 import MatchResult from './MatchResult.js';
 import PlayerMatchResult from './PlayerMatchResult.js';
+import Payment from './Payment.js';
 
 /* ======================
    Define Associations
@@ -62,6 +63,16 @@ PlayerMatchResult.belongsTo(Player, { foreignKey: 'playerId', as: 'player' });
 Team.hasMany(PlayerMatchResult, { foreignKey: 'teamId', as: 'playerMatchResults', onDelete: 'CASCADE' });
 PlayerMatchResult.belongsTo(Team, { foreignKey: 'teamId', as: 'team' });
 
+// Payment Associations
+Payment.belongsTo(Tournament, { foreignKey: 'tournamentId', as: 'tournament' });
+Tournament.hasMany(Payment, { foreignKey: 'tournamentId', as: 'payments' });
+
+Payment.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(Payment, { foreignKey: 'userId', as: 'payments' });
+
+Payment.belongsTo(Team, { foreignKey: 'teamId', as: 'team' });
+Team.hasOne(Payment, { foreignKey: 'teamId', as: 'payment' });
+
 /* ======================
    Sync Database
 ====================== */
@@ -89,4 +100,5 @@ export {
     Match,
     MatchResult,
     PlayerMatchResult,
+    Payment,
 };

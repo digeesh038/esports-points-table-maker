@@ -73,6 +73,19 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'prize_pool',
         },
+        tournamentType: {
+            type: DataTypes.ENUM('FREE', 'PAID'),
+            defaultValue: 'FREE',
+            field: 'tournament_type',
+        },
+        entryFee: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            validate: {
+                min: 0,
+            },
+            field: 'entry_fee',
+        },
     },
     {
         tableName: 'tournaments',

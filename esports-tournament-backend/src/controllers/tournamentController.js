@@ -22,7 +22,8 @@ export async function createTournament(req, res, next) {
 
         const {
             organizationId, name, game, description, format,
-            startDate, endDate, maxTeams, registrationDeadline, isPublic
+            startDate, endDate, maxTeams, registrationDeadline, isPublic,
+            tournamentType, entryFee
         } = req.body;
 
         const organization = await Organization.findByPk(organizationId);
@@ -50,6 +51,8 @@ export async function createTournament(req, res, next) {
             registrationDeadline: registrationDeadline || null,
             isPublic: isPublic !== false,
             status: 'draft',
+            tournamentType: tournamentType || 'FREE',
+            entryFee: tournamentType === 'PAID' ? parseInt(entryFee) || 0 : 0,
         };
 
         const tournament = await Tournament.create(sanitizedData);
@@ -126,7 +129,10 @@ export async function getTournament(req, res, next) {
                 {
                     model: Team,
                     as: 'teams',
-                    include: [{ model: Player, as: 'players' }]
+                    include: [
+                        { model: Player, as: 'players' },
+                        { model: Payment, as: 'payment', attributes: ['id', 'status', 'receiptNumber'] }
+                    ]
                 },
             ],
             order: [[{ model: Stage, as: 'stages' }, 'stageNumber', 'ASC']],

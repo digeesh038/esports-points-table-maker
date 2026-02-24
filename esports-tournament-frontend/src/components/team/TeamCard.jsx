@@ -1,7 +1,7 @@
-import { Users, Mail, Phone, CheckCircle, XCircle, Clock, Shield, UserPlus, Trash2 } from 'lucide-react';
+import { Users, Mail, Phone, CheckCircle, XCircle, Clock, Shield, UserPlus, Trash2, Download } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showActions = false }) => {
+const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, onDownloadReceipt, showActions = false }) => {
     const { isGuest } = useAuth();
     const statusConfig = {
         pending: {
@@ -124,6 +124,19 @@ const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showAction
                         </button>
                     </div>
                 </div>
+            )}
+
+            {team.payment && team.payment.status === 'SUCCESS' && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDownloadReceipt(team.payment.id, team.payment.receiptNumber);
+                    }}
+                    className="mt-4 w-full py-2.5 bg-neon-blue/10 text-neon-blue border border-neon-blue/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-neon-blue hover:text-black transition-all flex items-center justify-center gap-2"
+                >
+                    <Download className="w-3.5 h-3.5" />
+                    Download Receipt
+                </button>
             )}
 
             {showActions && team.status === 'pending' && (

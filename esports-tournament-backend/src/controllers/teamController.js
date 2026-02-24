@@ -20,6 +20,14 @@ export async function createTeam(req, res, next) {
             return res.status(404).json({ success: false, message: 'Tournament not found' });
         }
 
+        // Prevent registration for PAID tournaments through this endpoint
+        if (tournament.tournamentType === 'PAID') {
+            return res.status(400).json({
+                success: false,
+                message: 'This tournament requires an entry fee. Please use the secure payment flow for registration.'
+            });
+        }
+
         // Validate team limit
         if (tournament.maxTeams) {
             const teamCount = await Team.count({ where: { tournamentId } });
