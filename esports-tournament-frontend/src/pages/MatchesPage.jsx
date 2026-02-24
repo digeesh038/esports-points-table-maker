@@ -136,18 +136,22 @@ const MatchesPage = () => {
     return (
         <div className="space-y-10 px-2 lg:px-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-neon-blue/10 border border-neon-blue/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,183,255,0.15)]">
-                            <Target className="w-6 h-6 text-neon-blue" />
-                        </div>
-                        <div className="min-w-0">
-                            <span className="text-neon-blue text-[9px] font-black tracking-[0.3em] uppercase opacity-50 block mb-0.5">Tactical Command</span>
-                            <h1 className="text-2xl xs:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
-                                MY MATCHES
-                            </h1>
-                        </div>
+            {/* HEADER */}
+            <div className="relative mb-12">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
+                    <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
+                        Tactical // Match Feed
+                    </span>
+                </div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                    <div className="flex-1">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
+                            <span className="text-white">COMBAT</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">INTELLIGENCE</span>
+                        </h1>
+                        <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-blue/30 pl-4 py-1">
+                            Monitor and process real-time match data across all active tournament nodes.
+                        </p>
                     </div>
                 </div>
             </div>

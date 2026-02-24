@@ -107,39 +107,38 @@ const OrganizationsPage = () => {
 
     return (
         <div className="space-y-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-4 border-b border-white/5 pb-8">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-neon-blue/10 border border-neon-blue/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,183,255,0.15)]">
-                            <Plus className="w-6 h-6 text-neon-blue" />
-                        </div>
-                        <div className="min-w-0">
-                            <span className="text-neon-blue text-[9px] font-black tracking-[0.3em] uppercase opacity-50 block mb-0.5">Entity Management</span>
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
-                                MY ORGANIZATIONS
-                            </h1>
-                        </div>
+            {/* HEADER */}
+            <div className="relative mb-12">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
+                    <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
+                        Registry // Organization Units
+                    </span>
+                </div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                    <div className="flex-1">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
+                            <span className="text-white">TACTICAL</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">REGISTRY</span>
+                        </h1>
+                        <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-blue/30 pl-4 py-1">
+                            {isGuest
+                                ? 'View global esports collectives and institutional profiles indexed in the database.'
+                                : 'Architect and oversee your esports infrastructure. Manage multiple organizations from a single console.'}
+                        </p>
                     </div>
-                </div>
-                <p className="text-gray-400 mt-3 text-sm md:text-base font-medium opacity-80 max-w-2xl border-l-2 border-neon-blue pl-4">
-                    {isGuest
-                        ? 'Browse global esports collectives and institutional profiles indexed in the database.'
-                        : 'Architect and oversee your esports infrastructure. Manage multiple organizations from a single console.'}
-                </p>
-            </div>
 
-            {!isGuest && (
-                <div className="flex justify-end">
-                    <Button
-                        onClick={() => setShowCreateModal(true)}
-                        variant="primary"
-                        className="shadow-[0_0_25px_rgba(0,183,255,0.3)] !rounded-2xl px-8 py-4 font-black italic uppercase tracking-widest text-sm"
-                        icon={Plus}
-                    >
-                        Register Organization
-                    </Button>
+                    {!isGuest && (
+                        <Button
+                            onClick={() => setShowCreateModal(true)}
+                            variant="primary"
+                            className="shadow-[0_0_30px_rgba(0,183,255,0.3)] !rounded-2xl px-10 py-5 font-black italic uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all"
+                            icon={Plus}
+                        >
+                            Register Entity
+                        </Button>
+                    )}
                 </div>
-            )}
+            </div>
 
             {organizations.length === 0 ? (
                 <Card className="bg-dark-800/10 border-dashed border-2 border-dark-600/50 py-24 rounded-3xl group hover:border-neon-blue/30 transition-all">

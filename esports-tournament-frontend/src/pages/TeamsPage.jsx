@@ -144,79 +144,73 @@ const TeamsPage = () => {
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700">
-            {/* Cinematic Teams Hero */}
-            <header className="relative overflow-hidden rounded-3xl border border-dark-600 bg-dark-950/40 backdrop-blur-xl">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-neon-pink/10 to-transparent pointer-events-none"></div>
-                <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-neon-pink/5 blur-[120px] pointer-events-none animate-pulse"></div>
+            {/* HEADER */}
+            <div className="relative mb-12">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-neon-pink/40 via-transparent to-transparent" />
+                    <span className="text-[10px] font-mono text-neon-pink uppercase tracking-[0.4em] opacity-60">
+                        Registry // Talent Pool
+                    </span>
+                </div>
 
-                <div className="p-8 md:p-12 relative z-10">
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-                        <div className="space-y-6 flex-1">
-                            <div className="flex flex-wrap items-center gap-3">
-                                <button
-                                    onClick={() => setActiveTab('registry')}
-                                    className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all
-                                        ${activeTab === 'registry'
-                                            ? 'bg-neon-pink text-black shadow-[0_0_15px_rgba(255,0,212,0.4)]'
-                                            : 'bg-neon-pink/10 text-neon-pink border border-neon-pink/30 hover:bg-neon-pink/20'}`}
-                                >
-                                    TEAMS
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('squad')}
-                                    className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2
-                                        ${activeTab === 'squad'
-                                            ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]'
-                                            : 'bg-dark-800/50 text-gray-400 border border-dark-600 hover:border-gray-500 hover:text-white'}`}
-                                >
-                                    <Users className="w-3.5 h-3.5" />
-                                    SQUAD LIST
-                                </button>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-neon-pink/10 border border-neon-pink/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,0,212,0.15)]">
-                                    <Users className="w-6 h-6 text-neon-pink" />
-                                </div>
-                                <div className="min-w-0">
-                                    <span className="text-neon-pink text-[9px] font-black tracking-[0.3em] uppercase opacity-50 block mb-0.5">Talent Registry</span>
-                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
-                                        MY TEAMS
-                                    </h1>
-                                </div>
-                            </div>
-                            <p className="text-gray-400 text-sm md:text-base font-medium leading-relaxed border-l-2 border-neon-pink pl-6 py-2">
-                                Manage team registrations and rosters for your tournaments.
-                            </p>
-
-                            {/* Enhanced Search Terminal */}
-                            <div className="relative group max-w-xl">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-hover:text-neon-pink transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Search teams or tournaments..."
-                                    className="w-full bg-dark-900/60 border border-dark-600 rounded-2xl py-4 pl-12 pr-4 text-white font-mono text-xs focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 outline-none transition-all placeholder:text-gray-600 shadow-2xl"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-                                    <span className="text-[8px] font-mono text-gray-500 border border-dark-600 px-1.5 py-0.5 rounded">SEARCH</span>
-                                </div>
-                            </div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
+                    <div className="flex-1">
+                        <div className="flex flex-wrap items-center gap-3 mb-6">
+                            <button
+                                onClick={() => setActiveTab('registry')}
+                                className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all
+                                    ${activeTab === 'registry'
+                                        ? 'bg-neon-pink text-black shadow-[0_0_15px_rgba(255,0,212,0.4)]'
+                                        : 'bg-neon-pink/10 text-neon-pink border border-neon-pink/30 hover:bg-neon-pink/20'}`}
+                            >
+                                TEAMS
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('squad')}
+                                className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2
+                                    ${activeTab === 'squad'
+                                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]'
+                                        : 'bg-dark-800/50 text-gray-400 border border-dark-600 hover:border-gray-500 hover:text-white'}`}
+                            >
+                                <Users className="w-3.5 h-3.5" />
+                                SQUAD LIST
+                            </button>
                         </div>
 
-                        {!isGuest && (
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="btn-primary py-4 px-8 text-xs font-black uppercase tracking-[0.2em] flex items-center whitespace-nowrap shadow-[0_0_30px_rgba(255,0,212,0.3)] hover:scale-105 active:scale-95 transition-all"
-                            >
-                                <UserPlus className="w-5 h-5 mr-3" />
-                                Add New Team
-                            </button>
-                        )}
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
+                            <span className="text-white">TALENT</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)]">ROSTER</span>
+                        </h1>
+                        <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-pink/30 pl-4 py-1">
+                            Deploy and manage elite squads across your competitive infrastructure.
+                        </p>
+                    </div>
+
+                    {!isGuest && (
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="btn-primary py-5 px-10 text-xs font-black uppercase tracking-[0.2em] flex items-center whitespace-nowrap shadow-[0_0_40px_rgba(255,0,212,0.3)] hover:scale-105 active:scale-95 transition-all !rounded-2xl"
+                        >
+                            <UserPlus className="w-5 h-5 mr-3" />
+                            Initialize Squad
+                        </button>
+                    )}
+                </div>
+
+                {/* Enhanced Search Terminal */}
+                <div className="relative group max-w-2xl">
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-hover:text-neon-pink transition-colors" />
+                    <input
+                        type="text"
+                        placeholder="SEARCH_TEAMS_OR_TOURNAMENTS..."
+                        className="w-full bg-[#0d0d12]/40 backdrop-blur-xl border border-white/5 rounded-2xl py-5 pl-14 pr-4 text-white font-mono text-xs focus:border-neon-pink focus:ring-0 outline-none transition-all placeholder:text-gray-700 shadow-2xl"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                        <span className="text-[10px] font-mono text-gray-600 border border-white/5 px-2 py-1 rounded-lg uppercase">Search_Engine</span>
                     </div>
                 </div>
-            </header>
+            </div>
 
             {/* Content View */}
             {filteredTeams.length === 0 ? (

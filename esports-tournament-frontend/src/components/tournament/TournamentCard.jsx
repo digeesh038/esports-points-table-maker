@@ -28,70 +28,67 @@ const TournamentCard = ({ tournament }) => {
     return (
         <motion.div
             whileHover={{ y: -8 }}
-            className="group relative bg-dark-800/10 border border-white/5 rounded-[40px] p-8 overflow-hidden backdrop-blur-sm hover:border-white/10 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+            className="group relative bg-[#0d0d12]/40 border border-white/5 rounded-[40px] p-8 overflow-hidden backdrop-blur-xl hover:border-white/10 transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]"
         >
-            {/* Background Branding Watermark */}
-            <div className="absolute -bottom-6 -right-6 text-[120px] font-black italic text-white/[0.02] select-none pointer-events-none group-hover:text-white/[0.04] transition-all duration-700">
-                {tournament.game?.charAt(0).toUpperCase() || 'T'}
-            </div>
+            {/* Corner Decorative Trims */}
+            <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-white/5 rounded-tl-[40px] pointer-events-none group-hover:border-neon-blue/30 transition-colors" />
+            <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-white/5 rounded-br-[40px] pointer-events-none group-hover:border-neon-purple/30 transition-colors" />
 
-            {/* Corner Accent */}
-            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+            {/* Scanline Effect on Hover */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-full group-hover:animate-scan-fast pointer-events-none" />
+
+            {/* Background Index Watermark */}
+            <div className="absolute -bottom-6 -right-6 text-[140px] font-black italic text-white/[0.02] select-none pointer-events-none group-hover:text-white/[0.04] transition-all duration-1000 uppercase leading-none">
+                {tournament.game?.charAt(0) || 'T'}
+            </div>
 
             <div className="relative z-10 h-full flex flex-col">
                 {/* Header: Game & Status */}
-                <div className="flex items-center justify-between mb-8">
-                    <div className={`px-4 py-1.5 rounded-full border text-[9px] font-black tracking-[0.2em] uppercase ${gameColors[tournament.game] || gameColors.free_fire}`}>
-                        {tournament.game?.replace('_', ' ') || 'SYSTEM_NODE'}
+                <div className="flex items-center justify-between mb-10">
+                    <div className={`px-4 py-2 rounded-xl border text-[9px] font-black tracking-[0.2em] uppercase backdrop-blur-md ${gameColors[tournament.game] || gameColors.free_fire}`}>
+                        {tournament.game?.replace('_', ' ') || 'SYNTHETIC_NODE'}
                     </div>
-                    <div className={`px-3 py-1 border-l-2 text-[8px] font-black tracking-widest uppercase ${status.color}`}>
-                        {status.label}
+                    <div className={`flex items-center gap-2`}>
+                        <div className={`w-1.5 h-1.5 rounded-full animate-pulse shadow-[0_0_8px_currentColor] ${statusConfig[tournament.status]?.color?.split(' ')[0] || 'text-gray-500'}`} />
+                        <span className={`text-[9px] font-black tracking-widest uppercase ${status.color.split(' ')[0]}`}>
+                            {status.label}
+                        </span>
                     </div>
                 </div>
 
                 {/* Tournament Title */}
-                <h3 className="text-3xl font-black italic tracking-tighter text-white leading-tight mb-4 group-hover:text-neon-blue transition-colors duration-300 line-clamp-2">
-                    {tournament.name}
-                </h3>
+                <div className="mb-6">
+                    <h3 className="text-3xl font-black italic tracking-tighter text-white leading-none mb-3 group-hover:text-neon-blue transition-colors duration-500 line-clamp-2">
+                        {tournament.name}
+                    </h3>
+                    <div className="h-0.5 w-12 bg-neon-blue/40 group-hover:w-full transition-all duration-700" />
+                </div>
 
-                <p className="text-gray-500 text-xs font-medium leading-relaxed mb-10 line-clamp-2 h-9">
+                <p className="text-gray-500 text-[13px] font-medium leading-relaxed mb-10 line-clamp-2 h-10 opacity-80 group-hover:opacity-100 transition-opacity">
                     {tournament.description || 'System encryption error: No descriptive records found for this tournament identifier.'}
                 </p>
 
                 {/* Specs Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-10">
-                    <div className="bg-white/[0.02] border border-white/5 p-5 rounded-3xl flex flex-col gap-1 hover:border-white/10 transition-colors">
-                        <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2">
-                            <Calendar className="w-2.5 h-2.5 text-neon-blue" />
-                            DEPLOYED
+                    <div className="bg-[#050508]/60 border border-white/5 p-5 rounded-[24px] flex flex-col gap-1 hover:border-white/10 transition-colors group/item">
+                        <span className="text-[8px] font-bold text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/item:text-neon-blue transition-colors">
+                            <Calendar className="w-2.5 h-2.5" />
+                            Deployed
                         </span>
-                        <span className="text-[11px] font-black text-gray-300 tracking-tight">
+                        <span className="text-[11px] font-black text-white/80 tracking-tight">
                             {tournament.startDate ? format(new Date(tournament.startDate), 'MMM dd | yyyy') : 'TBD_NODE'}
                         </span>
                     </div>
 
-                    <div className="bg-white/[0.02] border border-white/5 p-5 rounded-3xl flex flex-col gap-1 hover:border-white/10 transition-colors">
-                        <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2">
-                            <Users className="w-2.5 h-2.5 text-neon-purple" />
-                            CAPACITY
+                    <div className="bg-[#050508]/60 border border-white/5 p-5 rounded-[24px] flex flex-col gap-1 hover:border-white/10 transition-colors group/item">
+                        <span className="text-[8px] font-bold text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/item:text-neon-purple transition-colors">
+                            <Users className="w-2.5 h-2.5" />
+                            Capacity
                         </span>
-                        <div className="flex items-end gap-1.5">
+                        <div className="flex items-baseline gap-1.5">
                             <span className="text-sm font-black text-white">{tournament.teams?.length || 0}</span>
-                            <span className="text-[10px] font-black text-gray-700 mb-0.5">/ {tournament.maxTeams || '∞'}</span>
+                            <span className="text-[10px] font-bold text-gray-700">/ {tournament.maxTeams || '∞'}</span>
                         </div>
-                    </div>
-
-                    <div className="col-span-2 bg-dark-900 border border-white/5 p-5 rounded-3xl flex items-center justify-between hover:border-white/10 transition-colors">
-                        <div className="flex flex-col gap-1">
-                            <span className="text-[8px] font-black text-gray-700 uppercase tracking-[0.3em] flex items-center gap-2">
-                                <Trophy className="w-2.5 h-2.5 text-yellow-500" />
-                                PROTOCOL
-                            </span>
-                            <span className="text-[11px] font-black text-gray-400 italic uppercase">
-                                {tournament.format?.replace('_', ' ') || 'Hybrid Tournament'}
-                            </span>
-                        </div>
-                        <Zap className="w-5 h-5 text-yellow-500/20 group-hover:text-yellow-500 transition-colors" />
                     </div>
                 </div>
 
@@ -99,17 +96,22 @@ const TournamentCard = ({ tournament }) => {
                 <div className="mt-auto">
                     <Link
                         to={isDashboard ? `/dashboard/tournaments/${tournament.id}` : `/tournaments/public/${tournament.id}`}
-                        className="w-full h-16 bg-white/[0.03] hover:bg-neon-blue border border-white/5 hover:border-neon-blue/20 rounded-2xl flex items-center justify-center gap-4 group/btn transition-all duration-500 relative overflow-hidden"
+                        className="w-full h-16 bg-[#12121a] hover:bg-neon-blue border border-white/5 hover:border-neon-blue/20 rounded-[22px] flex items-center justify-center gap-4 group/btn transition-all duration-700 relative overflow-hidden group"
                     >
-                        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white/20 scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-500 origin-left"></div>
-                        <Target className="w-4 h-4 text-gray-600 group-hover/btn:text-black group-hover/btn:rotate-12 transition-all" />
-                        <span className="text-[10px] font-black text-white group-hover/btn:text-black tracking-[0.3em] uppercase">
-                            {isDashboard ? 'ACCESS CONSOLE' : 'ENGAGE NODE'}
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/btn:animate-shimmer" />
+
+                        <Target className="w-4 h-4 text-gray-600 group-hover/btn:text-black transition-colors" />
+                        <span className="text-[11px] font-black text-white group-hover/btn:text-black tracking-[0.4em] uppercase">
+                            {isDashboard ? 'Access Console' : 'Engage Node'}
                         </span>
-                        <ChevronRight className="w-4 h-4 text-gray-800 group-hover/btn:text-black translate-x-0 group-hover/btn:translate-x-1 transition-all" />
+                        <ChevronRight className="w-4 h-4 text-gray-800 group-hover/btn:text-black group-hover/btn:translate-x-1 transition-all" />
                     </Link>
                 </div>
             </div>
+
+            {/* Ambient Ambient Glow */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-neon-blue/5 blur-[100px] group-hover:opacity-100 transition-opacity pointer-events-none" />
         </motion.div>
     );
 };

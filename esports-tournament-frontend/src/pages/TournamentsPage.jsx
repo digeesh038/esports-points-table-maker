@@ -59,42 +59,35 @@ const TournamentsPage = () => {
 
     return (
         <div className="space-y-12 px-4 lg:px-0">
-            {/* ── TOP SECTION: BRANDING & ACTION ── */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
-                <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    className="flex-1 min-w-0"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-neon-purple/10 border border-neon-purple/30 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(188,19,254,0.15)]">
-                            <Trophy className="w-6 h-6 text-neon-purple" />
-                        </div>
-                        <div className="min-w-">
-                            <span className="text-neon-purple text-[9px] font-black tracking-[0.3em] uppercase opacity-50 block mb-0.5">Management Console</span>
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent italic tracking-tight leading-none pr-4">
-                                MY TOURNAMENTS
-                            </h1>
-                        </div>
-                    </div>
-                </motion.div>
+            {/* HEADER */}
+            <div className="relative mb-12">
+                <div className="flex items-center gap-4 mb-2">
+                    <div className="h-px flex-1 bg-gradient-to-r from-neon-purple/40 via-transparent to-transparent" />
+                    <span className="text-[10px] font-mono text-neon-purple uppercase tracking-[0.4em] opacity-60">
+                        Registry // Arena Nodes
+                    </span>
+                </div>
 
-                {!isGuest && (
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="shrink-0"
-                    >
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
+                    <div className="flex-1">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
+                            <span className="text-white">ARENA</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-purple to-purple-600 drop-shadow-[0_0_15px_rgba(188,19,254,0.3)]">NETWORK</span>
+                        </h1>
+                        <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-purple/30 pl-4 py-1">
+                            Synchronize and orchestrate competitive events across the global grid.
+                        </p>
+                    </div>
+
+                    {!isGuest && (
                         <Link
                             to="/dashboard/tournaments/create"
-                            className="bg-neon-blue h-14 md:h-16 px-8 text-black font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center gap-3 rounded-xl md:rounded-2xl shadow-[0_0_30px_rgba(0,183,255,0.1)] hover:shadow-[0_0_40px_rgba(0,183,255,0.3)] hover:scale-[1.02] active:scale-95 transition-all group whitespace-nowrap"
+                            className="bg-neon-blue py-5 px-10 text-xs font-black uppercase tracking-[0.2em] flex items-center whitespace-nowrap shadow-[0_0_40px_rgba(0,183,255,0.3)] hover:scale-105 active:scale-95 transition-all rounded-2xl text-black"
                         >
-                            <Plus className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-90 transition-transform duration-500" />
-                            Launch New Node
+                            <Trophy className="w-5 h-5 mr-3" />
+                            Initialize Node
                         </Link>
-                    </motion.div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* ── INTERACTIVE FILTER HUB ── */}

@@ -46,16 +46,35 @@ export default {
             },
 
             /* Optional animations (safe to keep) */
+            /* Pro Gaming Animations */
             animation: {
-                shimmer: "shimmer 2s infinite linear",
+                shimmer: "shimmer 2.5s infinite linear",
+                "scan-fast": "scan 1.5s linear infinite",
+                scan: "scan 3s linear infinite",
+                "fade-in": "fade-in 0.5s ease-out forwards",
                 "bounce-slow": "bounce 3s infinite",
                 "load-progress": "load 2s ease-in-out infinite",
+                float: "float 6s ease-in-out infinite",
             },
 
             keyframes: {
                 shimmer: {
-                    "0%": { backgroundPosition: "-1000px 0" },
-                    "100%": { backgroundPosition: "1000px 0" },
+                    from: { transform: "translateX(-100%)" },
+                    to: { transform: "translateX(100%)" },
+                },
+                scan: {
+                    "0%": { top: "0%", opacity: 0 },
+                    "5%": { opacity: 0.5 },
+                    "95%": { opacity: 0.5 },
+                    "100%": { top: "100%", opacity: 0 },
+                },
+                "fade-in": {
+                    from: { opacity: 0, transform: "translateY(10px)" },
+                    to: { opacity: 1, transform: "translateY(0)" },
+                },
+                float: {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(-10px)" },
                 },
                 load: {
                     "0%": { width: "0%" },

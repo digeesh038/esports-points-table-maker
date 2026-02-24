@@ -37,41 +37,47 @@ const DashboardStats = ({ stats }) => {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6">
             {items.map((item, index) => (
                 <div
                     key={index}
-                    className={`bg-dark-800/20 backdrop-blur-xl border-l-4 ${item.borderColor.replace('border-', 'border-l-')} border-t border-b border-r border-white/5 p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-all duration-500 shadow-2xl`}
+                    className={`bg-[#0d0d12]/40 backdrop-blur-xl border border-white/5 p-6 rounded-[24px] relative overflow-hidden group hover:border-white/10 transition-all duration-700 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]`}
                 >
-                    {/* Futuristic Background Pattern */}
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full -mr-12 -mt-12 transition-transform duration-700 group-hover:scale-150" />
+                    {/* Corner Accent */}
+                    <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 ${item.borderColor.replace('border-', 'border-')} opacity-40 rounded-tl-2xl group-hover:opacity-100 transition-opacity`} />
 
-                    {/* Animated Glow Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    {/* Animated Scanning Bar */}
+                    <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white/5 overflow-hidden">
+                        <div className={`h-full w-1/3 ${item.borderColor.replace('border-', 'bg-')} shadow-[0_0_10px_currentColor] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity`} />
+                    </div>
 
-                    <div className="relative z-10 flex items-center justify-between">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className={`w-1.5 h-1.5 rounded-full ${item.borderColor.replace('border-', 'bg-')} shadow-[0_0_8px_currentColor]`}></span>
-                                <p className="text-gray-500 font-black text-[10px] uppercase tracking-[0.25em]">
-                                    {item.label}
-                                </p>
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-xl bg-dark-900/50 flex items-center justify-center border border-white/5 transition-all duration-500 group-hover:rotate-[15deg] group-hover:scale-110`}>
+                                    {item.icon}
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 font-bold text-[9px] uppercase tracking-[0.3em] leading-none mb-1">
+                                        Status // Active
+                                    </p>
+                                    <h4 className="text-gray-400 font-black text-[10px] uppercase tracking-widest leading-none">
+                                        {item.label}
+                                    </h4>
+                                </div>
                             </div>
-                            <h3 className="text-4xl font-black text-white italic tracking-tighter drop-shadow-md">
+                        </div>
+
+                        <div className="flex items-end justify-between">
+                            <h3 className="text-4xl md:text-5xl font-black text-white italic tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
                                 {item.value?.toLocaleString() || '0'}
                             </h3>
-                        </div>
-                        <div className={`w-14 h-14 bg-dark-900/80 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-neon-blue/30 transition-all duration-500 shadow-inner ${item.shadowColor}`}>
-                            {item.icon}
+                            <div className={`w-2 h-2 rounded-full ${item.borderColor.replace('border-', 'bg-')} animate-pulse shadow-[0_0_10px_currentColor]`} />
                         </div>
                     </div>
 
-                    {/* Footer decoration */}
-                    <div className="mt-4 flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
-                        <div className={`h-1 w-8 rounded-full ${item.borderColor.replace('border-', 'bg-')}`}></div>
-                        <div className="h-1 w-2 rounded-full bg-white/10"></div>
-                        <div className="h-1 w-1 rounded-full bg-white/10"></div>
-                    </div>
+                    {/* Background Light Spike */}
+                    <div className={`absolute -bottom-12 -right-12 w-32 h-32 ${item.borderColor.replace('border-', 'bg-')} opacity-[0.03] group-hover:opacity-[0.08] blur-[40px] rounded-full transition-all duration-700`} />
                 </div>
             ))}
         </div>
