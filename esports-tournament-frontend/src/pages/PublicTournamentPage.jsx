@@ -278,7 +278,7 @@ const PublicTournamentPage = () => {
                 <div className="flex items-center gap-4 mb-12">
                     <div className="w-2 h-10 bg-neon-purple rounded-full shadow-[0_0_15px_rgba(188,19,254,0.5)]"></div>
                     <div>
-                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tight">Live Rankings</h2>
+                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tight pr-4">Live Rankings</h2>
                         <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-1">Real-time team standings and statistics</p>
                     </div>
                 </div>

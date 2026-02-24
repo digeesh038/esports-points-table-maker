@@ -264,21 +264,21 @@ const StageManagementPage = () => {
                         <Zap className="w-16 h-16 text-white" />
                     </div>
                     <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Status</p>
-                    <h3 className="text-2xl font-black text-neon-green italic uppercase">Active</h3>
+                    <h3 className="text-2xl font-black text-neon-green italic uppercase pr-4">Active</h3>
                 </Card>
                 <Card className="bg-dark-800/40 border-dark-600 p-6 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-10 transition-opacity">
                         <Target className="w-16 h-16 text-white" />
                     </div>
                     <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Total Matches</p>
-                    <h3 className="text-2xl font-black text-white italic uppercase">{matches.length}</h3>
+                    <h3 className="text-2xl font-black text-white italic uppercase pr-4">{matches.length}</h3>
                 </Card>
                 <Card className="bg-dark-800/40 border-dark-600 p-6 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-10 transition-opacity">
                         <Shield className="w-16 h-16 text-white" />
                     </div>
                     <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Privacy</p>
-                    <h3 className="text-2xl font-black text-neon-blue italic uppercase">Private</h3>
+                    <h3 className="text-2xl font-black text-neon-blue italic uppercase pr-4">Private</h3>
                 </Card>
             </div>
 
@@ -286,7 +286,7 @@ const StageManagementPage = () => {
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-8 bg-neon-purple rounded-full shadow-neon-purple/50"></div>
-                    <h2 className="text-2xl font-black italic text-white uppercase tracking-tighter">Scheduled Matches</h2>
+                    <h2 className="text-2xl font-black italic text-white uppercase tracking-tighter pr-4">Scheduled Matches</h2>
                 </div>
 
                 {matches.length === 0 ? (

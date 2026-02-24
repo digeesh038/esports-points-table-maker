@@ -37,10 +37,10 @@ const Navbar = () => {
                                 <div className="absolute inset-0 bg-neon-blue/20 blur-lg rounded-full group-hover:bg-neon-blue/40 transition-all"></div>
                                 <Trophy className="relative w-8 h-8 text-neon-blue group-hover:scale-110 transition-transform" />
                             </div>
-                            <span className="text-xl font-black italic tracking-tighter bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent hidden sm:block">
+                            <span className="text-xl font-black italic tracking-tighter bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent hidden sm:block pr-4">
                                 ESPORTS_MANAGER
                             </span>
-                            <span className="text-xl font-black italic tracking-tighter bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent sm:hidden">
+                            <span className="text-xl font-black italic tracking-tighter bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent sm:hidden pr-2">
                                 EM
                             </span>
                         </Link>

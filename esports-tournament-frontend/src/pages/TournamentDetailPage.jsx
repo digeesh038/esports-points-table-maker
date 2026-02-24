@@ -389,7 +389,7 @@ const TournamentDetailPage = () => {
                     {/* Stages */}
                     <section>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-black italic text-white flex items-center uppercase tracking-tighter">
+                            <h2 className="text-2xl font-black italic text-white flex items-center uppercase tracking-tighter pr-4">
                                 <span className="w-2 h-8 bg-neon-purple mr-3 rounded-full shadow-[0_0_15px_rgba(188,19,254,0.5)]"></span>
                                 Tournament Stages
                             </h2>
@@ -406,7 +406,7 @@ const TournamentDetailPage = () => {
                                     <div key={stage.id} className="group card-interactive min-h-[160px] flex flex-col justify-between hover:border-neon-blue/40 transition-all">
                                         <div className="flex justify-between items-start relative z-10">
                                             <div>
-                                                <h3 className="text-lg font-black italic text-white group-hover:text-neon-blue transition-colors uppercase">{stage.name}</h3>
+                                                <h3 className="text-lg font-black italic text-white group-hover:text-neon-blue transition-colors uppercase pr-4">{stage.name}</h3>
                                                 <p className="text-xs text-gray-500 font-mono tracking-widest mt-1">MATCHES: {stage.matches ? stage.matches.length : (stage.totalMatches || stage.numberOfMatches || 0)}</p>
                                             </div>
                                             <div className="flex flex-col items-end gap-2">
@@ -456,7 +456,7 @@ const TournamentDetailPage = () => {
                     {/* Teams Sidebar */}
                     <section>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-black italic text-white flex items-center uppercase tracking-tighter">
+                            <h2 className="text-2xl font-black italic text-white flex items-center uppercase tracking-tighter pr-4">
                                 <span className="w-2 h-8 bg-neon-pink mr-3 rounded-full shadow-[0_0_15px_rgba(255,46,151,0.5)]"></span>
                                 Teams
                             </h2>
