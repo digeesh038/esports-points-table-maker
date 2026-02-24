@@ -22,8 +22,7 @@ import MatchesPage from './pages/MatchesPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
 import StageManagementPage from './pages/StageManagementPage';
-import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
+import LegalPage from './pages/LegalPage';
 
 function App() {
     return (
@@ -40,8 +39,8 @@ function App() {
                                 <Route path="/tournaments" element={<TournamentsPage />} />
                                 <Route path="/tournaments/public/:id" element={<PublicTournamentPage />} />
                                 <Route path="/leaderboard/:id" element={<LeaderboardPage />} />
-                                <Route path="/terms" element={<TermsPage />} />
-                                <Route path="/privacy" element={<PrivacyPage />} />
+                                <Route path="/terms" element={<LegalPage />} />
+                                <Route path="/privacy" element={<LegalPage />} />
                             </Route>
 
                             {/* 🔐 Auth */}
