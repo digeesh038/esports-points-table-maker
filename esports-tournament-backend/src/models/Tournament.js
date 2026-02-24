@@ -107,6 +107,16 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'upi_id',
         },
+        platformPaymentId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'platform_payment_id',
+        },
+        platformOrderId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'platform_order_id',
+        },
     },
     {
         tableName: 'tournaments',

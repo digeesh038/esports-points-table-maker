@@ -104,57 +104,63 @@ const PublicTournamentPage = () => {
             setRegistering(true);
 
             if (tournament.isPaid && tournament.entryFee > 0) {
-                if (tournament.paymentMethod === 'manual') {
-                    // Manual Payment Flow
-                    await teamsAPI.register(id, teamData);
-                    toast.success('Registration submitted! Awaiting payment verification.');
-                    setShowRegisterModal(false);
-                    fetchTournamentData();
-                } else {
-                    // Razorpay Flow (Default)
-                    const res = await loadRazorpay();
-                    if (!res) {
-                        toast.error('Razorpay SDK failed to load. Are you online?');
-                        return;
-                    }
 
-                    const orderRes = await paymentsAPI.createOrder({
+                // ─── Razorpay Gateway Flow ─────────────────────────────────────
+                const res = await loadRazorpay();
+                if (!res) {
+                    toast.error('Razorpay SDK failed to load. Are you online?');
+                    return;
+                }
+
+                let orderRes;
+                try {
+                    orderRes = await paymentsAPI.createOrder({
                         tournamentId: id,
                         amount: tournament.entryFee,
-                        currency: tournament.currency || 'INR'
+                        currency: tournament.currency || 'INR',
                     });
+                } catch (e) {
+                    toast.error(e.response?.data?.message || 'Could not initiate payment. Try again.');
+                    return;
+                }
 
-                    const { orderId, amount, currency, keyId } = orderRes.data.data;
+                const { orderId, amount, currency, keyId } = orderRes.data.data;
 
+                await new Promise((resolve, reject) => {
                     const options = {
                         key: keyId,
-                        amount: amount,
-                        currency: currency,
-                        name: "Esports Tournament",
-                        description: `Registration for ${tournament.name}`,
+                        amount,
+                        currency,
+                        name: tournament.name,
+                        description: `Entry fee — ${tournament.name}`,
                         order_id: orderId,
-                        handler: async (response) => {
+                        // Razorpay shows UPI / QR / Card / Net Banking — no manual setup needed
+                        handler: async (razorpayResponse) => {
                             try {
+                                // Send payment IDs + team data to backend
+                                // Backend verifies HMAC before registering team
                                 const registerData = {
                                     ...teamData,
-                                    razorpayPaymentId: response.razorpay_payment_id,
-                                    razorpayOrderId: response.razorpay_order_id,
-                                    razorpaySignature: response.razorpay_signature
+                                    razorpayPaymentId: razorpayResponse.razorpay_payment_id,
+                                    razorpayOrderId: razorpayResponse.razorpay_order_id,
+                                    razorpaySignature: razorpayResponse.razorpay_signature,
                                 };
 
-                                const registeredTeam = await teamsAPI.register(id, registerData);
-                                toast.success('Payment successful & Team registered!');
+                                const result = await teamsAPI.register(id, registerData);
+                                toast.success('✅ Payment verified & Team registered!');
                                 setShowRegisterModal(false);
                                 fetchTournamentData();
 
-                                // Automatically show receipt
-                                if (registeredTeam.data?.team) {
-                                    setSelectedReceiptTeam(registeredTeam.data.team);
+                                // Auto-show PDF receipt
+                                if (result.data?.team) {
+                                    setSelectedReceiptTeam(result.data.team);
                                     setShowReceiptModal(true);
                                 }
+                                resolve();
                             } catch (err) {
-                                console.error('Registration after payment failed:', err);
-                                toast.error('Payment was successful but team registration failed. Please contact support.');
+                                const msg = err.response?.data?.message || 'Registration failed after payment';
+                                toast.error(`❌ ${msg}. Save your Payment ID: ${razorpayResponse.razorpay_payment_id}`);
+                                reject(err);
                             }
                         },
                         prefill: {
@@ -162,16 +168,22 @@ const PublicTournamentPage = () => {
                             email: teamData.contactEmail || '',
                             contact: teamData.contactPhone || '',
                         },
-                        theme: {
-                            color: "#00f3ff",
+                        theme: { color: '#00f3ff' },
+                        modal: {
+                            ondismiss: () => {
+                                toast('Payment cancelled.', { icon: '⚠️' });
+                                setRegistering(false);
+                                resolve();
+                            },
                         },
                     };
 
-                    const paymentObject = new window.Razorpay(options);
-                    paymentObject.open();
-                }
+                    const rzp = new window.Razorpay(options);
+                    rzp.open();
+                });
+
             } else {
-                // Free tournament registration
+                // Free tournament — register directly
                 await teamsAPI.register(tournament.id, teamData);
                 toast.success('Team registered successfully! Awaiting approval.');
                 setShowRegisterModal(false);

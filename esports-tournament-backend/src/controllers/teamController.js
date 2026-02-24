@@ -64,16 +64,22 @@ export async function createTeam(req, res, next) {
                     });
                 }
 
-                // Verify signature
+                // Verify HMAC signature — NO fallback allowed
                 const crypto = await import('crypto');
-                const sign = razorpayOrderId + "|" + razorpayPaymentId;
+                const rzpSecret = process.env.RAZORPAY_KEY_SECRET;
+                if (!rzpSecret) {
+                    console.error('CRITICAL: RAZORPAY_KEY_SECRET not set');
+                    return res.status(500).json({ success: false, message: 'Payment gateway not configured on server' });
+                }
+                const sign = razorpayOrderId + '|' + razorpayPaymentId;
                 const expectedSign = crypto.default
-                    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your_key_secret')
-                    .update(sign.toString())
-                    .digest("hex");
+                    .createHmac('sha256', rzpSecret)
+                    .update(sign)
+                    .digest('hex');
 
                 if (razorpaySignature !== expectedSign) {
-                    return res.status(400).json({ success: false, message: 'Invalid payment signature' });
+                    console.warn(`🚫 Fake payment blocked — Order: ${razorpayOrderId}`);
+                    return res.status(400).json({ success: false, message: '🚫 Payment signature invalid — possible fraud attempt' });
                 }
 
                 paymentStatus = 'completed';

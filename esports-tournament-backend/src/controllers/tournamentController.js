@@ -59,6 +59,9 @@ export async function createTournament(req, res, next) {
             paymentInstructions: paymentInstructions || null,
             paymentQrCode: paymentQrCode || null,
             upiId: upiId || null,
+            platformPaymentId: req.body.platformPaymentId || null,
+            platformOrderId: req.body.platformOrderId || null,
+            status: req.body.status || 'draft',
         };
 
         const tournament = await Tournament.create(sanitizedData);
