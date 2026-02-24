@@ -105,22 +105,27 @@ const GoogleSignInPage = () => {
                             </label>
                         </div>
 
-                        {/* Google Action Button */}
-                        <div className={`relative transition-all duration-500 overflow-hidden rounded-2xl border ${!agreed ? 'opacity-20 pointer-events-none filter grayscale' : 'opacity-100 border-white/10 hover:border-neon-blue/50'}`}>
-                            <div className="absolute inset-0 bg-gradient-to-r from-neon-blue/5 via-transparent to-neon-purple/5 pointer-events-none" />
-                            <div className="flex justify-center items-center py-1 bg-white/[0.02] w-full min-h-[50px]">
-                                <div className="scale-[0.85] md:scale-100 transition-transform">
-                                    <GoogleLogin
-                                        onSuccess={handleSuccess}
-                                        onError={handleError}
-                                        theme="filled_black"
-                                        size="large"
-                                        text="signin_with"
-                                        shape="rectangular"
-                                        width="280"
-                                    />
-                                </div>
+                        {/* Google Action Button Section */}
+                        <div className={`relative transition-all duration-500 rounded-2xl border ${!agreed ? 'opacity-20 pointer-events-none filter grayscale' : 'opacity-100 border-white/10 hover:border-neon-blue/40'}`}>
+                            <div className="absolute inset-0 bg-gradient-to-r from-neon-blue/5 via-transparent to-neon-purple/5 pointer-events-none rounded-2xl" />
+                            <div className="flex justify-center items-center py-4 bg-white/[0.02] w-full rounded-2xl">
+                                <GoogleLogin
+                                    onSuccess={handleSuccess}
+                                    onError={handleError}
+                                    theme="filled_black"
+                                    size="large"
+                                    text="signin_with"
+                                    shape="rectangular"
+                                    width="320"
+                                />
                             </div>
+                        </div>
+
+                        {/* Connection Warning (Conditional) */}
+                        <div className="mt-6 text-center">
+                            <p className="text-[9px] text-gray-500 uppercase tracking-widest font-mono">
+                                Note: Disable AdBlockers if login button fails to load
+                            </p>
                         </div>
 
                         {/* Bottom Status Branding */}
