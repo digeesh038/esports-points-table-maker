@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { Tournament, Organization, Stage, Team, Ruleset, Player, Match, sequelize } from '../models/index.js';
+import { Tournament, Organization, Stage, Team, Ruleset, Player, Match, Payment, sequelize } from '../models/index.js';
 import { generateSlug, isValidUUID } from '../utils/helpers.js';
 import { getDefaultRuleset } from '../services/scoringEngine.js';
 import { clearCachePattern } from '../config/redis.js';

@@ -1,7 +1,8 @@
 import { createServer } from 'http';
 import dotenv from 'dotenv';
 import app from './app.js';
-import { testConnection, sequelize } from './config/database.js';
+import { testConnection } from './config/database.js';
+import { sequelize } from './models/index.js';
 import websocketService from './services/websocketService.js';
 
 // Load environment variables
@@ -24,7 +25,7 @@ const startServer = async () => {
         await testConnection();
 
         // 2. Sync database tables
-        await sequelize.sync({ alter: false });
+        await sequelize.sync({ alter: true });
         console.log('✅ Database tables synced successfully\n');
 
         // 3. Start HTTP server
