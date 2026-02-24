@@ -131,22 +131,27 @@ const ProfilePage = () => {
                                     {user?.name}
                                 </h2>
                                 <div className={`px-2 py-0.5 rounded border text-[9px] font-black font-mono shadow-[0_0_10px_rgba(0,0,0,0.5)] ${isGuest ? 'border-neon-blue/40 text-neon-blue' : 'border-neon-green/40 text-neon-green bg-neon-green/5'}`}>
-                                    {isGuest ? 'LVL_1' : 'LVL_5'}
+                                    {isGuest ? 'GUEST_MODE' : 'VERIFIED_ORGANIZER'}
                                 </div>
                             </div>
 
-                            <div className="w-full space-y-4 mb-8">
-                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                    <span>System Reputation</span>
-                                    <span className="text-neon-blue">Elite</span>
+                            {/* Account Privileges List */}
+                            <div className="w-full bg-black/20 rounded-2xl p-6 border border-white/5 space-y-4 mb-8">
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 text-left border-b border-white/5 pb-2">
+                                    Account Capabilities
                                 </div>
-                                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: "85%" }}
-                                        transition={{ duration: 1.5, ease: "easeOut" }}
-                                        className="h-full bg-gradient-to-r from-neon-blue to-neon-purple shadow-[0_0_15px_#00f0ff]"
-                                    ></motion.div>
+                                <div className="space-y-3 text-left">
+                                    {[
+                                        { label: 'Create Tournament Nodes', active: !isGuest },
+                                        { label: 'Manage Roster Data', active: !isGuest },
+                                        { label: 'Process Match Scores', active: !isGuest },
+                                        { label: 'Export Global Standings', active: !isGuest },
+                                    ].map((cap, i) => (
+                                        <div key={i} className="flex items-center gap-3">
+                                            <div className={`w-1.5 h-1.5 rounded-full ${cap.active ? 'bg-neon-green shadow-[0_0_8px_#39ff14]' : 'bg-gray-700'}`}></div>
+                                            <span className={`text-[10px] font-bold ${cap.active ? 'text-white/80' : 'text-gray-600 italic line-through'}`}>{cap.label}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
@@ -302,6 +307,39 @@ const ProfilePage = () => {
                     </div>
                 </motion.div>
             </div>
+
+            {/* System Key Section - Moved to bottom for clarity */}
+            {!isGuest && (
+                <motion.div variants={itemVariants} className="max-w-xl mx-auto md:mx-0">
+                    <div className="bg-dark-900/40 p-6 rounded-3xl border border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex-1">
+                            <div className="flex items-center text-gray-600 mb-2">
+                                <HardDrive className="w-4 h-4 mr-3" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">System ID Key</span>
+                            </div>
+                            <div className={`font-mono text-xs truncate transition-all duration-500 ${showKey ? 'text-gray-300 blur-0' : 'text-gray-800 blur-sm select-none'}`}>
+                                {showKey ? user?.id : '••••••••••••••••••••••••••••••••'}
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setShowKey(!showKey)}
+                                className="px-4 py-2 border border-white/10 rounded-xl text-[10px] font-black uppercase text-gray-400 hover:text-white transition-colors"
+                            >
+                                {showKey ? 'Hide' : 'Reveal'}
+                            </button>
+                            {showKey && (
+                                <button
+                                    onClick={() => copyToClipboard(user?.id)}
+                                    className="px-4 py-2 bg-neon-blue text-black rounded-xl text-[10px] font-black uppercase shadow-[0_0_15px_#00f0ff] active:scale-95 transition-all"
+                                >
+                                    Copy
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </motion.div>
+            )}
         </motion.div>
     );
 };
