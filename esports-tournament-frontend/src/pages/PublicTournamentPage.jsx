@@ -230,7 +230,7 @@ const PublicTournamentPage = () => {
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-neon-blue/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 w-1/2 h-full bg-gradient-to-r from-neon-purple/5 to-transparent"></div>
 
-                <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
+                <div className="max-w-[1400px] mx-auto px-4 relative z-10 text-center">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neon-blue text-[10px] font-black uppercase tracking-widest mb-6">
                         <Target className="w-3 h-3" /> LIVE TOURNAMENT PAGE
                     </div>
@@ -274,7 +274,7 @@ const PublicTournamentPage = () => {
             </div>
 
             {/* Leaderboard Section */}
-            <div className="max-w-7xl mx-auto px-4 py-20">
+            <div className="max-w-[1400px] mx-auto px-4 py-20">
                 <div className="flex items-center gap-4 mb-12">
                     <div className="w-2 h-10 bg-neon-purple rounded-full shadow-[0_0_15px_rgba(188,19,254,0.5)]"></div>
                     <div>
