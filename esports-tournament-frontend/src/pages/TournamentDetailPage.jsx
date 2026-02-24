@@ -313,7 +313,7 @@ const TournamentDetailPage = () => {
         }
     };
 
-    if (loading) return <Loader text="Loading tournament..." />;
+    if (loading) return <Loader text="Loading tournament details..." />;
     if (!tournament) return <div className="text-center py-12 text-gray-400 font-mono italic">TOURNAMENT NOT FOUND</div>;
 
     return (
@@ -361,7 +361,7 @@ const TournamentDetailPage = () => {
                     </div>
 
                     <div className="bg-dark-900/60 p-6 rounded-2xl border border-dark-600 space-y-4 shadow-2xl min-w-[260px]">
-                        <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest text-center border-b border-white/5 pb-3">Command Center</p>
+                        <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest text-center border-b border-white/5 pb-3">Actions</p>
                         {!isGuest && (
                             <Link to={`/dashboard/tournaments/${id}/edit`} className="w-full btn-secondary text-[10px] font-black tracking-widest py-3 flex items-center justify-center gap-2 group italic">
                                 <Zap className="w-4 h-4 text-neon-blue group-hover:scale-125 transition-transform" />
@@ -469,7 +469,7 @@ const TournamentDetailPage = () => {
                                             size="sm"
                                             className="!text-[10px] !p-2 !rounded-xl border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white"
                                         >
-                                            ERASE_ALL
+                                            ERASE ALL TEAMS
                                         </Button>
                                     )}
                                     <Button

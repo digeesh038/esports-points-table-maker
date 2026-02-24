@@ -205,7 +205,7 @@ const PublicTournamentPage = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-dark-900 flex items-center justify-center">
-                <Loader text="Decrypting tournament broadcast..." />
+                <Loader text="Loading live tournament page..." />
             </div>
         );
     }
@@ -214,9 +214,9 @@ const PublicTournamentPage = () => {
         return (
             <div className="min-h-screen bg-dark-900 flex flex-col items-center justify-center text-center p-4">
                 <Trophy className="w-20 h-20 text-dark-600 mb-6" />
-                <h1 className="text-3xl font-black text-gray-400 italic mb-4 uppercase">Node Not Found</h1>
-                <p className="text-gray-600 mb-8">The requested tournament broadcast is offline or private.</p>
-                <Link to="/tournaments" className="btn-primary px-8">Return to Archive</Link>
+                <h1 className="text-3xl font-black text-gray-400 italic mb-4 uppercase">Tournament Not Found</h1>
+                <p className="text-gray-600 mb-8">The requested tournament page is either private or does not exist.</p>
+                <Link to="/tournaments" className="btn-primary px-8">Return to Tournaments</Link>
             </div>
         );
     }
@@ -232,13 +232,13 @@ const PublicTournamentPage = () => {
 
                 <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neon-blue text-[10px] font-black uppercase tracking-widest mb-6">
-                        <Target className="w-3 h-3" /> PUBLIC_BROADCAST_ACTIVE
+                        <Target className="w-3 h-3" /> LIVE TOURNAMENT PAGE
                     </div>
                     <h1 className="text-5xl md:text-7xl font-black text-white italic mb-6 uppercase tracking-tighter">
                         {tournament.name}
                     </h1>
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-medium">
-                        {tournament.description || 'Participate in the next generation of competitive gaming protocols.'}
+                        {tournament.description || 'Welcome to the official tournament page. Follow the action and check out the rankings below.'}
                     </p>
 
                     <div className="flex flex-wrap justify-center gap-8 mb-12">
@@ -252,7 +252,7 @@ const PublicTournamentPage = () => {
                         </div>
                         <div className="flex items-center bg-dark-800/50 px-5 py-2 rounded-xl border border-dark-600">
                             <Users className="w-5 h-5 mr-3 text-neon-pink" />
-                            <span className="font-bold text-white">{tournament.teams?.length || 0} Entities Registered</span>
+                            <span className="font-bold text-white">{tournament.teams?.length || 0} Teams Registered</span>
                         </div>
                     </div>
 
@@ -267,7 +267,7 @@ const PublicTournamentPage = () => {
                     )}
                     {isGuest && (
                         <div className="text-xs font-mono text-neon-blue/60 uppercase tracking-widest italic">
-                            Spectator View Only • Authorization Required for Registration
+                            Viewing Mode • Sign in to register your team
                         </div>
                     )}
                 </div>
@@ -278,8 +278,8 @@ const PublicTournamentPage = () => {
                 <div className="flex items-center gap-4 mb-12">
                     <div className="w-2 h-10 bg-neon-purple rounded-full shadow-[0_0_15px_rgba(188,19,254,0.5)]"></div>
                     <div>
-                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tight">Broadcast_Rankings.exe</h2>
-                        <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-1">Real-time node telemetry and scoring</p>
+                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tight">Live Rankings</h2>
+                        <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-1">Real-time team standings and statistics</p>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@ const PublicTournamentPage = () => {
                         <div className="text-center py-32 bg-dark-900/40">
                             <Zap className="w-16 h-16 text-gray-700 mx-auto mb-6 opacity-20" />
                             <p className="text-gray-600 text-xl font-medium italic">
-                                Awaiting match data synchronization...
+                                Waiting for match data to be updated...
                             </p>
                         </div>
                     )}

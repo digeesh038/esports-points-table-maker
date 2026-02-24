@@ -112,18 +112,18 @@ const OrganizationsPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
-                        Registry // Organization Units
+                        Admin // Organizations
                     </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                     <div className="flex-1">
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
-                            <span className="text-white">TACTICAL</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">REGISTRY</span>
+                            <span className="text-white">MY</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">ORGANIZATIONS</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-blue/30 pl-4 py-1">
                             {isGuest
-                                ? 'View global esports collectives and institutional profiles indexed in the database.'
-                                : 'Architect and oversee your esports infrastructure. Manage multiple organizations from a single console.'}
+                                ? 'View all gaming organizations and tournament hosts registered on the platform.'
+                                : 'Manage your gaming organizations. You can create multiple organizations to host different types of tournaments.'}
                         </p>
                     </div>
 
@@ -134,7 +134,7 @@ const OrganizationsPage = () => {
                             className="shadow-[0_0_30px_rgba(0,183,255,0.3)] !rounded-2xl px-10 py-5 font-black italic uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all"
                             icon={Plus}
                         >
-                            Register Entity
+                            New Organization
                         </Button>
                     )}
                 </div>
@@ -148,8 +148,8 @@ const OrganizationsPage = () => {
                         </div>
                         <p className="text-gray-500 mb-8 text-lg italic">
                             {isGuest
-                                ? 'No entities detected in the global registry.'
-                                : 'Your organization index is currently empty. Initialize your first node to begin.'}
+                                ? 'No organizations found in the database.'
+                                : 'You haven\'t created any organizations yet. Create one to start hosting tournaments.'}
                         </p>
                         {!isGuest && (
                             <Button
@@ -157,7 +157,7 @@ const OrganizationsPage = () => {
                                 variant="outline"
                                 className="group-hover:bg-neon-blue group-hover:text-black transition-all"
                             >
-                                Launch First Organization
+                                Start First Organization
                             </Button>
                         )}
                     </div>
@@ -173,23 +173,23 @@ const OrganizationsPage = () => {
             <Modal
                 isOpen={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
-                title="Initialize_New_Entity"
+                title="Create New Organization"
             >
                 <form onSubmit={handleCreateOrganization} className="p-8 space-y-8 bg-dark-900/50">
                     <div className="space-y-6">
                         <Input
-                            label="ORGANIZATION_NAME"
+                            label="Organization Name"
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            placeholder="e.g. GALAXY_ESPORTS_PRO"
+                            placeholder="e.g. Elite Gaming League"
                             required
                         />
 
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
                                 <span className="w-2 h-2 bg-neon-blue rounded-full"></span>
-                                ENTITY_DESCRIPTION
+                                Description
                             </label>
                             <textarea
                                 name="description"
@@ -202,21 +202,21 @@ const OrganizationsPage = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Input
-                                label="OFFICIAL_WEBSITE"
+                                label="Official Website"
                                 name="website"
                                 type="url"
                                 value={formData.website}
                                 onChange={handleInputChange}
-                                placeholder="https://nexus.gg"
+                                placeholder="https://yourwebsite.com"
                             />
 
                             <Input
-                                label="LOGO_PROTOCOL_URL"
+                                label="Logo URL"
                                 name="logo"
                                 type="url"
                                 value={formData.logo}
                                 onChange={handleInputChange}
-                                placeholder="https://assets.nexus.io/logo.png"
+                                placeholder="https://site.com/logo.png"
                             />
                         </div>
                     </div>
@@ -229,14 +229,14 @@ const OrganizationsPage = () => {
                             className="flex-1 !rounded-2xl py-4 font-bold border-white/5"
                             disabled={creating}
                         >
-                            ABORT
+                            Cancel
                         </Button>
                         <Button
                             type="submit"
                             loading={creating}
                             className="flex-[2] !rounded-2xl py-4 shadow-[0_0_20px_rgba(0,183,255,0.2)]"
                         >
-                            CREATE_ORGANIZATION
+                            Create Organization
                         </Button>
                     </div>
                 </form>

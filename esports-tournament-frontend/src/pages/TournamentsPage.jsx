@@ -64,17 +64,17 @@ const TournamentsPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-purple/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-purple uppercase tracking-[0.4em] opacity-60">
-                        Registry // Arena Nodes
+                        Admin // Tournaments
                     </span>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
                     <div className="flex-1">
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
-                            <span className="text-white">ARENA</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-purple to-purple-600 drop-shadow-[0_0_15px_rgba(188,19,254,0.3)]">NETWORK</span>
+                            <span className="text-white">MY</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-purple to-purple-600 drop-shadow-[0_0_15px_rgba(188,19,254,0.3)]">TOURNAMENTS</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-purple/30 pl-4 py-1">
-                            Synchronize and orchestrate competitive events across the global grid.
+                            Create and manage your esports tournaments from one place.
                         </p>
                     </div>
 
@@ -84,7 +84,7 @@ const TournamentsPage = () => {
                             className="bg-neon-blue py-5 px-10 text-xs font-black uppercase tracking-[0.2em] flex items-center whitespace-nowrap shadow-[0_0_40px_rgba(0,183,255,0.3)] hover:scale-105 active:scale-95 transition-all rounded-2xl text-black"
                         >
                             <Trophy className="w-5 h-5 mr-3" />
-                            Initialize Node
+                            New Tournament
                         </Link>
                     )}
                 </div>
@@ -106,7 +106,7 @@ const TournamentsPage = () => {
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600 group-focus-within/search:text-neon-blue transition-colors" />
                             <input
                                 type="text"
-                                placeholder="SEARCH REGISTRY BY NAME..."
+                                placeholder="Search tournaments by name..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full h-16 bg-white/[0.03] border border-white/5 rounded-2xl pl-16 pr-6 text-sm font-black tracking-widest text-white placeholder:text-gray-700 outline-none focus:border-neon-blue/40 focus:bg-white/[0.05] transition-all"

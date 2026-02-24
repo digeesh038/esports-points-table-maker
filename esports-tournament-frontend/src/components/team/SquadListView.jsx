@@ -42,7 +42,7 @@ const SquadListView = ({ teams, onManageRoster, onDelete, showActions, onDownloa
                                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
                                         <span className="flex items-center gap-1 text-neon-blue">
                                             <Users className="w-3 h-3" />
-                                            {team.players?.length || 0} OPERATIVES
+                                            {team.players?.length || 0} PLAYERS
                                         </span>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@ const SquadListView = ({ teams, onManageRoster, onDelete, showActions, onDownloa
                                     <button
                                         onClick={() => onDelete(team.id)}
                                         className="p-3 bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 rounded-2xl text-gray-400 hover:text-red-500 transition-all group/btn"
-                                        title="Expunge Squad"
+                                        title="Delete Team"
                                     >
                                         <Trash2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                                     </button>
@@ -99,7 +99,7 @@ const SquadListView = ({ teams, onManageRoster, onDelete, showActions, onDownloa
                                                     </h4>
                                                     <div className="flex flex-col">
                                                         <span className="text-[9px] font-mono text-gray-500 uppercase tracking-tighter truncate">
-                                                            {player.inGameId ? `ID: ${player.inGameId}` : 'NO FIELD ID'}
+                                                            {player.inGameId ? `ID: ${player.inGameId}` : 'NO ID'}
                                                         </span>
                                                         <div className="flex items-center gap-1 mt-0.5">
                                                             <Shield className="w-2.5 h-2.5 text-neon-blue/60" />
@@ -116,12 +116,12 @@ const SquadListView = ({ teams, onManageRoster, onDelete, showActions, onDownloa
                             ) : (
                                 <div className="py-12 border-2 border-dashed border-white/5 rounded-3xl text-center bg-white/[0.01]">
                                     <Users className="w-12 h-12 text-gray-800 mx-auto mb-4 opacity-20" />
-                                    <p className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.3em]">No active operatives in registry</p>
+                                    <p className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.3em]">No players in this team</p>
                                     <button
                                         onClick={() => onManageRoster(team)}
                                         className="mt-4 text-[10px] font-black text-neon-pink hover:underline uppercase tracking-widest"
                                     >
-                                        Deploy Squad Roster
+                                        Manage Players
                                     </button>
                                 </div>
                             )}

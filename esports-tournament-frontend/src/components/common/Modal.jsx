@@ -5,7 +5,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] overflow-y-auto overflow-x-hidden flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] overflow-y-auto overflow-x-hidden flex items-start justify-center p-4 sm:p-6 md:p-8">
             {/* Background overlay with high-end blur */}
             <div
                 className="fixed inset-0 bg-[#02040a]/90 backdrop-blur-sm transition-opacity animate-fade-in"
@@ -13,7 +13,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             />
 
             {/* Modal panel with cyberpunk aesthetics */}
-            <div className="relative inline-block align-bottom bg-[#0a0c10] border border-white/10 rounded-[2rem] text-left shadow-[0_0_80px_rgba(0,0,0,0.8)] transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full overflow-hidden animate-fade-in">
+            <div className="relative w-full max-w-2xl bg-[#0a0c10] border border-white/10 rounded-[2.5rem] shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden animate-in fade-in zoom-in-95 duration-300">
 
                 {/* Decorative neon bar at top */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink shadow-[0_0_15px_rgba(0,183,255,0.5)]"></div>
@@ -38,7 +38,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
                 </div>
 
                 {/* Content area */}
-                <div className="custom-scrollbar overflow-y-auto max-h-[85vh] bg-gradient-to-b from-[#0a0c10] to-[#04060b]">
+                <div className="custom-scrollbar overflow-y-auto max-h-[calc(100vh-160px)] bg-gradient-to-b from-[#0a0c10] to-[#04060b]">
                     {children}
                 </div>
             </div>

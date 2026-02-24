@@ -49,8 +49,8 @@ const StageManagementPage = () => {
 
     const fetchStageAndMatches = async () => {
         if (isGuest) {
-            const mockStage = { id: stageId, name: 'Simulated Phase', stageNumber: 1, status: 'operational' };
-            const mockTournament = { id: tournamentId, name: 'SIMULATION_NODE_ALPHA' };
+            const mockStage = { id: stageId, name: 'Qualifier Phase', stageNumber: 1, status: 'active' };
+            const mockTournament = { id: tournamentId, name: 'PREMIER CHAMPIONSHIP' };
             const mockMatches = [
                 {
                     id: 'mock-match-1',
@@ -98,8 +98,8 @@ const StageManagementPage = () => {
 
         } catch (error) {
             console.error('Error in StageManagementPage:', error);
-            setError('Failed to synchronize stage data. Please verify your connection.');
-            toast.error('Data sync failed');
+            setError('Failed to load stage data. Please try again.');
+            toast.error('Sync failed');
         } finally {
             setLoading(false);
         }
@@ -124,7 +124,7 @@ const StageManagementPage = () => {
         try {
             setSubmitting(true);
             await matchesAPI.submitResult(selectedMatch.id, resultData);
-            toast.success('Results archived.');
+            toast.success('Results saved successfully.');
             setShowResultModal(false);
             fetchStageAndMatches();
         } catch (error) {
@@ -146,10 +146,10 @@ const StageManagementPage = () => {
 
             if (selectedMatch) {
                 await matchesAPI.update(selectedMatch.id, payload);
-                toast.success('Match parameters updated.');
+                toast.success('Match updated successfully.');
             } else {
                 await matchesAPI.create(payload);
-                toast.success('New match deployed.');
+                toast.success('Match created successfully.');
             }
             setShowMatchModal(false);
             setMatchFormData({ matchNumber: '', mapName: '', scheduledTime: '', customTitle: '' });
@@ -186,14 +186,14 @@ const StageManagementPage = () => {
     const handleDeleteMatch = async (matchId) => {
         try {
             await matchesAPI.delete(matchId);
-            toast.success('Match purged');
+            toast.success('Match deleted');
             fetchStageAndMatches();
         } catch (error) {
             toast.error('Purge failed');
         }
     };
 
-    if (loading) return <Loader text="Synchronizing..." fullScreen={true} />;
+    if (loading) return <Loader text="Loading stage..." fullScreen={true} />;
 
     if (error) {
         return (
@@ -227,7 +227,7 @@ const StageManagementPage = () => {
                             </span>
                         </div>
                         <h1 className="text-4xl font-black bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent italic flex items-center italic uppercase">
-                            Stage Command
+                            Stage Management
                         </h1>
                     </div>
                 </div>
@@ -251,7 +251,7 @@ const StageManagementPage = () => {
                             className="shadow-[0_0_20px_rgba(0,183,255,0.3)] !rounded-xl"
                         >
                             <Plus className="w-5 h-5 mr-3" />
-                            Create Match +
+                            Add New Match
                         </Button>
                     )}
                 </div>
@@ -264,21 +264,21 @@ const StageManagementPage = () => {
                         <Zap className="w-16 h-16 text-white" />
                     </div>
                     <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Status</p>
-                    <h3 className="text-2xl font-black text-neon-green italic uppercase">Online</h3>
+                    <h3 className="text-2xl font-black text-neon-green italic uppercase">Active</h3>
                 </Card>
                 <Card className="bg-dark-800/40 border-dark-600 p-6 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-10 transition-opacity">
                         <Target className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Deployments</p>
+                    <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Total Matches</p>
                     <h3 className="text-2xl font-black text-white italic uppercase">{matches.length}</h3>
                 </Card>
                 <Card className="bg-dark-800/40 border-dark-600 p-6 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-10 transition-opacity">
                         <Shield className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Security</p>
-                    <h3 className="text-2xl font-black text-neon-blue italic uppercase">Protected</h3>
+                    <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em] mb-1">Privacy</p>
+                    <h3 className="text-2xl font-black text-neon-blue italic uppercase">Private</h3>
                 </Card>
             </div>
 
@@ -286,7 +286,7 @@ const StageManagementPage = () => {
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-8 bg-neon-purple rounded-full shadow-neon-purple/50"></div>
-                    <h2 className="text-2xl font-black italic text-white uppercase tracking-tighter">Active Deployments</h2>
+                    <h2 className="text-2xl font-black italic text-white uppercase tracking-tighter">Scheduled Matches</h2>
                 </div>
 
                 {matches.length === 0 ? (
@@ -321,7 +321,7 @@ const StageManagementPage = () => {
                             loading={submitting}
                         />
                     ) : (
-                        <div className="py-10 text-center"><Loader text="Syncing Roster..." /></div>
+                        <div className="py-10 text-center"><Loader text="Loading Teams..." /></div>
                     )}
                 </div>
             </Modal>
@@ -329,11 +329,11 @@ const StageManagementPage = () => {
             <Modal
                 isOpen={showMatchModal}
                 onClose={() => { setShowMatchModal(false); setSelectedMatch(null); }}
-                title={selectedMatch ? "Update match" : "Initialize Match"}
+                title={selectedMatch ? "Edit Match" : "Add Match"}
             >
                 <form onSubmit={handleCreateMatch} className="p-8 space-y-6 bg-dark-900/80">
                     <Input
-                        label="MATCH TITLE"
+                        label="Match Title"
                         type="text"
                         value={matchFormData.customTitle}
                         onChange={(e) => setMatchFormData({ ...matchFormData, customTitle: e.target.value })}
@@ -348,7 +348,7 @@ const StageManagementPage = () => {
                             required
                         />
                         <Input
-                            label="Map Area"
+                            label="Map Name"
                             type="text"
                             value={matchFormData.mapName}
                             onChange={(e) => setMatchFormData({ ...matchFormData, mapName: e.target.value })}
@@ -356,14 +356,14 @@ const StageManagementPage = () => {
                         />
                     </div>
                     <Input
-                        label="Deployment Time"
+                        label="Scheduled Time"
                         type="datetime-local"
                         value={matchFormData.scheduledTime}
                         onChange={(e) => setMatchFormData({ ...matchFormData, scheduledTime: e.target.value })}
                         required
                     />
                     <Button type="submit" fullWidth loading={submitting} className="shadow-neon-blue/20 mt-4 py-4 italic">
-                        {selectedMatch ? 'Archiving Update...' : 'Commit Deployment'}
+                        {selectedMatch ? 'Saving Changes...' : 'Save Match'}
                     </Button>
                 </form>
             </Modal>

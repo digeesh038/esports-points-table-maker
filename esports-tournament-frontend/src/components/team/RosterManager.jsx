@@ -142,7 +142,7 @@ const RosterManager = ({ team, onUpdate }) => {
     if (!team) return <div className="p-8 text-center text-gray-500 italic">No team selected.</div>;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-6 md:p-8">
             {/* Warning for rejected teams */}
             {team.status === 'rejected' && (
                 <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-4">
@@ -171,7 +171,7 @@ const RosterManager = ({ team, onUpdate }) => {
             <div className="bg-dark-800/50 p-4 rounded-xl border border-dark-600">
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center">
                     <Users className="w-3.5 h-3.5 mr-2 text-neon-pink" />
-                    Active Team Roster
+                    Current Team Roster
                 </h3>
 
                 {players.length === 0 ? (
@@ -297,7 +297,7 @@ const RosterManager = ({ team, onUpdate }) => {
                         disabled={loading}
                         className="w-full bg-neon-green/10 text-neon-green border-neon-green/30 hover:bg-neon-green hover:text-black py-2.5 text-[10px] font-black uppercase tracking-widest"
                     >
-                        {loading ? 'SAVING...' : 'SAVE TO ROSTER'}
+                        {loading ? 'SAVING...' : 'ADD TO ROSTER'}
                     </Button>
                 </form>
             )}

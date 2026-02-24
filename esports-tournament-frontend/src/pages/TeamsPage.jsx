@@ -257,7 +257,7 @@ const TeamsPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-pink/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-pink uppercase tracking-[0.4em] opacity-60">
-                        Registry // Talent Pool
+                        Team Management
                     </span>
                 </div>
 
@@ -286,10 +286,10 @@ const TeamsPage = () => {
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
-                            <span className="text-white">TALENT</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)]">ROSTER</span>
+                            <span className="text-white">SQUAD</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-purple-600 drop-shadow-[0_0_15px_rgba(255,0,212,0.3)]">REGISTRY</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-pink/30 pl-4 py-1">
-                            Deploy and manage elite squads across your competitive infrastructure.
+                            Manage all teams and players across your tournaments.
                         </p>
                     </div>
 
@@ -299,7 +299,7 @@ const TeamsPage = () => {
                             className="btn-primary py-5 px-10 text-xs font-black uppercase tracking-[0.2em] flex items-center whitespace-nowrap shadow-[0_0_40px_rgba(255,0,212,0.3)] hover:scale-105 active:scale-95 transition-all !rounded-2xl"
                         >
                             <UserPlus className="w-5 h-5 mr-3" />
-                            Initialize Squad
+                            Register New Team
                         </button>
                     )}
                 </div>
@@ -309,7 +309,7 @@ const TeamsPage = () => {
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-hover:text-neon-pink transition-colors" />
                     <input
                         type="text"
-                        placeholder="SEARCH_TEAMS_OR_TOURNAMENTS..."
+                        placeholder="Search teams or tournaments..."
                         className="w-full bg-[#0d0d12]/40 backdrop-blur-xl border border-white/5 rounded-2xl py-5 pl-14 pr-4 text-white font-mono text-xs focus:border-neon-pink focus:ring-0 outline-none transition-all placeholder:text-gray-700 shadow-2xl"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}

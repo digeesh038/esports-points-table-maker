@@ -19,7 +19,7 @@ const LeaderboardTable = ({ leaderboard, loading }) => {
                 <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-neon-blue transition-all">
                     <Trophy className="w-8 h-8 text-gray-800" />
                 </div>
-                <p className="text-gray-700 font-black uppercase tracking-[0.4em] text-[10px]">No telemetry detected in this sector</p>
+                <p className="text-gray-700 font-black uppercase tracking-[0.4em] text-[10px]">No results found for this stage</p>
                 <div className="mt-4 flex gap-2">
                     <div className="w-1 h-1 bg-gray-800 rounded-full"></div>
                     <div className="w-1 h-1 bg-gray-800 rounded-full"></div>
@@ -60,7 +60,7 @@ const LeaderboardTable = ({ leaderboard, loading }) => {
                 <thead>
                     <tr>
                         <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic"># Rank</th>
-                        <th className="px-3 md:px-6 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 italic">Squad Identifier</th>
+                        <th className="px-3 md:px-6 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 italic">Team Name</th>
                         <th className="hidden sm:table-cell px-4 py-2 text-[9px] font-black uppercase tracking-[0.4em] text-gray-700 w-24 text-center italic">WWCD</th>
                         <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic">Pos</th>
                         <th className="px-2 md:px-4 py-2 text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-700 w-16 md:w-24 text-center italic">Fin</th>

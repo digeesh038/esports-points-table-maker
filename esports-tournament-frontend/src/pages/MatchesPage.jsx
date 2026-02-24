@@ -131,7 +131,7 @@ const MatchesPage = () => {
         return match.status === statusFilter;
     });
 
-    if (loading) return <Loader text="Synchronizing feed..." />;
+    if (loading) return <Loader text="Loading matches..." />;
 
     return (
         <div className="space-y-10 px-2 lg:px-6">
@@ -141,16 +141,16 @@ const MatchesPage = () => {
                 <div className="flex items-center gap-4 mb-2">
                     <div className="h-px flex-1 bg-gradient-to-r from-neon-blue/40 via-transparent to-transparent" />
                     <span className="text-[10px] font-mono text-neon-blue uppercase tracking-[0.4em] opacity-60">
-                        Tactical // Match Feed
+                        Admin // Matches
                     </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                     <div className="flex-1">
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase leading-none">
-                            <span className="text-white">COMBAT</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">INTELLIGENCE</span>
+                            <span className="text-white">MATCH</span> <span className="text-transparent bg-clip-text bg-gradient-to-br from-neon-blue to-neon-purple drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">MANAGEMENT</span>
                         </h1>
                         <p className="text-gray-500 mt-4 text-sm md:text-base font-medium max-w-2xl border-l-2 border-neon-blue/30 pl-4 py-1">
-                            Monitor and process real-time match data across all active tournament nodes.
+                            Manage and record match results for your tournaments.
                         </p>
                     </div>
                 </div>
@@ -209,7 +209,7 @@ const MatchesPage = () => {
             <Modal
                 isOpen={showResultModal}
                 onClose={() => setShowResultModal(false)}
-                title={`UPDATE RESULT: MATCH ${selectedMatch?.matchNumber || selectedMatch?.matchNo || '#'}`}
+                title={`Match Results: Match ${selectedMatch?.matchNumber || selectedMatch?.matchNo || '#'}`}
             >
                 <div className="min-h-[400px]">
                     {teams.length > 0 ? (
@@ -223,7 +223,7 @@ const MatchesPage = () => {
                     ) : (
                         <div className="flex flex-col items-center justify-center py-20">
                             <div className="w-10 h-10 border-4 border-neon-purple border-t-transparent rounded-full animate-spin mb-4" />
-                            <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">Fetching Team Rosters...</p>
+                            <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">Loading Teams...</p>
                         </div>
                     )}
                 </div>

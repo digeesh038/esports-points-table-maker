@@ -94,7 +94,7 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-10 p-2 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <form onSubmit={handleSubmit} className="space-y-10 p-4">
 
             {/* --- CORE SQUAD IDENTIFICATION --- */}
             <div className="relative p-8 bg-dark-900/40 rounded-[2.5rem] border border-white/5 overflow-hidden group">
