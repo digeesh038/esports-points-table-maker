@@ -102,6 +102,11 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'payment_qr_code',
         },
+        upiId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            field: 'upi_id',
+        },
     },
     {
         tableName: 'tournaments',

@@ -379,6 +379,25 @@ const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
                                     <p className="text-[8px] text-gray-600 font-mono text-center">SCAN USING ANY UPI/BANK APP</p>
                                 </div>
                             )}
+
+                            {selectedT.upiId && (
+                                <div className="mt-6 p-6 bg-neon-purple/5 border border-neon-purple/20 rounded-3xl flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-neon-purple rounded-full animate-ping"></div>
+                                        <span className="text-[10px] font-black text-neon-purple uppercase tracking-widest">Direct UPI Gateway</span>
+                                    </div>
+                                    <div className="p-4 bg-white rounded-2xl shadow-2xl">
+                                        <img
+                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${selectedT.upiId}&pn=${selectedT.name}&am=${selectedT.entryFee}&tn=Registration for ${selectedT.name}`)}`}
+                                            alt="Functional UPI QR"
+                                            className="w-32 h-32 object-contain"
+                                        />
+                                    </div>
+                                    <p className="text-[9px] text-gray-500 font-mono text-center uppercase tracking-widest italic">
+                                        Scan to open Payment Gateway
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-4">

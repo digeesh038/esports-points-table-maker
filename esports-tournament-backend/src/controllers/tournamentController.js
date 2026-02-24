@@ -23,7 +23,8 @@ export async function createTournament(req, res, next) {
         const {
             organizationId, name, game, description, format,
             startDate, endDate, maxTeams, registrationDeadline, isPublic,
-            isPaid, entryFee, currency
+            isPaid, entryFee, currency,
+            paymentMethod, paymentInstructions, paymentQrCode, upiId
         } = req.body;
 
         const organization = await Organization.findByPk(organizationId);
@@ -54,6 +55,10 @@ export async function createTournament(req, res, next) {
             isPaid: isPaid === true || isPaid === 'true',
             entryFee: entryFee || 0,
             currency: currency || 'INR',
+            paymentMethod: paymentMethod || 'razorpay',
+            paymentInstructions: paymentInstructions || null,
+            paymentQrCode: paymentQrCode || null,
+            upiId: upiId || null,
         };
 
         const tournament = await Tournament.create(sanitizedData);
@@ -166,7 +171,13 @@ export async function updateTournament(req, res, next) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
-        await tournament.update(req.body);
+        // Sanitize numeric fields if they exist in body
+        const updateData = { ...req.body };
+        if (updateData.maxTeams) updateData.maxTeams = parseInt(updateData.maxTeams);
+        if (updateData.entryFee) updateData.entryFee = parseFloat(updateData.entryFee);
+        if (updateData.isPaid !== undefined) updateData.isPaid = updateData.isPaid === true || updateData.isPaid === 'true';
+
+        await tournament.update(updateData);
 
         res.json({
             success: true,

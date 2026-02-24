@@ -38,7 +38,9 @@ const PaymentReceipt = ({ team, tournament, onClose }) => {
             <div className="mb-10 flex justify-center">
                 <div className="bg-neon-green/10 border border-neon-green/30 px-6 py-2 rounded-full flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-neon-green" />
-                    <span className="text-[10px] font-black text-neon-green uppercase tracking-[0.2em]">Transaction Confirmed</span>
+                    <span className="text-[10px] font-black text-neon-green uppercase tracking-[0.2em]">
+                        {team.paymentMethod === 'manual' ? 'Manually Peer-Verified' : 'Automatic Gateway Verified'}
+                    </span>
                 </div>
             </div>
 

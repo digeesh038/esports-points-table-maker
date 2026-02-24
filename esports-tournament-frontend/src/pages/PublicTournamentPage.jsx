@@ -142,10 +142,16 @@ const PublicTournamentPage = () => {
                                     razorpaySignature: response.razorpay_signature
                                 };
 
-                                await teamsAPI.register(id, registerData);
+                                const registeredTeam = await teamsAPI.register(id, registerData);
                                 toast.success('Payment successful & Team registered!');
                                 setShowRegisterModal(false);
                                 fetchTournamentData();
+
+                                // Automatically show receipt
+                                if (registeredTeam.data?.team) {
+                                    setSelectedReceiptTeam(registeredTeam.data.team);
+                                    setShowReceiptModal(true);
+                                }
                             } catch (err) {
                                 console.error('Registration after payment failed:', err);
                                 toast.error('Payment was successful but team registration failed. Please contact support.');

@@ -44,6 +44,7 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
         paymentMethod: 'razorpay',
         paymentInstructions: '',
         paymentQrCode: '',
+        upiId: '',
     });
 
     const [qrPreview, setQrPreview] = useState(null);
@@ -62,7 +63,12 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                 startDate: initialData.startDate?.split('T')[0] || '',
                 endDate: initialData.endDate?.split('T')[0] || '',
                 registrationDeadline: initialData.registrationDeadline?.split('T')[0] || '',
+                paymentQrCode: initialData.paymentQrCode || '',
+                upiId: initialData.upiId || '',
             });
+            if (initialData.paymentQrCode) {
+                setQrPreview(initialData.paymentQrCode);
+            }
         }
     }, [initialData]);
 
@@ -157,7 +163,6 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                     <span className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">Tournament Identity</span>
                 </div>
 
-                {/* Organization */}
                 <Select
                     label="Organization"
                     icon={<Building2 className="w-3.5 h-3.5" />}
@@ -175,7 +180,6 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                     ))}
                 </Select>
 
-                {/* Tournament Name */}
                 <Input
                     label="Tournament Name"
                     icon={<Trophy className="w-3.5 h-3.5" />}
@@ -187,7 +191,6 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                     required
                 />
 
-                {/* Description */}
                 <Textarea
                     label="Description"
                     icon={<AlignLeft className="w-3.5 h-3.5" />}
@@ -360,43 +363,79 @@ const TournamentForm = ({ onSubmit, loading, initialData = null }) => {
                         </Select>
 
                         {formData.paymentMethod === 'manual' && (
-                            <div className="md:col-span-2">
+                            <div className="md:col-span-2 space-y-6">
                                 <Textarea
-                                    label="Payment Instructions (e.g. UPI ID or QR Link)"
+                                    label="Payment Instructions"
                                     icon={<QrCode className="w-3.5 h-3.5" />}
                                     name="paymentInstructions"
                                     value={formData.paymentInstructions}
                                     onChange={handleChange}
-                                    placeholder="Enter your UPI ID or payment details where teams should pay."
+                                    placeholder="Enter your payment instructions / Bank details"
                                     rows={3}
                                     required
                                 />
-                                <div className="mt-4">
-                                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 mb-2">
-                                        Upload QR Code (Optional)
-                                    </label>
-                                    {qrPreview ? (
-                                        <div className="relative inline-block group/qr">
-                                            <img src={qrPreview} alt="QR Preview" className="w-24 h-24 rounded-2xl border border-white/10 shadow-lg" />
-                                            <button
-                                                type="button"
-                                                onClick={removeQr}
-                                                className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all opacity-0 group-hover/qr:opacity-100"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <label className="flex items-center gap-3 p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-neon-purple/50 transition-all group">
-                                            <Upload className="w-5 h-5 text-gray-500 group-hover:text-neon-purple" />
-                                            <span className="text-[10px] font-black text-gray-500 group-hover:text-white uppercase">Upload QR Graphic</span>
-                                            <input type="file" accept="image/*" onChange={handleQrChange} className="hidden" />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                                            UPI ID for Automatic QR
                                         </label>
-                                    )}
+                                        <input
+                                            type="text"
+                                            name="upiId"
+                                            value={formData.upiId}
+                                            onChange={handleChange}
+                                            placeholder="e.g. yourname@upi"
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neon-purple/50 transition-all font-mono"
+                                        />
+                                        <p className="text-[8px] font-mono text-gray-600 uppercase tracking-widest italic">
+                                            Recommended: Scanning this QR will open GPay/PhonePe directly.
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                                            OR Upload Custom QR
+                                        </label>
+                                        {qrPreview ? (
+                                            <div className="relative inline-block group/qr">
+                                                <img src={qrPreview} alt="QR Preview" className="w-24 h-24 rounded-2xl border border-white/10 shadow-lg object-contain bg-white" />
+                                                <button
+                                                    type="button"
+                                                    onClick={removeQr}
+                                                    className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all shadow-lg"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <label className="flex items-center gap-3 p-4 bg-white/5 border border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-neon-purple/50 transition-all group">
+                                                <Upload className="w-5 h-5 text-gray-500 group-hover:text-neon-purple" />
+                                                <span className="text-[10px] font-black text-gray-500 group-hover:text-white uppercase">Upload QR Graphic</span>
+                                                <input type="file" accept="image/*" onChange={handleQrChange} className="hidden" />
+                                            </label>
+                                        )}
+                                    </div>
                                 </div>
-                                <p className="mt-2 text-[10px] font-mono text-gray-500 uppercase italic">
-                                    Teams will be asked to upload a screenshot of their transaction.
-                                </p>
+
+                                {formData.upiId && (
+                                    <div className="p-6 bg-neon-purple/5 border border-neon-purple/20 rounded-3xl flex flex-col items-center gap-4 animate-in zoom-in-95 duration-500">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 bg-neon-purple rounded-full animate-ping"></div>
+                                            <span className="text-[10px] font-black text-neon-purple uppercase tracking-widest">Live QR Gateway Preview</span>
+                                        </div>
+                                        <div className="p-4 bg-white rounded-2xl shadow-2xl">
+                                            <img
+                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${formData.upiId}&pn=${formData.name}&am=${formData.entryFee}&tn=Registration for ${formData.name}`)}`}
+                                                alt="Functional UPI QR"
+                                                className="w-32 h-32 object-contain"
+                                            />
+                                        </div>
+                                        <p className="text-[9px] text-gray-500 font-mono text-center uppercase tracking-widest">
+                                            Redirects to Payment Gateway on Scan
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
