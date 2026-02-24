@@ -9,15 +9,12 @@ import StageForm from '../components/tournament/StageForm';
 import TeamList from '../components/team/TeamList';
 import RosterManager from '../components/team/RosterManager';
 import TeamForm from '../components/team/TeamForm';
-import PaymentReceipt from '../components/payment/PaymentReceipt';
 import Button from '../components/common/Button';
 import apiClient from '../api/client';
 import { Calendar, Users, Trophy, Plus, Target, Zap, UserPlus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import paymentsAPI from '../api/payments';
-import { loadRazorpay } from '../utils/payment';
 
 const TournamentDetailPage = () => {
     const { id } = useParams();
@@ -31,8 +28,6 @@ const TournamentDetailPage = () => {
     const [selectedTeamId, setSelectedTeamId] = useState(null);
     const [creatingStage, setCreatingStage] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [showReceiptModal, setShowReceiptModal] = useState(false);
-    const [selectedReceiptTeam, setSelectedReceiptTeam] = useState(null);
 
     const activeTeam = teams.find(t => t.id === selectedTeamId);
 
@@ -121,13 +116,7 @@ const TournamentDetailPage = () => {
         try {
             setSubmitting(true);
             await teamsAPI.register(id, teamData);
-
-            if (tournament.isPaid && tournament.entryFee > 0) {
-                toast.success('✅ Team registered! Payment pending organizer verification.');
-            } else {
-                toast.success('Team registered successfully.');
-            }
-
+            toast.success('Team registered successfully.');
             setShowTeamModal(false);
             fetchTournamentData();
         } catch (error) {
@@ -138,10 +127,6 @@ const TournamentDetailPage = () => {
     };
 
 
-    const handleViewReceipt = (team) => {
-        setSelectedReceiptTeam(team);
-        setShowReceiptModal(true);
-    };
 
     const handleApproveTeam = async (teamId) => {
         if (isGuest) return;
@@ -264,10 +249,8 @@ const TournamentDetailPage = () => {
                             </div>
                             <div className="bg-dark-800/40 p-4 rounded-2xl border border-dark-600">
                                 <Zap className="w-5 h-5 text-yellow-500 mb-2" />
-                                <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">Entry Fee</p>
-                                <p className={`font-black text-sm uppercase ${tournament.isPaid ? 'text-neon-pink' : 'text-neon-green'}`}>
-                                    {tournament.isPaid ? `${tournament.currency} ${tournament.entryFee}` : 'FREE'}
-                                </p>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase mb-1">Status</p>
+                                <p className="text-white font-black text-sm uppercase">Active</p>
                             </div>
                         </div>
                     </div>
@@ -409,7 +392,6 @@ const TournamentDetailPage = () => {
                                     onReject={handleRejectTeam}
                                     onDelete={handleDeleteTeam}
                                     onAddPlayer={handleManageRoster}
-                                    onViewReceipt={handleViewReceipt}
                                     className="grid grid-cols-1 gap-6"
                                 />
                             </div>
@@ -423,7 +405,7 @@ const TournamentDetailPage = () => {
                 <div className="p-6 bg-dark-900/50"><StageForm onSubmit={handleCreateStage} loading={creatingStage} tournamentGame={tournament.game} /></div>
             </Modal>
             <Modal isOpen={showTeamModal} onClose={() => setShowTeamModal(false)} title="Register New Team">
-                <div className="p-6 bg-dark-900/50"><TeamForm onSubmit={handleRegisterTeam} loading={submitting} tournament={tournament} /></div>
+                <div className="p-6 bg-dark-900/50"><TeamForm onSubmit={handleRegisterTeam} loading={submitting} /></div>
             </Modal>
 
             <Modal isOpen={showPlayerModal} onClose={() => setShowPlayerModal(false)} title="Manage Team Roster">
@@ -432,19 +414,6 @@ const TournamentDetailPage = () => {
                         <RosterManager
                             team={activeTeam}
                             onUpdate={fetchTournamentData}
-                        />
-                    )}
-                </div>
-            </Modal>
-
-            {/* Receipt Modal */}
-            <Modal isOpen={showReceiptModal} onClose={() => setShowReceiptModal(false)} title="Payment Verification Receipt">
-                <div className="p-2 md:p-6 bg-dark-900 border-t border-white/5">
-                    {selectedReceiptTeam && (
-                        <PaymentReceipt
-                            team={selectedReceiptTeam}
-                            tournament={tournament}
-                            onClose={() => setShowReceiptModal(false)}
                         />
                     )}
                 </div>

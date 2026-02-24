@@ -1,7 +1,7 @@
-import { Users, Mail, Phone, CheckCircle, XCircle, Clock, Shield, UserPlus, Trash2, CreditCard, Receipt } from 'lucide-react';
+import { Users, Mail, Phone, CheckCircle, XCircle, Clock, Shield, UserPlus, Trash2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showActions = false, onViewReceipt }) => {
+const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showActions = false }) => {
     const { isGuest } = useAuth();
     const statusConfig = {
         pending: {
@@ -29,16 +29,6 @@ const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showAction
             <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                 <Shield className="w-24 h-24 text-white" />
             </div>
-
-            {/* Payment Badge */}
-            {team.paymentStatus === 'completed' && (
-                <div className="absolute top-0 left-0 z-20">
-                    <div className="bg-neon-green/90 text-black text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-br-xl flex items-center gap-1 shadow-lg shadow-neon-green/10">
-                        <CreditCard className="w-2.5 h-2.5" />
-                        PAID
-                    </div>
-                </div>
-            )}
 
             <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center space-x-4">
@@ -134,16 +124,6 @@ const TeamCard = ({ team, onApprove, onReject, onAddPlayer, onDelete, showAction
                         </button>
                     </div>
                 </div>
-            )}
-
-            {team.paymentStatus === 'completed' && onViewReceipt && (
-                <button
-                    onClick={() => onViewReceipt(team)}
-                    className="mb-4 w-full py-2 bg-neon-blue/5 text-neon-blue border border-neon-blue/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-neon-blue hover:text-black transition-all flex items-center justify-center gap-2 group/receipt hover:shadow-[0_0_15px_rgba(0,183,255,0.3)]"
-                >
-                    <Receipt className="w-3.5 h-3.5 group-hover/receipt:scale-110 transition-transform" />
-                    View Payment Receipt
-                </button>
             )}
 
             {showActions && team.status === 'pending' && (

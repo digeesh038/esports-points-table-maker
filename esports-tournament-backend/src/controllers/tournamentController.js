@@ -22,9 +22,7 @@ export async function createTournament(req, res, next) {
 
         const {
             organizationId, name, game, description, format,
-            startDate, endDate, maxTeams, registrationDeadline, isPublic,
-            isPaid, entryFee, currency,
-            paymentMethod, paymentInstructions, paymentQrCode, upiId
+            startDate, endDate, maxTeams, registrationDeadline, isPublic
         } = req.body;
 
         const organization = await Organization.findByPk(organizationId);
@@ -52,16 +50,6 @@ export async function createTournament(req, res, next) {
             registrationDeadline: registrationDeadline || null,
             isPublic: isPublic !== false,
             status: 'draft',
-            isPaid: isPaid === true || isPaid === 'true',
-            entryFee: entryFee || 0,
-            currency: currency || 'INR',
-            paymentMethod: paymentMethod || 'razorpay',
-            paymentInstructions: paymentInstructions || null,
-            paymentQrCode: paymentQrCode || null,
-            upiId: upiId || null,
-            platformPaymentId: req.body.platformPaymentId || null,
-            platformOrderId: req.body.platformOrderId || null,
-            status: req.body.status || 'draft',
         };
 
         const tournament = await Tournament.create(sanitizedData);
@@ -174,13 +162,7 @@ export async function updateTournament(req, res, next) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
-        // Sanitize numeric fields if they exist in body
-        const updateData = { ...req.body };
-        if (updateData.maxTeams) updateData.maxTeams = parseInt(updateData.maxTeams);
-        if (updateData.entryFee) updateData.entryFee = parseFloat(updateData.entryFee);
-        if (updateData.isPaid !== undefined) updateData.isPaid = updateData.isPaid === true || updateData.isPaid === 'true';
-
-        await tournament.update(updateData);
+        await tournament.update(req.body);
 
         res.json({
             success: true,

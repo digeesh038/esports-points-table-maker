@@ -73,46 +73,6 @@ const Tournament = sequelize.define(
             allowNull: true,
             field: 'prize_pool',
         },
-        isPaid: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            field: 'is_paid',
-        },
-        entryFee: {
-            type: DataTypes.DECIMAL(10, 2),
-            defaultValue: 0,
-            field: 'entry_fee',
-        },
-        currency: {
-            type: DataTypes.STRING,
-            defaultValue: 'INR',
-        },
-        paymentMethod: {
-            type: DataTypes.STRING,
-            defaultValue: 'manual',
-            field: 'payment_method',
-        },
-        paymentInstructions: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-            field: 'payment_instructions',
-        },
-        // paymentQrCode removed — QR is now auto-generated from upiId + entryFee
-        upiId: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            field: 'upi_id',
-        },
-        platformPaymentId: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            field: 'platform_payment_id',
-        },
-        platformOrderId: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            field: 'platform_order_id',
-        },
     },
     {
         tableName: 'tournaments',

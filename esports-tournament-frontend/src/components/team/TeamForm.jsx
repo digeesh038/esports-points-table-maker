@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity, Receipt, QrCode } from 'lucide-react';
+import { Plus, Trash2, Upload, X, Shield, Mail, Phone, Users, Zap, Database, Cpu, Activity } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const getUpiQrUrl = (upiId, amount, name = 'Tournament') => {
-    if (!upiId) return null;
-    const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent('Tournament Entry Fee')}`;
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}&bgcolor=ffffff&color=000000&margin=10`;
-};
-
-const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) => {
+const TeamForm = ({ onSubmit, loading, tournaments = [] }) => {
     const [formData, setFormData] = useState({
         tournamentId: '',
         name: '',
@@ -21,15 +15,9 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
         players: [
             { inGameName: '', inGameId: '', role: '' }
         ],
-        upiTransactionId: '',
     });
 
     const [logoPreview, setLogoPreview] = useState(null);
-
-    // Use directly-passed tournament OR find from dropdown selection
-    const selectedT = tournament || tournaments.find(t => t.id === formData.tournamentId);
-    const isManualPayment = selectedT?.isPaid && selectedT?.entryFee > 0;
-    const qrUrl = getUpiQrUrl(selectedT?.upiId, selectedT?.entryFee, selectedT?.name);
 
     const handleChange = (e) => {
         setFormData({
@@ -65,7 +53,6 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
         setLogoPreview(null);
     };
 
-
     const handlePlayerChange = (index, field, value) => {
         const updatedPlayers = [...formData.players];
         updatedPlayers[index][field] = value;
@@ -94,11 +81,6 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
 
         if (!formData.logo) {
             toast.error('Team logo is mandatory');
-            return;
-        }
-
-        if (isManualPayment && !formData.upiTransactionId?.trim()) {
-            toast.error('Enter your UPI Transaction ID after paying');
             return;
         }
 
@@ -325,74 +307,6 @@ const TeamForm = ({ onSubmit, loading, tournaments = [], tournament = null }) =>
                     ))}
                 </div>
             </div>
-
-            {/* --- UPI PAYMENT --- */}
-            {isManualPayment && (
-                <div className="relative p-8 bg-dark-900/40 rounded-[2.5rem] border border-neon-green/20 overflow-hidden animate-in zoom-in-95 duration-500">
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-neon-green/10 rounded-2xl border border-neon-green/30">
-                            <QrCode className="w-5 h-5 text-neon-green" />
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Pay Entry Fee</h3>
-                            <p className="text-[9px] text-gray-500 font-mono mt-0.5">SCAN QR TO PAY · THEN ENTER TRANSACTION ID</p>
-                        </div>
-                    </div>
-
-                    {/* Amount + UPI */}
-                    <div className="flex flex-col md:flex-row items-center gap-6 p-5 bg-black/40 rounded-3xl border border-white/5 mb-6">
-                        {/* Auto QR */}
-                        {qrUrl ? (
-                            <div className="flex-shrink-0 p-3 bg-white rounded-2xl shadow-2xl shadow-neon-green/10">
-                                <img
-                                    src={qrUrl}
-                                    alt="Pay via UPI"
-                                    className="w-36 h-36 object-contain"
-                                    onError={(e) => e.target.style.display = 'none'}
-                                />
-                            </div>
-                        ) : (
-                            <div className="w-36 h-36 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center">
-                                <QrCode className="w-10 h-10 text-gray-600" />
-                            </div>
-                        )}
-
-                        <div className="space-y-3 text-center md:text-left">
-                            <div>
-                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Entry Fee</p>
-                                <p className="text-3xl font-black text-white italic">₹{selectedT.entryFee}</p>
-                            </div>
-                            {selectedT.upiId && (
-                                <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 inline-block">
-                                    <p className="text-[9px] text-gray-500 uppercase tracking-widest">Pay to UPI ID</p>
-                                    <p className="text-sm font-black text-neon-green font-mono">{selectedT.upiId}</p>
-                                </div>
-                            )}
-                            <p className="text-[10px] text-gray-500">
-                                Scan QR with Google Pay, PhonePe, Paytm, or BHIM
-                            </p>
-                            {selectedT.paymentInstructions && (
-                                <p className="text-xs text-gray-400 italic">{selectedT.paymentInstructions}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Transaction ID */}
-                    <Input
-                        label="UPI Transaction ID *"
-                        icon={<Zap className="w-4 h-4" />}
-                        type="text"
-                        name="upiTransactionId"
-                        value={formData.upiTransactionId || ''}
-                        onChange={handleChange}
-                        placeholder="e.g. 402312345678 (copy from your payment app)"
-                        required={isManualPayment}
-                    />
-                    <p className="text-[10px] text-gray-600 mt-2 ml-1">
-                        After paying, open your UPI app → go to transaction history → copy the 12-digit Transaction ID.
-                    </p>
-                </div>
-            )}
 
             <div className="pt-6">
                 <button

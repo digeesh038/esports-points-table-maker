@@ -25,8 +25,8 @@ const CreateTournamentPage = () => {
             toast.success('Tournament created successfully!');
             navigate(`/dashboard/tournaments/${response.data.tournament.id}`);
         } catch (error) {
-            const msg = error.response?.data?.message || error.message || 'Failed to create tournament';
-            toast.error(msg);
+            const apiMessage = error.response?.data?.message || error.response?.data?.errors?.[0]?.msg;
+            toast.error(apiMessage || error.message || 'Failed to create tournament');
         } finally {
             setLoading(false);
         }
@@ -54,6 +54,7 @@ const CreateTournamentPage = () => {
 
             {/* Form Card */}
             <div className="bg-[#0d0d14] border border-white/8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden">
+                {/* Top gradient stripe */}
                 <div className="h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink" />
                 <div className="p-8">
                     <TournamentForm onSubmit={handleSubmit} loading={loading} />

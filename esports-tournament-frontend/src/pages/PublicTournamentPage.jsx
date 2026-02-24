@@ -9,14 +9,11 @@ import Loader from '../components/common/Loader';
 import tournamentsAPI from '../api/tournaments';
 import leaderboardAPI from '../api/leaderboard';
 import teamsAPI from '../api/teams';
-import PaymentReceipt from '../components/payment/PaymentReceipt';
-import TeamCard from '../components/team/TeamCard';
-import { Calendar, Users, Trophy, UserPlus, Target, Zap, LayoutGrid, Receipt } from 'lucide-react';
+import { Calendar, Users, Trophy, UserPlus, Target, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useSocket } from '../contexts/SocketContext';
-// UPI/QR manual payment — no external SDK needed
 
 const PublicTournamentPage = () => {
     const { id } = useParams();
@@ -27,9 +24,6 @@ const PublicTournamentPage = () => {
     const [loading, setLoading] = useState(true);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [registering, setRegistering] = useState(false);
-    const [userTeams, setUserTeams] = useState([]);
-    const [showReceiptModal, setShowReceiptModal] = useState(false);
-    const [selectedReceiptTeam, setSelectedReceiptTeam] = useState(null);
 
     useEffect(() => {
         fetchTournamentData();
@@ -77,15 +71,6 @@ const PublicTournamentPage = () => {
                 const lbResponse = await leaderboardAPI.getByStage(response.data.tournament.stages[0].id);
                 setLeaderboard(lbResponse.data.leaderboard || []);
             }
-
-            // If user is logged in, find their teams
-            if (response.data.tournament.teams) {
-                // In a real app, we'd filter by user id. Since we don't have user object here easily, 
-                // we'll assume for now we want to show teams if they exist. 
-                // Actually, let's filter teams that might belong to this user if we had auth info.
-                // For now, let's just show all for the owner/public view if applicable? 
-                // No, better to keep it specific.
-            }
         } catch (error) {
             toast.error('Failed to load tournament info');
         } finally {
@@ -98,38 +83,16 @@ const PublicTournamentPage = () => {
             toast.error('Registration is restricted in guest mode.');
             return;
         }
-
         try {
             setRegistering(true);
-
-            // For both paid and free — submit directly
-            // Paid: teamData already includes paymentProof (screenshot) from TeamForm
-            const result = await teamsAPI.register(tournament.id, teamData);
-
-            if (tournament.isPaid && tournament.entryFee > 0) {
-                toast.success('✅ Team registered! Your payment is pending organizer verification.');
-                // Show receipt
-                if (result.data?.team) {
-                    setSelectedReceiptTeam(result.data.team);
-                    setShowReceiptModal(true);
-                }
-            } else {
-                toast.success('Team registered successfully! Awaiting approval.');
-            }
-
+            await teamsAPI.register(tournament.id, teamData);
+            toast.success('Team registered successfully! Awaiting approval.');
             setShowRegisterModal(false);
-            fetchTournamentData();
-
         } catch (error) {
-            toast.error(error.response?.data?.message || error.message || 'Failed to register team');
+            toast.error(error.message || 'Failed to register team');
         } finally {
             setRegistering(false);
         }
-    };
-
-    const handleViewReceipt = (team) => {
-        setSelectedReceiptTeam(team);
-        setShowReceiptModal(true);
     };
 
     if (loading) {
@@ -181,10 +144,8 @@ const PublicTournamentPage = () => {
                             <span className="font-bold text-white">{format(new Date(tournament.startDate), 'MMM dd, yyyy')}</span>
                         </div>
                         <div className="flex items-center bg-dark-800/50 px-5 py-2 rounded-xl border border-dark-600">
-                            <Zap className={`w-5 h-5 mr-3 ${tournament.isPaid ? 'text-neon-pink' : 'text-neon-green'}`} />
-                            <span className="font-bold text-white">
-                                {tournament.isPaid ? `Entry: ${tournament.currency} ${tournament.entryFee}` : 'FREE ENTRY'}
-                            </span>
+                            <Users className="w-5 h-5 mr-3 text-neon-pink" />
+                            <span className="font-bold text-white">{tournament.teams?.length || 0} Entities Registered</span>
                         </div>
                     </div>
 
@@ -204,29 +165,6 @@ const PublicTournamentPage = () => {
                     )}
                 </div>
             </div>
-
-            {/* My Teams Section (Personal context) */}
-            {tournament.teams?.length > 0 && (
-                <div className="max-w-7xl mx-auto px-4 py-12 border-b border-white/5">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-1.5 h-8 bg-neon-blue rounded-full shadow-[0_0_15px_rgba(0,183,255,0.5)]"></div>
-                        <div>
-                            <h2 className="text-2xl font-black text-white italic uppercase tracking-tight">Your_Registration.sys</h2>
-                            <p className="text-gray-500 font-mono text-[10px] uppercase tracking-widest mt-1">Personal node status and payment verification</p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {tournament.teams.map(team => (
-                            <TeamCard
-                                key={team.id}
-                                team={team}
-                                onViewReceipt={handleViewReceipt}
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
 
             {/* Leaderboard Section */}
             <div className="max-w-7xl mx-auto px-4 py-20">
@@ -259,20 +197,7 @@ const PublicTournamentPage = () => {
                 title="Register Your Team"
             >
                 <div className="bg-dark-900 p-8">
-                    <TeamForm onSubmit={handleRegisterTeam} loading={registering} tournament={tournament} />
-                </div>
-            </Modal>
-
-            {/* Receipt Modal */}
-            <Modal isOpen={showReceiptModal} onClose={() => setShowReceiptModal(false)} title="Payment Verification Receipt">
-                <div className="p-2 md:p-6 bg-dark-900 border-t border-white/5">
-                    {selectedReceiptTeam && (
-                        <PaymentReceipt
-                            team={selectedReceiptTeam}
-                            tournament={tournament}
-                            onClose={() => setShowReceiptModal(false)}
-                        />
-                    )}
+                    <TeamForm onSubmit={handleRegisterTeam} loading={registering} />
                 </div>
             </Modal>
         </div>

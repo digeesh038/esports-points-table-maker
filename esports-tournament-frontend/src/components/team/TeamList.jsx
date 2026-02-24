@@ -1,7 +1,7 @@
 import TeamCard from './TeamCard';
 import Loader from '../common/Loader';
 
-const TeamList = ({ teams, loading, showActions = false, onApprove, onReject, onAddPlayer, onDelete, onViewReceipt, className }) => {
+const TeamList = ({ teams, loading, showActions = false, onApprove, onReject, onAddPlayer, onDelete, className }) => {
     if (loading) {
         return <Loader text="Loading teams..." />;
     }
@@ -25,7 +25,6 @@ const TeamList = ({ teams, loading, showActions = false, onApprove, onReject, on
                     onReject={onReject}
                     onAddPlayer={() => onAddPlayer && onAddPlayer(team)}
                     onDelete={onDelete}
-                    onViewReceipt={onViewReceipt}
                 />
             ))}
         </div>
